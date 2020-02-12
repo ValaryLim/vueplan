@@ -1,3 +1,3 @@
 <template>
-    <h1>The Reviews Component</h1>
+    <h1>The Review Component</h1>
 </template>

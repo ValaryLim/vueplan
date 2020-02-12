@@ -1,3 +1,17 @@
 <template>
-    <h1>The Home Component</h1>
+    <div>
+        <!-- set academic plan to the home screen -->
+        <acad-plan></acad-plan>
+    </div>
 </template>
+
+<script>
+import AcadPlan from './acadplan/AcadPlan.vue';
+
+export default {
+  name: 'App',
+  components: {
+    acadPlan: AcadPlan,
+  }
+}
+</script>
