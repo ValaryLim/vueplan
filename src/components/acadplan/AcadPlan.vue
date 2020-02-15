@@ -1,3 +1,4 @@
+/* eslint-disable vue/no-side-effects-in-computed-properties */
 <template>
     <div class="row">
         <div class="col-1">
@@ -9,6 +10,9 @@
                 </div>
                 <div class="list-group-item item" v-for="element in sorted_y1s1" :key="element.mod">
                     {{ element.mod }}
+                    <button type="button" class="close" aria-label="Close" v-if="element.move===true">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
             </draggable>
         </div>
@@ -198,9 +202,24 @@ export default {
 </script>
 
 <style scoped>
+    .row {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        margin-left: 5px;
+    }
+
+    .col-1 {
+        margin: 0px;
+        padding: 5px;
+    }
+
     .list-group-item.item {
-        font-size: 12px;
+        font-size: 10px;
         text-align: center;
+    }
+
+    .close {
+        font-size: 12px;
     }
     
     .list-group {
