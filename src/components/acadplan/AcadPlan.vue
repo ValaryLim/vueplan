@@ -1,4 +1,5 @@
 /* eslint-disable vue/no-side-effects-in-computed-properties */
+/* eslint-disable vue/no-side-effects-in-computed-properties */
 <template>
     <div class="row">
         <div class="col-1">
