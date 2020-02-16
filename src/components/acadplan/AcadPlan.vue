@@ -9,9 +9,9 @@
                     <h6>Y1S1</h6>
                 </div>
                 <div class="list-group-item item" v-for="element in sorted_y1s1" :key="element.mod">
-                    {{ element.mod }}
-                    <button type="button" class="close" aria-label="Close" v-if="element.move===true">
-                        <span aria-hidden="true">×</span>
+                    <span class="text">{{ element.mod }}</span>
+                    <button type="button" class="close" v-if="element.move===true" @click="delete_module(element.mod)">
+                        <font-awesome-icon icon="times" />
                     </button>
                 </div>
             </draggable>
@@ -24,7 +24,10 @@
                     <h6>Y1S2</h6>
                 </div>
                 <div class="list-group-item item" v-for="element in sorted_y1s2" :key="element.mod">
-                    {{ element.mod }}
+                    <span class="text">{{ element.mod }}</span>
+                    <button type="button" class="close" v-if="element.move===true" @click="delete_module(element.mod)">
+                        <font-awesome-icon icon="times" />
+                    </button>
                 </div>
             </draggable>
         </div>
@@ -36,7 +39,10 @@
                     <h6>Y2S1</h6>
                 </div>
                 <div class="list-group-item item" v-for="element in sorted_y2s1" :key="element.mod">
-                    {{ element.mod }}
+                    <span class="text">{{ element.mod }}</span>
+                    <button type="button" class="close" v-if="element.move===true" @click="delete_module(element.mod)">
+                        <font-awesome-icon icon="times" />
+                    </button>
                 </div>
             </draggable>
         </div>
@@ -48,7 +54,10 @@
                     <h6>Y2S2</h6>
                 </div>
                 <div class="list-group-item item" v-for="element in sorted_y2s2" :key="element.mod">
-                    {{ element.mod }}
+                    <span class="text">{{ element.mod }}</span>
+                    <button type="button" class="close" v-if="element.move===true" @click="delete_module(element.mod)">
+                        <font-awesome-icon icon="times" />
+                    </button>
                 </div>
             </draggable>
         </div>
@@ -60,7 +69,10 @@
                     <h6>Y3S1</h6>
                 </div>
                 <div class="list-group-item item" v-for="element in sorted_y3s1" :key="element.mod">
-                    {{ element.mod }}
+                    <span class="text">{{ element.mod }}</span>
+                    <button type="button" class="close" v-if="element.move===true" @click="delete_module(element.mod)">
+                        <font-awesome-icon icon="times" />
+                    </button>
                 </div>
             </draggable>
         </div>
@@ -72,7 +84,10 @@
                     <h6>Y3S2</h6>
                 </div>
                 <div class="list-group-item item" v-for="element in sorted_y3s2" :key="element.mod">
-                    {{ element.mod }}
+                    <span class="text">{{ element.mod }}</span>
+                    <button type="button" class="close" v-if="element.move===true" @click="delete_module(element.mod)">
+                        <font-awesome-icon icon="times" />
+                    </button>
                 </div>
             </draggable>
         </div>
@@ -84,7 +99,10 @@
                     <h6>Y4S1</h6>
                 </div>
                 <div class="list-group-item item" v-for="element in sorted_y4s1" :key="element.mod">
-                    {{ element.mod }}
+                    <span class="text">{{ element.mod }}</span>
+                    <button type="button" class="close" v-if="element.move===true" @click="delete_module(element.mod)">
+                        <font-awesome-icon icon="times" />
+                    </button>
                 </div>
             </draggable>
         </div>
@@ -96,7 +114,10 @@
                     <h6>Y4S2</h6>
                 </div>
                 <div class="list-group-item item" v-for="element in sorted_y4s2" :key="element.mod">
-                    {{ element.mod }}
+                    <span class="text">{{ element.mod }}</span>
+                    <button type="button" class="close" v-if="element.move===true" @click="delete_module(element.mod)">
+                        <font-awesome-icon icon="times" />
+                    </button>
                 </div>
             </draggable>
         </div>
@@ -112,43 +133,60 @@
 
 <script>
 import draggable from "vuedraggable";
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faTimes, faAlignJustify, faCouch } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(faTimes, faAlignJustify, faCouch)
+
+var index = 22;
 
 export default {
     name: "App",
     display: "Academic Planner",
     order: 14,
     components: {
-        draggable
+        draggable,
+        FontAwesomeIcon
     },
     data() {
         return {
             add_module_code: "",
             y1s1: [
-                { mod: "", move: false },
-                { mod: "BT1101", move: true },
-                { mod: "CS1010S", move: true },
-                { mod: "MA1521", move: true },
-                { mod: "IS1103", move: true }
+                { mod: "", move: false, index: 0 },
+                { mod: "BT1101", move: true, index: 1 },
+                { mod: "CS1010S", move: true, index: 2 },
+                { mod: "MA1521", move: true, index: 3 },
+                { mod: "IS1103", move: true, index: 4 }
             ], 
             y1s2: [
-                { mod: "", move: false },
-                { mod: "BT2101", move: true },
-                { mod: "BT2102", move: true },
-                { mod: "CS2030", move: true },
-                { mod: "MA1101R", move: true },
-                { mod: "MKT1705X", move: true }],
+                { mod: "", move: false, index: 5 },
+                { mod: "BT2101", move: true, index: 6 },
+                { mod: "CS2030", move: true, index: 7 },
+                { mod: "MA1101R", move: true, index: 8 },
+                { mod: "EC1301", move: true, index: 9 }
+            ],
             y2s1: [
-                { mod: "", move: false }, 
-                { mod: "BT3102", move: true }, 
-                { mod: "CS2040", move: true },
-                { mod: "ST2334", move: true },
-                { mod: "EC1301", move: true },
-                { mod: "IS3103", move: true }], 
-            y2s2: [{ mod: "", move: false },],
-            y3s1: [{ mod: "", move: false },],
-            y3s2: [{ mod: "", move: false },],
-            y4s1: [{ mod: "", move: false },],
-            y4s2: [{ mod: "", move: false },],
+                { mod: "", move: false, index: 10 }, 
+                { mod: "BT2102", move: true, index: 11 }, 
+                { mod: "CS2040", move: true, index: 12 },
+                { mod: "ST2334", move: true, index: 13 }
+            ], 
+            y2s2: [
+                { mod: "", move: false, index: 14 }, 
+                { mod: "BT3102", move: true, index: 15 }, 
+                { mod: "BT3103", move: true, index: 16 },
+            ],
+            y3s1: [
+                { mod: "", move: false, index: 19 },
+                { mod: "IS3103", move: true, index: 20 }
+            ],
+            y3s2: [
+                { mod: "", move: false, index: 21 },
+                { mod: "MKT1705X", move: true, index: 18 }
+            ],
+            y4s1: [{ mod: "", move: false, index: 22 },],
+            y4s2: [{ mod: "", move: false, index: 23 },],
         };
     },
     computed: {
@@ -182,9 +220,13 @@ export default {
             // remove whitespace in module name
             var module_name = this.add_module_code.trim();
             if (module_name != "") {
-                this.y1s1.push({ mod: module_name, move: true });
+                this.y1s1.push({ mod: module_name, move: true, index: index });
+                index++;
             }
         },
+        delete_module: function(module_name) {
+            this.y1s1.splice(module_name, 1);
+        }, 
         compare_module: function(a, b) {
             if (a.move === false) { 
                 return 1;
@@ -210,7 +252,7 @@ export default {
 
     .col-1 {
         margin: 0px;
-        padding: 5px;
+        padding: 2px;
     }
 
     .list-group-item.item {
