@@ -24,6 +24,8 @@ export default {
     data() {
         return {
             add_module_code: "",
+            invalid_module: 0,
+            inserted_module: 1,
             valid_modules: [
                 { mod: "BT1101", name: "BT1101 Introduction to Business Analytics", mc: 4, inserted: true },
                 { mod: "CS1010S", name: "CS1010S Programming Methodology", mc: 4, inserted: true },
@@ -136,11 +138,34 @@ export default {
     methods: {
         add_module: function() {
             // remove whitespace in module name
-            var module_name = this.add_module_code.trim();
-            if (module_name != "") {
-                this.y1s1.push({ mod: module_name, move: true, index: index });
-                index++;
+            var module_name = this.add_module_code.trim().toLowerCase();
+            if (module_name !== "") {
+                var module = this.check_valid_module(module_name);
+                if (module === this.invalid_module) {
+                    alert("Error: Module is invalid");
+                } else if (module === this.inserted_module) {
+                    alert("Error: Module is already in academic plan"); 
+                } else {
+                    this.y1s1.push({ mod: module.mod, move: true, index: index }); 
+                    index++;
+                }
+            } else {
+                alert("Error: Field cannot be left blank");
             }
+        },
+        check_valid_module: function(module_name) {
+            for (var i = 0; i < this.valid_modules.length; i++) {
+                // check if module exists
+                if (this.valid_modules[i].name.toLowerCase().includes(module_name)) {
+                    // check if module is inserted
+                    if (this.valid_modules[i].inserted === false) {
+                        return this.valid_modules[i];
+                    } else {
+                        return this.inserted_module;
+                    }
+                }
+            }
+            return this.invalid_module;
         },
         delete_module: function(data_name, index) {
             if (data_name === "y1s1") {
