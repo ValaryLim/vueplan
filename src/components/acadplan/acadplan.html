@@ -146,19 +146,6 @@
             <!-- add module button -->
             <div class="col-4 add_feature">
                 <p>Module Code:</p>
-<<<<<<< HEAD
-                <form>
-                    <input type="text" list="valid_modules" v-model="add_module_code"/>
-                    <datalist id="valid_modules">
-                        <option v-for="option in valid_modules" v-bind:value="option.mod">
-                            {{ option.name }}
-                        </option>
-                    </datalist>   
-                    <button class="btn btn-secondary" @click = "add_module">
-                        Add
-                    </button>                 
-                </form>
-=======
                     <form>
                         <input type="text" class="input" list="valid_modules" v-model="add_module_code"/>
                         <datalist id="valid_modules">
@@ -172,7 +159,6 @@
                 <button class="btn btn-secondary" @click = "add_module">
                     Add
                 </button>
->>>>>>> temp
             </div>
         </div>
     </body>
