@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>vueplan SEP Page</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" type="text/css" href="/Users/laiyanjean/vueplan/src/components/sepmapping/SEPMapping.css">
+  </head>
+  
+  <body>
+    <h2>SEP Module Mappings </h2>
+    
+    <div id="app">
+      Course: Business Analytics
+      
+      <br>
+      
+      <!-- Filter by Partner University -->
+      <label for="PU">Partner University:</label>
+      <!-- Creates a dropdown PU list based on input data in js -->
+      <selection v-model="pu"></selection>
+      <br> <br>
+
+      <!-- If a PU is selected from dropdown list -->
+      <div v-if="pu">
+        <table>
+          <!-- table header -->
+          <thead>
+            <tr>
+              <th>NUS Module Code</th>
+              <th>NUS Module Title</th>
+              <th>MCs</th>
+              <th>PU Module Code</th>
+              <th>PU Module Title</th>
+              <th>PU MCs</th>
+            </tr>
+          </thead>
+
+          <!-- table body -->
+          <tbody>
+            <tr v-for="module in pu.modules">
+              <td>{{module.nusModuleCode}}</td>
+              <td>{{module.nusModuleTitle}}</td>
+              <td>{{module.mcs}}</td>
+              <td>{{module.puModuleCode}}</td>
+              <td>{{module.puModuleTitle}}</td>
+              <td>{{module.puMcs}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Else if a PU is not selected, just display header -->
+      <div v-else>
+        <table>
+          <thead>
+            <tr>
+              <th>NUS Module Code</th>
+              <th>NUS Module Title</th>
+              <th>MCs</th>
+              <th>PU Module Code</th>
+              <th>PU Module Title</th>
+              <th>PU MCs</th>
+            </tr>
+          </thead>
+        </table>
+        <p> Please select a PU in the dropdown above to view module mappings. </p>
+      </div>
+    </div>
+  </body>
+  <!-- link to js file -->
+  <script src="/Users/laiyanjean/vueplan/src/components/sepmapping/SEPMapping.js"></script>
+</html>
