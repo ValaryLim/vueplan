@@ -1,0 +1,23 @@
+.row {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: 5px;
+}
+
+.col-1 {
+    margin: 0px;
+    padding: 2px;
+}
+
+.list-group-item.item {
+    font-size: 10px;
+    text-align: center;
+}
+
+.close {
+    font-size: 12px;
+}
+
+.list-group {
+    background-color: grey;
+}
