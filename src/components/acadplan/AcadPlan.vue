@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(faTimes, faAlignJustify)
 
-var index = 23;
+var index = 22;
 
 export default {
     name: "App",
@@ -24,6 +24,45 @@ export default {
     data() {
         return {
             add_module_code: "",
+            valid_modules: [
+                { mod: "BT1101", name: "BT1101 Introduction to Business Analytics", mc: 4, inserted: true },
+                { mod: "CS1010S", name: "CS1010S Programming Methodology", mc: 4, inserted: true },
+                { mod: "EC1301", name: "EC1301 Principles of Economics", mc: 4, inserted: true }, 
+                { mod: "IS1103", name: "IS1103 Ethics in Computing", mc: 4, inserted: true }, 
+                { mod: "MA1521", name: "MA1521 Calculus for Computing", mc: 4, inserted: true }, 
+                { mod: "MA1102R", name: "MA1102R Calculus", mc: 4, inserted: false },
+                { mod: "MA1311", name: "MA1311 Matrix Algebra", mc: 4, inserted: false }, 
+                { mod: "MA1101R", name: "MA1101R Linear Algebra I", mc: 4, inserted: true },
+                { mod: "MKT1705X", name: "MKT1705X Principles of Marketing", mc: 4, inserted: true }, 
+                { mod: "BT2101", name: "BT2101 Decision Making Methods and Tools", mc: 4, inserted: true },
+                { mod: "BT2102", name: "BT2102 Data Management and Visualisation", mc: 4, inserted: true },
+                { mod: "CS2030", name: "CS2030 Programming Methodology I", mc: 4, inserted: true },
+                { mod: "CS2040", name: "CS2040 Data Structures and Algorithms", mc: 4, inserted: true }, 
+                { mod: "IS2101", name: "IS2101 Business and Technical Communication", mc: 4, inserted: false },
+                { mod: "ST2334", name: "ST2334 Probability and Statistics", mc: 4, inserted: true },
+                { mod: "BT3102", name: "BT3102 Computational Methods for Business Analytics", mc: 4, inserted: true },
+                { mod: "BT3103", name: "BT3103 Application Systems Development for Business Analytics", mc: 4, inserted: true },
+                { mod: "IS3103", name: "IS3103 Information Systems Leadership and Communication", mc: 4, inserted: false }, 
+                { mod: "BT4103", name: "BT4103 Business Analytics Capstone Project", mc: 8, inserted: false },
+                { mod: "IS4010", name: "IS4010 Industry Internship Programme", mc: 12, inserted: false },
+                { mod: "BT4101", name: "BT4101 B.Sc. Dissertation", mc: 12, inserted: false },
+                { mod: "BT4013", name: "BT4013 Analytics for Capital Market Trading and Investment", mc: 4, inserted: false },
+                { mod: "BT4016", name: "BT4016 Risk Analytics for Financial Services", mc: 4, inserted: false }, 
+                { mod: "BT4211", name: "BT4211 Data-Driven Marketing", mc: 4, inserted: false },
+                { mod: "BT4212", name: "BT4212 Search Engine Optimization and Analytics", mc: 4, inserted: false },
+                { mod: "IS4241", name: "IS4241 Social Media Network Analysis", mc: 4, inserted: false },
+                { mod: "BT4012", name: "BT4012 Fraud Analytics", mc: 4, inserted: false },
+                { mod: "BT4015", name: "BT4015 Geospatial Analytics", mc: 4, inserted: false },
+                { mod: "BT4221", name: "BT4221 Big Data Techniques and Technologies", mc: 4, inserted: false },
+                { mod: "BT4222", name: "BT4222 Mining Web Data for Business Insights", mc: 4, inserted: false },
+                { mod: "BT4240", name: "BT4240 Machine Learning for Predictive Data Analytics", mc: 4, inserted: false },
+                { mod: "ST3131", name: "ST3131 Regression Analysis", mc: 4, inserted: false },
+                { mod: "ST4245", name: "ST4245 Statistical Methods for Finance", mc: 4, inserted: false },
+                { mod: "IS3261", name: "IS3261 Mobile Apps Development for Enterprise", mc: 4, inserted: false },
+                { mod: "BT4014", name: "BT4014 Analytics Driven Design of Adaptive Systems", mc: 4, inserted: false },
+                { mod: "IS4228", name: "IS4228 Information Technologies in Financial Services", mc: 4, inserted: false },
+                { mod: "IS4302", name: "IS4302 Blockchain and Distributed Ledger Technologies ", mc: 4, inserted: false }
+            ],
             y1s1: [
                 { mod: "", move: false, index: 0 },
                 { mod: "BT1101", move: true, index: 1 },
@@ -51,14 +90,13 @@ export default {
             ],
             y3s1: [
                 { mod: "", move: false, index: 17 },
-                { mod: "IS3103", move: true, index: 18 }
+                { mod: "MKT1705X", move: true, index: 18 }
             ],
             y3s2: [
                 { mod: "", move: false, index: 19 },
-                { mod: "MKT1705X", move: true, index: 20 }
             ],
-            y4s1: [{ mod: "", move: false, index: 21 },],
-            y4s2: [{ mod: "", move: false, index: 22 },],
+            y4s1: [{ mod: "", move: false, index: 20 },],
+            y4s2: [{ mod: "", move: false, index: 21 },],
         };
     },
     computed: {
