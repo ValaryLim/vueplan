@@ -1,14 +1,16 @@
 <html>
     <head>
-
     </head>
     <body>
+        <div class="row">
+            <h2 id="title">Academic Plan</h2>
+        </div>
         <div class="row">
             <div class="col-1">
                 <draggable
                     :list="y1s1" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header">
+                    <div slot="header" class="header">
                         <h6>Y1S1</h6>
                     </div>
                     <div class="list-group-item item" v-for="element in sorted_y1s1" :key="element.mod">
@@ -25,7 +27,7 @@
                 <draggable
                     :list="y1s2" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header">
+                    <div slot="header" class="header">
                         <h6>Y1S2</h6>
                     </div>
                     <div class="list-group-item item" v-for="element in sorted_y1s2" :key="element.mod">
@@ -42,7 +44,7 @@
                 <draggable
                     :list="y2s1" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header">
+                    <div slot="header" class="header">
                         <h6>Y2S1</h6>
                     </div>
                     <div class="list-group-item item" v-for="element in sorted_y2s1" :key="element.mod">
@@ -59,7 +61,7 @@
                 <draggable
                     :list="y2s2" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header">
+                    <div slot="header" class="header">
                         <h6>Y2S2</h6>
                     </div>
                     <div class="list-group-item item" v-for="element in sorted_y2s2" :key="element.mod">
@@ -76,7 +78,7 @@
                 <draggable
                     :list="y3s1" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header">
+                    <div slot="header" class="header">
                         <h6>Y3S1</h6>
                     </div>
                     <div class="list-group-item item" v-for="element in sorted_y3s1" :key="element.mod">
@@ -93,7 +95,7 @@
                 <draggable
                     :list="y3s2" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header">
+                    <div slot="header" class="header">
                         <h6>Y3S2</h6>
                     </div>
                     <div class="list-group-item item" v-for="element in sorted_y3s2" :key="element.mod">
@@ -110,7 +112,7 @@
                 <draggable
                     :list="y4s1" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header">
+                    <div slot="header" class="header">
                         <h6>Y4S1</h6>
                     </div>
                     <div class="list-group-item item" v-for="element in sorted_y4s1" :key="element.mod">
@@ -127,7 +129,7 @@
                 <draggable
                     :list="y4s2" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header">
+                    <div slot="header" class="header">
                         <h6>Y4S2</h6>
                     </div>
                     <div class="list-group-item item" v-for="element in sorted_y4s2" :key="element.mod">
@@ -142,19 +144,19 @@
             </div>
             
             <!-- add module button -->
-            <div class="col-2 add_feature">
+            <div class="col-4 add_feature">
                 <p>Module Code:</p>
-                    <form>
-                        <input type="text" list="valid_modules" v-model="add_module_code"/>
-                        <datalist id="valid_modules">
-                            <option v-for="option in valid_modules" v-bind:value="option.mod">
-                                {{ option.name }}
-                            </option>
-                        </datalist>
-                    </form>
-                <button class="bth btn-secondary" @click = "add_module">
-                    Add
-                </button>
+                <form>
+                    <input type="text" list="valid_modules" v-model="add_module_code"/>
+                    <datalist id="valid_modules">
+                        <option v-for="option in valid_modules" v-bind:value="option.mod">
+                            {{ option.name }}
+                        </option>
+                    </datalist>   
+                    <button class="btn btn-secondary" @click = "add_module">
+                        Add
+                    </button>                 
+                </form>
             </div>
         </div>
     </body>

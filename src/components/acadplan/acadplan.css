@@ -4,6 +4,10 @@
     margin-left: 5px;
 }
 
+#title {
+    margin-left: 5px;
+}
+
 .col-1 {
     margin: 0px;
     padding: 2px;
@@ -23,7 +27,7 @@
 }
 
 .list-group {
-    background-color: grey;
+    background-color: #B9CCED;
 }
 
 .handle {
@@ -38,4 +42,18 @@
     cursor: grabbing;
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
+}
+
+.header {
+    text-align: center;
+    height: 50px;
+    padding-top: 15px;
+}
+
+.add_feature {
+    align-items: flex-start;
+}
+
+.btn {
+    margin-left: 10px;
 }
