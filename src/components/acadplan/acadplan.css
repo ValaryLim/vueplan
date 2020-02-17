@@ -11,7 +11,11 @@
 
 .list-group-item.item {
     font-size: 10px;
-    text-align: center;
+    text-align: left;
+}
+
+.list-group-item .module_code {
+    font-weight: bold;
 }
 
 .close {

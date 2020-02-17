@@ -66,39 +66,39 @@ export default {
                 { mod: "IS4302", name: "IS4302 Blockchain and Distributed Ledger Technologies ", mc: 4, inserted: false }
             ],
             y1s1: [
-                { mod: "", move: false, index: 0 },
-                { mod: "BT1101", move: true, index: 1 },
-                { mod: "CS1010S", move: true, index: 2 },
-                { mod: "MA1521", move: true, index: 3 },
-                { mod: "IS1103", move: true, index: 4 }
+                { mod: "", mc: 0, move: false, index: 0 },
+                { mod: "BT1101", mc: 4, move: true, index: 1 },
+                { mod: "CS1010S", mc: 4, move: true, index: 2 },
+                { mod: "MA1521", mc: 4, move: true, index: 3 },
+                { mod: "IS1103", mc: 4, move: true, index: 4 }
             ], 
             y1s2: [
-                { mod: "", move: false, index: 5 },
-                { mod: "BT2101", move: true, index: 6 },
-                { mod: "CS2030", move: true, index: 7 },
-                { mod: "MA1101R", move: true, index: 8 },
-                { mod: "EC1301", move: true, index: 9 }
+                { mod: "", mc: 0, move: false, index: 5 },
+                { mod: "BT2101", mc: 4, move: true, index: 6 },
+                { mod: "CS2030", mc: 4, move: true, index: 7 },
+                { mod: "MA1101R", mc: 4, move: true, index: 8 },
+                { mod: "EC1301", mc: 4, move: true, index: 9 }
             ],
             y2s1: [
-                { mod: "", move: false, index: 10 }, 
-                { mod: "BT2102", move: true, index: 11 }, 
-                { mod: "CS2040", move: true, index: 12 },
-                { mod: "ST2334", move: true, index: 13 }
+                { mod: "", mc: 0, move: false, index: 10 }, 
+                { mod: "BT2102", mc: 4, move: true, index: 11 }, 
+                { mod: "CS2040", mc: 4, move: true, index: 12 },
+                { mod: "ST2334", mc: 4, move: true, index: 13 }
             ], 
             y2s2: [
-                { mod: "", move: false, index: 14 }, 
-                { mod: "BT3102", move: true, index: 15 }, 
-                { mod: "BT3103", move: true, index: 16 },
+                { mod: "", mc: 0, move: false, index: 14 }, 
+                { mod: "BT3102", mc: 4, move: true, index: 15 }, 
+                { mod: "BT3103", mc: 4, move: true, index: 16 },
             ],
             y3s1: [
-                { mod: "", move: false, index: 17 },
-                { mod: "MKT1705X", move: true, index: 18 }
+                { mod: "", mc: 0,move: false, index: 17 },
+                { mod: "MKT1705X", mc: 4, move: true, index: 18 }
             ],
             y3s2: [
-                { mod: "", move: false, index: 19 },
+                { mod: "", mc: 0, move: false, index: 19 },
             ],
-            y4s1: [{ mod: "", move: false, index: 20 },],
-            y4s2: [{ mod: "", move: false, index: 21 },],
+            y4s1: [{ mod: "", mc: 0, move: false, index: 20 },],
+            y4s2: [{ mod: "", mc: 0, move: false, index: 21 },],
         };
     },
     computed: {
@@ -151,7 +151,7 @@ export default {
                 } else if (module === this.inserted_module) {
                     alert("Error: Module is already in academic plan"); 
                 } else {
-                    this.y1s1.push({ mod: module.mod, move: true, index: index }); 
+                    this.y1s1.push({ mod: module.mod, mc: module.mc, move: true, index: index }); 
                     index++;
                 }
             } else {
