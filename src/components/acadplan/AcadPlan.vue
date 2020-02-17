@@ -137,9 +137,14 @@ export default {
     },
     methods: {
         add_module: function() {
-            // remove whitespace in module name
+            // remove whitespace and convert module name to lowercase
             var module_name = this.add_module_code.trim().toLowerCase();
+
+            // clear module slot after use
+            this.add_module_code = ""; 
+
             if (module_name !== "") {
+                // check valid module
                 var module = this.check_valid_module(module_name);
                 if (module === this.invalid_module) {
                     alert("Error: Module is invalid");
@@ -155,10 +160,11 @@ export default {
         },
         check_valid_module: function(module_name) {
             for (var i = 0; i < this.valid_modules.length; i++) {
-                // check if module exists
+                // check if module exists in the valid_modules list
                 if (this.valid_modules[i].name.toLowerCase().includes(module_name)) {
-                    // check if module is inserted
+                    // check if module is already inserted
                     if (this.valid_modules[i].inserted === false) {
+                        this.valid_modules[i].inserted = true;
                         return this.valid_modules[i];
                     } else {
                         return this.inserted_module;

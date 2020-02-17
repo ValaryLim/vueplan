@@ -124,9 +124,18 @@
                     </div>
                 </draggable>
             </div>
-    
-            <div class="col-2">
-                <p>Module Code: <input type="text" v-model="add_module_code"/></p>
+            
+            <!-- add module button -->
+            <div class="col-2 add_feature">
+                <p>Module Code:</p>
+                    <form>
+                        <input type="text" list="valid_modules" v-model="add_module_code"/>
+                        <datalist id="valid_modules">
+                            <option v-for="option in valid_modules" v-bind:value="option.mod">
+                                {{ option.name }}
+                            </option>
+                        </datalist>
+                    </form>
                 <button class="bth btn-secondary" @click = "add_module">
                     Add
                 </button>
