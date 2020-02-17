@@ -167,7 +167,7 @@ export default {
             }
             return this.invalid_module;
         },
-        delete_module: function(data_name, index) {
+        delete_module: function(data_name, index, code) {
             if (data_name === "y1s1") {
                 this.y1s1 = this.y1s1.filter((event) => event.index !== index);
             } else if (data_name === "y1s2") {
@@ -185,6 +185,12 @@ export default {
             } else if (data_name === "y4s2") {
                 this.y4s2 = this.y4s2.filter((event) => event.index !== index);
             } 
+
+            for (var i = 0; i < this.valid_modules.length; i++) {
+                if (this.valid_modules[i].mod === code) {
+                    this.valid_modules[i].inserted = false; 
+                }
+            }
         }, 
         sort_modules: function(data) {
             data.sort(this.compare_module);

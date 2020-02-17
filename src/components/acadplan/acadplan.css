@@ -52,8 +52,20 @@
 
 .add_feature {
     align-items: flex-start;
+<<<<<<< HEAD
 }
 
 .btn {
     margin-left: 10px;
+=======
+    vertical-align: top;
+}
+
+.btn {
+    margin-top: 35px;
+}
+
+.input {
+    width: 100%
+>>>>>>> temp
 }
