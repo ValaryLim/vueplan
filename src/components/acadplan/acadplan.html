@@ -12,7 +12,7 @@
                         <h6>Y1S1</h6>
                     </div>
                     <div class="list-group-item item" v-for="element in sorted_y1s1" :key="element.mod">
-                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y1s1', element.index)">
+                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y1s1', element.index, element.mod)">
                             <font-awesome-icon icon="times" />
                         </button>
                         <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
