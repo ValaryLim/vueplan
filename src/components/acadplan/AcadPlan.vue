@@ -1,4 +1,3 @@
-/* eslint-disable vue/no-side-effects-in-computed-properties */
 <template src="./acadplan.html"></template>
 
 <style src="./acadplan.css"></style>
@@ -8,11 +7,8 @@ import draggable from "vuedraggable";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faTimes, faAlignJustify } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
 library.add(faTimes, faAlignJustify)
-
 var index = 22;
-
 export default {
     name: "App",
     display: "Academic Planner",
@@ -139,10 +135,8 @@ export default {
         add_module: function() {
             // remove whitespace and convert module name to lowercase
             var module_name = this.add_module_code.trim().toLowerCase();
-
             // clear module slot after use
             this.add_module_code = ""; 
-
             if (module_name !== "") {
                 // check valid module
                 var module = this.check_valid_module(module_name);
