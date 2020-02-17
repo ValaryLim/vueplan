@@ -104,23 +104,23 @@ export default {
                 index++;
             }
         },
-        delete_module: function(data_name, module_name) {
+        delete_module: function(data_name, index) {
             if (data_name === "y1s1") {
-                this.y1s1 = this.y1s1.filter((event) => event.mod !== module_name);
+                this.y1s1 = this.y1s1.filter((event) => event.index !== index);
             } else if (data_name === "y1s2") {
-                this.y1s2 = this.y1s2.filter((event) => event.mod !== module_name);
+                this.y1s2 = this.y1s2.filter((event) => event.index !== index);
             } else if (data_name === "y2s1") {
-                this.y2s1 = this.y2s1.filter((event) => event.mod !== module_name);
+                this.y2s1 = this.y2s1.filter((event) => event.index !== index);
             } else if (data_name === "y2s2") {
-                this.y2s2 = this.y2s2.filter((event) => event.mod !== module_name);
+                this.y2s2 = this.y2s2.filter((event) => event.index !== index);
             } else if (data_name === "y3s1") {
-                this.y3s1 = this.y3s1.filter((event) => event.mod !== module_name);
+                this.y3s1 = this.y3s1.filter((event) => event.index !== index);
             } else if (data_name === "y3s2") {
-                this.y3s2 = this.y3s2.filter((event) => event.mod !== module_name);
+                this.y3s2 = this.y3s2.filter((event) => event.index !== index);
             } else if (data_name === "y4s1") {
-                this.y4s1 = this.y4s1.filter((event) => event.mod !== module_name);
+                this.y4s1 = this.y4s1.filter((event) => event.index !== index);
             } else if (data_name === "y4s2") {
-                this.y4s2 = this.y4s2.filter((event) => event.mod !== module_name);
+                this.y4s2 = this.y4s2.filter((event) => event.index !== index);
             } 
         }, 
         sort_modules: function(data) {
