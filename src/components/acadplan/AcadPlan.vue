@@ -206,9 +206,6 @@ export default {
                 return 1;
             }
             return 0;
-        }, 
-        check_move: function(element) {
-            return (element.move === true);
         }
     },
 }
