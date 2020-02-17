@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-1">
                 <draggable
-                    :list="y1s1" class="list-group" draggable=".item" group="a"
+                    :list="y1s1" class="list-group" handle=".handle" group="a"
                 >
                     <div slot="header">
                         <h6>Y1S1</h6>
@@ -15,15 +15,15 @@
                         <button type="button" class="close" v-if="element.move===true" @click="delete_module('y1s1', element.index)">
                             <font-awesome-icon icon="times" />
                         </button>
-                        <span class="text module_code" v-if="element.move===true">{{ element.mod }}</span>
+                        <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
                         <br>
-                        <span class="text" v-if="element.move===true">{{ element.mc }} MCs</span>
+                        <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
             <div class="col-1">
                 <draggable
-                    :list="y1s2" class="list-group" draggable=".item" group="a"
+                    :list="y1s2" class="list-group" handle=".handle" group="a"
                 >
                     <div slot="header">
                         <h6>Y1S2</h6>
@@ -32,15 +32,15 @@
                         <button type="button" class="close" v-if="element.move===true" @click="delete_module('y1s2', element.index)">
                             <font-awesome-icon icon="times" />
                         </button>
-                        <span class="text module_code" v-if="element.move===true">{{ element.mod }}</span>
+                        <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
                         <br>
-                        <span class="text" v-if="element.move===true">{{ element.mc }} MCs</span>
+                        <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
             <div class="col-1">
                 <draggable
-                    :list="y2s1" class="list-group" draggable=".item" group="a"
+                    :list="y2s1" class="list-group" handle=".handle" group="a"
                 >
                     <div slot="header">
                         <h6>Y2S1</h6>
@@ -49,15 +49,15 @@
                         <button type="button" class="close" v-if="element.move===true" @click="delete_module('y2s1', element.index)">
                             <font-awesome-icon icon="times" />
                         </button>
-                        <span class="text module_code" v-if="element.move===true">{{ element.mod }}</span>
+                        <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
                         <br>
-                        <span class="text" v-if="element.move===true">{{ element.mc }} MCs</span>
+                        <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
             <div class="col-1">
                 <draggable
-                    :list="y2s2" class="list-group" draggable=".item" group="a"
+                    :list="y2s2" class="list-group" handle=".handle" group="a"
                 >
                     <div slot="header">
                         <h6>Y2S2</h6>
@@ -66,15 +66,15 @@
                         <button type="button" class="close" v-if="element.move===true" @click="delete_module('y2s2', element.index)">
                             <font-awesome-icon icon="times" />
                         </button>
-                        <span class="text module_code" v-if="element.move===true">{{ element.mod }}</span>
+                        <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
                         <br>
-                        <span class="text" v-if="element.move===true">{{ element.mc }} MCs</span>
+                        <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
             <div class="col-1">
                 <draggable
-                    :list="y3s1" class="list-group" draggable=".item" group="a"
+                    :list="y3s1" class="list-group" handle=".handle" group="a"
                 >
                     <div slot="header">
                         <h6>Y3S1</h6>
@@ -83,15 +83,15 @@
                         <button type="button" class="close" v-if="element.move===true" @click="delete_module('y3s1', element.index)">
                             <font-awesome-icon icon="times" />
                         </button>
-                        <span class="text module_code" v-if="element.move===true">{{ element.mod }}</span>
+                        <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
                         <br>
-                        <span class="text" v-if="element.move===true">{{ element.mc }} MCs</span>
+                        <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
             <div class="col-1">
                 <draggable
-                    :list="y3s2" class="list-group" draggable=".item" group="a"
+                    :list="y3s2" class="list-group" handle=".handle" group="a"
                 >
                     <div slot="header">
                         <h6>Y3S2</h6>
@@ -100,15 +100,15 @@
                         <button type="button" class="close" v-if="element.move===true" @click="delete_module('y3s2', element.index)">
                             <font-awesome-icon icon="times" />
                         </button>
-                        <span class="text module_code" v-if="element.move===true">{{ element.mod }}</span>
+                        <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
                         <br>
-                        <span class="text" v-if="element.move===true">{{ element.mc }} MCs</span>
+                        <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
             <div class="col-1">
                 <draggable
-                    :list="y4s1" class="list-group" draggable=".item" group="a"
+                    :list="y4s1" class="list-group" handle=".handle" group="a"
                 >
                     <div slot="header">
                         <h6>Y4S1</h6>
@@ -117,15 +117,15 @@
                         <button type="button" class="close" v-if="element.move===true" @click="delete_module('y4s1', element.index)">
                             <font-awesome-icon icon="times" />
                         </button>
-                        <span class="text module_code" v-if="element.move===true">{{ element.mod }}</span>
+                        <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
                         <br>
-                        <span class="text" v-if="element.move===true">{{ element.mc }} MCs</span>
+                        <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
             <div class="col-1">
                 <draggable
-                    :list="y4s2" class="list-group" draggable=".item" group="a"
+                    :list="y4s2" class="list-group" handle=".handle" group="a"
                 >
                     <div slot="header">
                         <h6>Y4S2</h6>
@@ -134,9 +134,9 @@
                         <button type="button" class="close" v-if="element.move===true" @click="delete_module('y4s2', element.index)">
                             <font-awesome-icon icon="times" />
                         </button>
-                        <span class="text module_code" v-if="element.move===true">{{ element.mod }}</span>
+                        <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
                         <br>
-                        <span class="text" v-if="element.move===true">{{ element.mc }} MCs</span>
+                        <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
