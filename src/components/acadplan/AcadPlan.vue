@@ -102,43 +102,34 @@ export default {
     computed: {
         sorted_y1s1: function() {
             this.sort_modules(this.acad_plan['y1s1']);
-            // this.sort_modules('y1s1');
-            console.log(this.acad_plan['y1s1'], "COMputed");
             return this.acad_plan['y1s1'];
         },
         sorted_y1s2: function() {
             this.sort_modules(this.acad_plan['y1s2']);
-            // this.sort_modules('y1s2');
             return this.acad_plan['y1s2'];
         },
         sorted_y2s1: function() {
             this.sort_modules(this.acad_plan['y2s1']);
-            // this.sort_modules('y2s1');
             return this.acad_plan['y2s1'];
         },
         sorted_y2s2: function() {
             this.sort_modules(this.acad_plan['y2s2']);
-            // this.sort_modules('y2s2')
             return this.acad_plan['y2s2'];
         },
         sorted_y3s1: function() {
             this.sort_modules(this.acad_plan['y3s1']);
-            // this.sort_modules('y3s1');
             return this.acad_plan['y3s1'];
         },
         sorted_y3s2: function() {
             this.sort_modules(this.acad_plan['y3s2']);
-            // this.sort_modules('y3s2');
             return this.acad_plan['y3s2'];
         },
         sorted_y4s1: function() {
             this.sort_modules(this.acad_plan['y4s1']);
-            // this.sort_modules('y4s1');
             return this.acad_plan['y4s1'];
         },
         sorted_y4s2: function() {
             this.sort_modules(this.acad_plan['y4s2']);
-            // this.sort_modules('y4s2');
             return this.acad_plan['y4s2'];
         },
     },
@@ -180,8 +171,6 @@ export default {
         },
         delete_module: function(data_name, element) {
             this.acad_plan[data_name] = this.acad_plan[data_name].filter((event) => {
-                console.log(event.index !== element.index, "DELETION")
-                console.log(event, "EVENT")
                 return event.index !== element.index   
             });            
             // update valid_modules and change inserted attribute to false
@@ -193,7 +182,6 @@ export default {
         }, 
         sort_modules: function(data) {
             data.sort(this.compare_module);
-            console.log(data, "SORT_MODULES");
         },
         compare_module: function(a, b) {
             if (a.move === false) { 
