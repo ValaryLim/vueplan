@@ -1,7 +1,9 @@
 new Vue({
   el: "#app",
   data: {
-  	pu: null,
+    courses: ['Business Analytics', 'Economics'],
+    pus: ['Technical University of Denmark', 'Technical University of Munich', 'Georgia Institute of Technology'],
+
     modules: [  
 
       { pu: "Technical University of Denmark", course: "Business Analytics", 

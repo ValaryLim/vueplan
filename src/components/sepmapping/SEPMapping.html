@@ -11,6 +11,22 @@
     <h2>SEP Module Mappings </h2>
     
     <div id="app">
+      <!-- Filter by PU -->
+      <label for="Pus">PU: </label>
+      <select v-model='pus' multiple>
+        <option>Technical University of Denmark</option>
+        <option>Technical University of Munich</option>
+        <option>Georgia Institute of Technology</option>
+      </select>
+      <br><br>
+      <!-- Filter by Course -->
+      <label for="Courses">Courses: </label>
+      <select v-model='courses' multiple>
+        <option>Business Analytics</option>
+        <option>Economics</option>
+      </select>
+      <br> <br>
+
       <table>
         <!-- table header -->
         <thead>
@@ -28,7 +44,7 @@
 
           <!-- table body -->
         <tbody>
-          <tr v-for="module in modules">
+          <tr v-for="module in modules" v-show="courses.includes(module.course) && pus.includes(module.pu)">
             <td>{{module.pu}}</td>
             <td>{{module.course}}</td>
             <td>{{module.nusModuleCode}}</td>
