@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>vueplan SEP Page</title>
+  </head>
+  
+  <body>
+    <h2>SEP Module Mappings </h2>
+    
+    <div id="app" >
+      <!-- Labels -->
+      <label for="Pus">Filter by PU and Course:</label>
+      <label for="Courses"></label>
+      <br>
+
+      <!-- Filter by PU -->
+      <select v-model='pus' multiple>
+        <option>Technical University of Denmark</option>
+        <option>Technical University of Munich</option>
+        <option>Georgia Institute of Technology</option>
+      </select>
+
+      <!-- Filter by Course -->
+      <select v-model='courses' multiple>
+        <option>Business Analytics</option>
+        <option>Economics</option>
+      </select>
+      <br> <br>
+
+      <table :modules="modules" pus="pus" courses="courses">
+        <!-- table header -->
+        <thead>
+          <tr>
+            <th>Partner University</th>
+            <th>Course</th>
+            <th>NUS Module Code</th>
+            <th>NUS Module Title</th>
+            <th>MCs</th>
+            <th>PU Module Code</th>
+            <th>PU Module Title</th>
+            <th>PU MCs</th>
+          </tr>
+        </thead>
+
+          <!-- table body -->
+        <tbody :modules="modules" pus="pus" courses="courses">
+          <tr v-for="module in modules" v-show="courses.includes(module.course) && pus.includes(module.pu)">
+            <td>{{module.pu}}</td>
+            <td>{{module.course}}</td>
+            <td>{{module.nusModuleCode}}</td>
+            <td>{{module.nusModuleTitle}}</td>
+            <td>{{module.mcs}}</td>
+            <td>{{module.puModuleCode}}</td>
+            <td>{{module.puModuleTitle}}</td>
+            <td>{{module.puMcs}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
