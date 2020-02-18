@@ -4,6 +4,10 @@
     margin-left: 5px;
 }
 
+#title {
+    margin-left: 5px;
+}
+
 .col-1 {
     margin: 0px;
     padding: 2px;
@@ -11,7 +15,11 @@
 
 .list-group-item.item {
     font-size: 10px;
-    text-align: center;
+    text-align: left;
+}
+
+.list-group-item .module_code {
+    font-weight: bold;
 }
 
 .close {
@@ -19,5 +27,38 @@
 }
 
 .list-group {
-    background-color: grey;
+    background-color: #B9CCED;
+}
+
+.handle {
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+
+ /* Apply a "closed-hand" cursor during drag operation. */
+.handle:active {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+.header {
+    text-align: center;
+    height: 50px;
+    padding-top: 15px;
+}
+
+.add_feature {
+    align-items: flex-start;
+    vertical-align: top;
+}
+
+.btn {
+    margin-top: 35px;
+}
+
+.input {
+    width: 100%
 }
