@@ -1,133 +1,162 @@
 <html>
     <head>
-
     </head>
     <body>
         <div class="row">
+            <h2 id="title">Academic Plan</h2>
+        </div>
+        <div class="row">
             <div class="col-1">
                 <draggable
-                    :list="y1s1" class="list-group" draggable=".item" group="a"
+                    :list="y1s1" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header">
+                    <div slot="header" class="header">
                         <h6>Y1S1</h6>
                     </div>
                     <div class="list-group-item item" v-for="element in sorted_y1s1" :key="element.mod">
-                        <span class="text">{{ element.mod }}</span>
-                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y1s1', element.mod)">
+                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y1s1', element.index, element.mod)">
                             <font-awesome-icon icon="times" />
                         </button>
+                        <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
+                        <br>
+                        <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
             <div class="col-1">
                 <draggable
-                    :list="y1s2" class="list-group" draggable=".item" group="a"
+                    :list="y1s2" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header">
+                    <div slot="header" class="header">
                         <h6>Y1S2</h6>
                     </div>
                     <div class="list-group-item item" v-for="element in sorted_y1s2" :key="element.mod">
-                        <span class="text">{{ element.mod }}</span>
-                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y1s2', element.mod)">
+                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y1s2', element.index)">
                             <font-awesome-icon icon="times" />
                         </button>
+                        <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
+                        <br>
+                        <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
             <div class="col-1">
                 <draggable
-                    :list="y2s1" class="list-group" draggable=".item" group="a"
+                    :list="y2s1" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header">
+                    <div slot="header" class="header">
                         <h6>Y2S1</h6>
                     </div>
                     <div class="list-group-item item" v-for="element in sorted_y2s1" :key="element.mod">
-                        <span class="text">{{ element.mod }}</span>
-                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y2s1', element.mod)">
+                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y2s1', element.index)">
                             <font-awesome-icon icon="times" />
                         </button>
+                        <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
+                        <br>
+                        <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
             <div class="col-1">
                 <draggable
-                    :list="y2s2" class="list-group" draggable=".item" group="a"
+                    :list="y2s2" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header">
+                    <div slot="header" class="header">
                         <h6>Y2S2</h6>
                     </div>
                     <div class="list-group-item item" v-for="element in sorted_y2s2" :key="element.mod">
-                        <span class="text">{{ element.mod }}</span>
-                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y2s2', element.mod)">
+                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y2s2', element.index)">
                             <font-awesome-icon icon="times" />
                         </button>
+                        <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
+                        <br>
+                        <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
             <div class="col-1">
                 <draggable
-                    :list="y3s1" class="list-group" draggable=".item" group="a"
+                    :list="y3s1" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header">
+                    <div slot="header" class="header">
                         <h6>Y3S1</h6>
                     </div>
                     <div class="list-group-item item" v-for="element in sorted_y3s1" :key="element.mod">
-                        <span class="text">{{ element.mod }}</span>
-                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y3s1', element.mod)">
+                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y3s1', element.index)">
                             <font-awesome-icon icon="times" />
                         </button>
+                        <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
+                        <br>
+                        <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
             <div class="col-1">
                 <draggable
-                    :list="y3s2" class="list-group" draggable=".item" group="a"
+                    :list="y3s2" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header">
+                    <div slot="header" class="header">
                         <h6>Y3S2</h6>
                     </div>
                     <div class="list-group-item item" v-for="element in sorted_y3s2" :key="element.mod">
-                        <span class="text">{{ element.mod }}</span>
-                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y3s2', element.mod)">
+                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y3s2', element.index)">
                             <font-awesome-icon icon="times" />
                         </button>
+                        <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
+                        <br>
+                        <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
             <div class="col-1">
                 <draggable
-                    :list="y4s1" class="list-group" draggable=".item" group="a"
+                    :list="y4s1" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header">
+                    <div slot="header" class="header">
                         <h6>Y4S1</h6>
                     </div>
                     <div class="list-group-item item" v-for="element in sorted_y4s1" :key="element.mod">
-                        <span class="text">{{ element.mod }}</span>
-                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y4s1', element.mod)">
+                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y4s1', element.index)">
                             <font-awesome-icon icon="times" />
                         </button>
+                        <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
+                        <br>
+                        <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
             <div class="col-1">
                 <draggable
-                    :list="y4s2" class="list-group" draggable=".item" group="a"
+                    :list="y4s2" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header">
+                    <div slot="header" class="header">
                         <h6>Y4S2</h6>
                     </div>
                     <div class="list-group-item item" v-for="element in sorted_y4s2" :key="element.mod">
-                        <span class="text">{{ element.mod }}</span>
-                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y4s2', element.mod)">
+                        <button type="button" class="close" v-if="element.move===true" @click="delete_module('y4s2', element.index)">
                             <font-awesome-icon icon="times" />
                         </button>
+                        <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
+                        <br>
+                        <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
-    
-            <div class="col-2">
-                <p>Module Code: <input type="text" v-model="add_module_code"/></p>
-                <button class="bth btn-secondary" @click = "add_module">
+            
+            <!-- add module button -->
+            <div class="col-2 add_feature">
+                <p>Module Code:</p>
+                    <form>
+                        <input type="text" class="input" list="valid_modules" v-model="add_module_code"/>
+                        <datalist id="valid_modules">
+                            <option v-for="option in valid_modules" v-bind:value="option.mod">
+                                {{ option.name }}
+                            </option>
+                        </datalist>
+                    </form>
+            </div>
+            <div class="col-1">
+                <button class="btn btn-secondary" @click = "add_module">
                     Add
                 </button>
             </div>
