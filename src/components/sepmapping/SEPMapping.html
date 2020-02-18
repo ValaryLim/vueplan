@@ -3,30 +3,32 @@
 <html>
   <head>
     <title>vueplan SEP Page</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   </head>
   
   <body>
     <h2>SEP Module Mappings </h2>
     
     <div id="app" >
+      <!-- Labels -->
+      <label for="Pus">Filter by PU and Course:</label>
+      <label for="Courses"></label>
+      <br>
+
       <!-- Filter by PU -->
-      <label for="Pus">PU: </label>
       <select v-model='pus' multiple>
         <option>Technical University of Denmark</option>
         <option>Technical University of Munich</option>
         <option>Georgia Institute of Technology</option>
       </select>
-      <br><br>
+
       <!-- Filter by Course -->
-      <label for="Courses">Courses: </label>
       <select v-model='courses' multiple>
         <option>Business Analytics</option>
         <option>Economics</option>
       </select>
       <br> <br>
 
-      <table :modules="modules" :pus="pus" :courses="courses">
+      <table :modules="modules" pus="pus" courses="courses">
         <!-- table header -->
         <thead>
           <tr>
@@ -42,7 +44,7 @@
         </thead>
 
           <!-- table body -->
-        <tbody>
+        <tbody :modules="modules" pus="pus" courses="courses">
           <tr v-for="module in modules" v-show="courses.includes(module.course) && pus.includes(module.pu)">
             <td>{{module.pu}}</td>
             <td>{{module.course}}</td>
