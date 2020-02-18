@@ -1,0 +1,40 @@
+/* table generator */
+
+table {
+  border-collapse:collapse;
+  border-spacing:0;
+  border-color:#aaa;
+}
+
+/* table header */
+th {
+  font-family:Arial, sans-serif;
+  font-size:14px;
+  font-weight:normal;
+  padding:10px 5px;
+  border-style:solid;
+  border-width:0px;
+  overflow:hidden;
+  word-break:normal;
+  border-color:#aaa;
+  color:#fff;
+  background-color:#f38630;
+  text-align:left;
+  vertical-align:middle;
+}
+
+/* table data */
+td, p { 
+  font-family:Arial, sans-serif;
+  font-size:14px;
+  padding:10px 5px;
+  border-style:solid;
+  border-width:0px;
+  overflow:hidden;
+  word-break:normal;
+  border-color:#aaa;
+  color:#333;
+  background-color:#fff;
+}
+
+
