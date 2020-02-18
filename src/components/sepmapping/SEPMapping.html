@@ -9,7 +9,7 @@
   <body>
     <h2>SEP Module Mappings </h2>
     
-    <div id="app">
+    <div id="app" >
       <!-- Filter by PU -->
       <label for="Pus">PU: </label>
       <select v-model='pus' multiple>
@@ -26,7 +26,7 @@
       </select>
       <br> <br>
 
-      <table>
+      <table :modules="modules" :pus="pus" :courses="courses">
         <!-- table header -->
         <thead>
           <tr>
