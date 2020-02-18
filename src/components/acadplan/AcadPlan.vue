@@ -61,74 +61,76 @@ export default {
                 { mod: "IS4228", name: "IS4228 Information Technologies in Financial Services", mc: 4, inserted: false },
                 { mod: "IS4302", name: "IS4302 Blockchain and Distributed Ledger Technologies ", mc: 4, inserted: false }
             ],
-            y1s1: [
-                { mod: "", mc: 0, move: false, index: 0 },
-                { mod: "BT1101", mc: 4, move: true, index: 1 },
-                { mod: "CS1010S", mc: 4, move: true, index: 2 },
-                { mod: "MA1521", mc: 4, move: true, index: 3 },
-                { mod: "IS1103", mc: 4, move: true, index: 4 }
-            ], 
-            y1s2: [
-                { mod: "", mc: 0, move: false, index: 5 },
-                { mod: "BT2101", mc: 4, move: true, index: 6 },
-                { mod: "CS2030", mc: 4, move: true, index: 7 },
-                { mod: "MA1101R", mc: 4, move: true, index: 8 },
-                { mod: "EC1301", mc: 4, move: true, index: 9 }
-            ],
-            y2s1: [
-                { mod: "", mc: 0, move: false, index: 10 }, 
-                { mod: "BT2102", mc: 4, move: true, index: 11 }, 
-                { mod: "CS2040", mc: 4, move: true, index: 12 },
-                { mod: "ST2334", mc: 4, move: true, index: 13 }
-            ], 
-            y2s2: [
-                { mod: "", mc: 0, move: false, index: 14 }, 
-                { mod: "BT3102", mc: 4, move: true, index: 15 }, 
-                { mod: "BT3103", mc: 4, move: true, index: 16 },
-            ],
-            y3s1: [
-                { mod: "", mc: 0,move: false, index: 17 },
-                { mod: "MKT1705X", mc: 4, move: true, index: 18 }
-            ],
-            y3s2: [
-                { mod: "", mc: 0, move: false, index: 19 },
-            ],
-            y4s1: [{ mod: "", mc: 0, move: false, index: 20 },],
-            y4s2: [{ mod: "", mc: 0, move: false, index: 21 },],
+            acad_plan: {
+                y1s1: [
+                    { mod: "", mc: 0, move: false, index: 0 },
+                    { mod: "BT1101", mc: 4, move: true, index: 1 },
+                    { mod: "CS1010S", mc: 4, move: true, index: 2 },
+                    { mod: "MA1521", mc: 4, move: true, index: 3 },
+                    { mod: "IS1103", mc: 4, move: true, index: 4 }
+                ], 
+                y1s2: [
+                    { mod: "", mc: 0, move: false, index: 5 },
+                    { mod: "BT2101", mc: 4, move: true, index: 6 },
+                    { mod: "CS2030", mc: 4, move: true, index: 7 },
+                    { mod: "MA1101R", mc: 4, move: true, index: 8 },
+                    { mod: "EC1301", mc: 4, move: true, index: 9 }
+                ],
+                y2s1: [
+                    { mod: "", mc: 0, move: false, index: 10 }, 
+                    { mod: "BT2102", mc: 4, move: true, index: 11 }, 
+                    { mod: "CS2040", mc: 4, move: true, index: 12 },
+                    { mod: "ST2334", mc: 4, move: true, index: 13 }
+                ], 
+                y2s2: [
+                    { mod: "", mc: 0, move: false, index: 14 }, 
+                    { mod: "BT3102", mc: 4, move: true, index: 15 }, 
+                    { mod: "BT3103", mc: 4, move: true, index: 16 },
+                ],
+                y3s1: [
+                    { mod: "", mc: 0,move: false, index: 17 },
+                    { mod: "MKT1705X", mc: 4, move: true, index: 18 }
+                ],
+                y3s2: [
+                    { mod: "", mc: 0, move: false, index: 19 },
+                ],
+                y4s1: [{ mod: "", mc: 0, move: false, index: 20 },],
+                y4s2: [{ mod: "", mc: 0, move: false, index: 21 },],
+                }
         };
     },
     computed: {
         sorted_y1s1: function() {
-            this.sort_modules(this.y1s1);
-            return this.y1s1;
+            this.sort_modules(this.acad_plan['y1s1']);
+            return this.acad_plan['y1s1'];
         },
         sorted_y1s2: function() {
-            this.sort_modules(this.y1s2);
-            return this.y1s2;
+            this.sort_modules(this.acad_plan['y1s2']);
+            return this.acad_plan['y1s2'];
         },
         sorted_y2s1: function() {
-            this.sort_modules(this.y2s1);
-            return this.y2s1;
+            this.sort_modules(this.acad_plan['y2s1']);
+            return this.acad_plan['y2s1'];
         },
         sorted_y2s2: function() {
-            this.sort_modules(this.y2s2);
-            return this.y2s2;
+            this.sort_modules(this.acad_plan['y2s2']);
+            return this.acad_plan['y2s2'];
         },
         sorted_y3s1: function() {
-            this.sort_modules(this.y3s1);
-            return this.y3s1;
+            this.sort_modules(this.acad_plan['y3s1']);
+            return this.acad_plan['y3s1'];
         },
         sorted_y3s2: function() {
-            this.sort_modules(this.y3s2);
-            return this.y3s2;
+            this.sort_modules(this.acad_plan['y3s2']);
+            return this.acad_plan['y3s2'];
         },
         sorted_y4s1: function() {
-            this.sort_modules(this.y4s1);
-            return this.y4s1;
+            this.sort_modules(this.acad_plan['y4s1']);
+            return this.acad_plan['y4s1'];
         },
         sorted_y4s2: function() {
-            this.sort_modules(this.y4s2);
-            return this.y4s2;
+            this.sort_modules(this.acad_plan['y4s2']);
+            return this.acad_plan['y4s2'];
         },
     },
     methods: {
@@ -145,7 +147,7 @@ export default {
                 } else if (module === this.inserted_module) {
                     alert("Error: Module is already in academic plan"); 
                 } else {
-                    this.y1s1.push({ mod: module.mod, mc: module.mc, move: true, index: index }); 
+                    this.acad_plan['y1s1'].push({ mod: module.mod, mc: module.mc, move: true, index: index }); 
                     index++;
                 }
             } else {
@@ -167,27 +169,13 @@ export default {
             }
             return this.invalid_module;
         },
-        delete_module: function(data_name, index, code) {
-            if (data_name === "y1s1") {
-                this.y1s1 = this.y1s1.filter((event) => event.index !== index);
-            } else if (data_name === "y1s2") {
-                this.y1s2 = this.y1s2.filter((event) => event.index !== index);
-            } else if (data_name === "y2s1") {
-                this.y2s1 = this.y2s1.filter((event) => event.index !== index);
-            } else if (data_name === "y2s2") {
-                this.y2s2 = this.y2s2.filter((event) => event.index !== index);
-            } else if (data_name === "y3s1") {
-                this.y3s1 = this.y3s1.filter((event) => event.index !== index);
-            } else if (data_name === "y3s2") {
-                this.y3s2 = this.y3s2.filter((event) => event.index !== index);
-            } else if (data_name === "y4s1") {
-                this.y4s1 = this.y4s1.filter((event) => event.index !== index);
-            } else if (data_name === "y4s2") {
-                this.y4s2 = this.y4s2.filter((event) => event.index !== index);
-            } 
-
+        delete_module: function(data_name, element) {
+            this.acad_plan[data_name] = this.acad_plan[data_name].filter((event) => {
+                return event.index !== element.index   
+            });            
+            // update valid_modules and change inserted attribute to false
             for (var i = 0; i < this.valid_modules.length; i++) {
-                if (this.valid_modules[i].mod === code) {
+                if (this.valid_modules[i].mod === element.mod) {
                     this.valid_modules[i].inserted = false; 
                 }
             }
