@@ -42,9 +42,11 @@ export default {
 
     data() {
         return {
+            /* default values for dropdown filters */
             courses: ['Business Analytics', 'Economics'],
             pus: ['Technical University of Denmark', 'Technical University of Munich', 'Georgia Institute of Technology'],
 
+            /* sep module mapping data */
             modules: [  
 
             { pu: "Technical University of Denmark",
