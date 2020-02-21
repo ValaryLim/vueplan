@@ -38,7 +38,6 @@
         <thead>
           <tr>
             <th>Partner University</th>
-            <th>Course</th>
             <th>NUS Module Code</th>
             <th>NUS Module Title</th>
             <th>MCs</th>
@@ -50,9 +49,8 @@
 
         <!-- table body -->
         <tbody :modules="modules" pus="pus" courses="courses">
-          <tr v-for="module in modules" v-show="courses.includes(module.course) && pus.includes(module.pu)">
+          <tr v-for="module in modules" v-show="pus.includes(module.pu)">
             <td>{{module.pu}}</td>
-            <td>{{module.course}}</td>
             <td>{{module.nusModuleCode}}</td>
             <td>{{module.nusModuleTitle}}</td>
             <td>{{module.mcs}}</td>
