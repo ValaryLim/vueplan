@@ -17,14 +17,14 @@
         <br>
 
         <!-- Filter by PU -->
-        <select v-model='pus' multiple>
+        <select class = "dropdown" v-model='pus' multiple>
           <option :modules="modules" v-for="module in unique(modules, 'pu')">
             {{ module.pu }}
           </option>
         </select>
 
         <!-- Filter by Course -->
-        <select v-model='courses' multiple>
+        <select class = "dropdown" v-model='courses' multiple>
           <!-- retrieve data from props -->
           <option :allmajors="allmajors" v-for="(value, name) in allmajors">
             {{ name }}
