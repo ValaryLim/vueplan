@@ -6,6 +6,7 @@
         <router-view></router-view>
       </div>
     </div>
+    <SEPMapping :allmajors="allmajors"></SEPMapping>
   </div>
 </template>
 

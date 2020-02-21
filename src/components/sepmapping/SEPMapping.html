@@ -7,25 +7,27 @@
   
   <body>
     <h2>SEP Module Mappings </h2>
+    <br>
     
-    <div id="app" >
+    <div id="app">
       <div id = "filters">
         <!-- Labels -->
-        <label for="Pus">Filter by PU and Course:</label>
+        <label for="Pus">Filter by Partner University and Course:</label>
         <label for="Courses"></label>
         <br>
 
         <!-- Filter by PU -->
         <select v-model='pus' multiple>
-          <option>Technical University of Denmark</option>
-          <option>Technical University of Munich</option>
-          <option>Georgia Institute of Technology</option>
+          <option :modules="modules" v-for="module in unique(modules, 'pu')">
+            {{ module.pu }}
+          </option>
         </select>
 
         <!-- Filter by Course -->
         <select v-model='courses' multiple>
-          <option>Business Analytics</option>
-          <option>Economics</option>
+          <option v-for="(value, name) in allmajors">
+            {{ name }}
+          </option>
         </select>
         <br> <br>
       </div>
@@ -45,7 +47,7 @@
           </tr>
         </thead>
 
-          <!-- table body -->
+        <!-- table body -->
         <tbody :modules="modules" pus="pus" courses="courses">
           <tr v-for="module in modules" v-show="courses.includes(module.course) && pus.includes(module.pu)">
             <td>{{module.pu}}</td>
