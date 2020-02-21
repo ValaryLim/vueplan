@@ -9,24 +9,26 @@
     <h2>SEP Module Mappings </h2>
     
     <div id="app" >
-      <!-- Labels -->
-      <label for="Pus">Filter by PU and Course:</label>
-      <label for="Courses"></label>
-      <br>
+      <div id = "filters">
+        <!-- Labels -->
+        <label for="Pus">Filter by PU and Course:</label>
+        <label for="Courses"></label>
+        <br>
 
-      <!-- Filter by PU -->
-      <select v-model='pus' multiple>
-        <option>Technical University of Denmark</option>
-        <option>Technical University of Munich</option>
-        <option>Georgia Institute of Technology</option>
-      </select>
+        <!-- Filter by PU -->
+        <select v-model='pus' multiple>
+          <option>Technical University of Denmark</option>
+          <option>Technical University of Munich</option>
+          <option>Georgia Institute of Technology</option>
+        </select>
 
-      <!-- Filter by Course -->
-      <select v-model='courses' multiple>
-        <option>Business Analytics</option>
-        <option>Economics</option>
-      </select>
-      <br> <br>
+        <!-- Filter by Course -->
+        <select v-model='courses' multiple>
+          <option>Business Analytics</option>
+          <option>Economics</option>
+        </select>
+        <br> <br>
+      </div>
 
       <table :modules="modules" pus="pus" courses="courses">
         <!-- table header -->
