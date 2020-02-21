@@ -1,6 +1,11 @@
 /* table generator */
 
 table {
+<<<<<<< HEAD
+=======
+  margin-left: auto;
+  margin-right: auto;
+>>>>>>> master
   border-collapse:collapse;
   border-spacing:0;
   border-color:#aaa;
