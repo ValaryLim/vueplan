@@ -25,7 +25,8 @@
 
         <!-- Filter by Course -->
         <select v-model='courses' multiple>
-          <option v-for="(value, name) in allmajors">
+          <!-- retrieve data from props -->
+          <option :allmajors="allmajors" v-for="(value, name) in allmajors">
             {{ name }}
           </option>
         </select>

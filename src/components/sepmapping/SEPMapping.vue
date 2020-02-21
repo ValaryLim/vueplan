@@ -6,12 +6,8 @@
 export default {
     name: "App",
     display: "SEP Mappings",
-    props: {
-        allmajors: {
-            type: Array,
-            required: true,
-        }
-    },
+    /* set properties from parent */
+    props: ['allmajors'],
 
     computed: {
         /* unique function that returns unique pus */
