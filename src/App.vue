@@ -72,6 +72,7 @@ export default {
                   {modCode: "IS4010", modTitle: "IS4010 Industry Internship Programme", modType: "core"}
                   ],
                   "Economics": [
+                  {modCode: "EC1301", modTitle: "Principles of Economics", modType: "core"},
                   {modCode: "EC2101", modTitle: "Microeconomic Analysis I", modType: "core"},
                   {modCode: "EC3101", modTitle: "Microeconomic Analysis II", modType: "core"},
                   {modCode: "EC3312", modTitle: "Game Theory and Applications for Economics", modType: "elective"}]

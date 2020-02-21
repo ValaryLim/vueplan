@@ -10,6 +10,20 @@ export default {
     props: ['allmajors'],
 
     computed: {
+        /* relevant function that computes relevant modules based on filters */
+        relevant() {
+            return function(arr, code) {
+                var output = []
+                for (var j = 0; j < this.courses.length; j++) {
+                    var relevantModules = arr[this.courses[j]];
+                    for (var i = 0; i < relevantModules.length; i++) {
+                        output.push(relevantModules[i].modCode)
+                    }
+                }
+                return output.includes(code);
+            }
+        },
+
         /* unique function that returns unique pus */
         unique () {
             return function (arr, key) {
