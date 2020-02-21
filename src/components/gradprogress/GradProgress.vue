@@ -1,6 +1,6 @@
 <template src="./GradProgress.html"></template>
 
-<style src = "./GradProgress.css"></style>
+<style src = "../sepmapping/SEPMapping.css"></style>
 
 <script>
 export default {
