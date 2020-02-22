@@ -23,7 +23,10 @@ export default {
             invalid_module: 0,
             inserted_module: 1,
             valid_modules: [
-                { mod: "BT1101", name: "BT1101 Introduction to Business Analytics", mc: 4, inserted: true, prereqs: [] },
+                { mod: "BT1101", name: "BT1101 Introduction to Business Analytics", mc: 4, inserted: true, 
+                    prereqs: { "and": ["BT2101", {"or": [
+                    "CS1020", "CS1020E", "CS2020", "CS2030", "CS2103", "CS2103T", "CS2113", "CS2113T"]}]
+                }},
                 { mod: "CS1010S", name: "CS1010S Programming Methodology", mc: 4, inserted: true, prereqs: [] },
                 { mod: "EC1301", name: "EC1301 Principles of Economics", mc: 4, inserted: true, prereqs: [] }, 
                 { mod: "IS1103", name: "IS1103 Ethics in Computing", mc: 4, inserted: true, prereqs: [] }, 
@@ -194,7 +197,7 @@ export default {
                 return 1;
             }
             return 0;
-        }
+        }, 
     },
 }
 </script>
