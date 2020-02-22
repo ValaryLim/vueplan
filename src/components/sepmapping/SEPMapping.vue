@@ -3,11 +3,18 @@
 <style src = "./SEPMapping.css"></style>
 
 <script>
+import vueMultiSelect from 'vue-multi-select';
+import 'vue-multi-select/dist/lib/vue-multi-select.css';
+
 export default {
     name: "App",
     display: "SEP Mappings",
     /* set properties from parent */
     props: ['allmajors'],
+
+    components: {
+        vueMultiSelect
+    },
 
     computed: {
         /* relevant function that computes relevant modules based on filters */
@@ -37,7 +44,7 @@ export default {
                 }
                 return output
             }
-        }
+        },
     },
 
     data() {
