@@ -7,25 +7,28 @@
   
   <body>
     <h2>SEP Module Mappings </h2>
+    <br>
     
-    <div id="app" >
+    <div id="app">
       <div id = "filters">
         <!-- Labels -->
-        <label for="Pus">Filter by PU and Course:</label>
+        <label for="Pus">Filter by PU(s) and Course(s):</label>
         <label for="Courses"></label>
         <br>
 
         <!-- Filter by PU -->
-        <select v-model='pus' multiple>
-          <option>Technical University of Denmark</option>
-          <option>Technical University of Munich</option>
-          <option>Georgia Institute of Technology</option>
+        <select class = "puFilter" v-model='pus' multiple>
+          <option :modules="modules" v-for="module in unique(modules, 'pu')">
+            {{ module.pu }}
+          </option>
         </select>
 
         <!-- Filter by Course -->
-        <select v-model='courses' multiple>
-          <option>Business Analytics</option>
-          <option>Economics</option>
+        <select class = "courseFilter" v-model='courses' multiple>
+          <!-- retrieve data from props -->
+          <option :allmajors="allmajors" v-for="(value, name) in allmajors">
+            {{ name }}
+          </option>
         </select>
         <br> <br>
       </div>
@@ -35,7 +38,6 @@
         <thead>
           <tr>
             <th>Partner University</th>
-            <th>Course</th>
             <th>NUS Module Code</th>
             <th>NUS Module Title</th>
             <th>MCs</th>
@@ -45,11 +47,10 @@
           </tr>
         </thead>
 
-          <!-- table body -->
+        <!-- table body -->
         <tbody :modules="modules" pus="pus" courses="courses">
-          <tr v-for="module in modules" v-show="courses.includes(module.course) && pus.includes(module.pu)">
+          <tr v-for="module in modules" v-show="relevant(allmajors, module.nusModuleCode) && pus.includes(module.pu)">
             <td>{{module.pu}}</td>
-            <td>{{module.course}}</td>
             <td>{{module.nusModuleCode}}</td>
             <td>{{module.nusModuleTitle}}</td>
             <td>{{module.mcs}}</td>
