@@ -1,8 +1,8 @@
 <template>
     <div>
         <ul>
-            <li v-for="(item, key) in allmodules" v-bind:key=item>
-                {{ item }} - {{ key }}
+            <li v-for="element in allmodules" v-bind:key=element.code>
+                {{ element.code }}
             </li>
         </ul>
     </div>
