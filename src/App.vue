@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-md-12">
         <!-- link allmajors data to components -->
-        <router-view :allmajors="allmajors"></router-view>
+        <router-view :allmodules="allmodules" :allmajors="allmajors"></router-view>
       </div>
     </div>
   </div>
@@ -12,6 +12,7 @@
 
 <script>
 import Navbar from './components/Navbar.vue';
+import allModules from './assets/allmoduleinfo.json';
 
 export default {
   name: 'App',
@@ -22,6 +23,7 @@ export default {
   data() {
     return {
       /* list of majors & corresponding modules */
+      allmodules: allModules,
       allmajors: { "Business Analytics" : [
                   {modCode: "BT1101", modTitle: "BT1101 Introduction to Business Analytics", modType: "core"},
                   {modCode: "CS1010S", modTitle: "CS1010S Programming Methodology", modType: "core"},
@@ -77,7 +79,7 @@ export default {
                   {modCode: "EC3101", modTitle: "Microeconomic Analysis II", modType: "core"},
                   {modCode: "EC3312", modTitle: "Game Theory and Applications for Economics", modType: "elective"}]
                 }
-    }
+      }
   }
 }
 </script>
