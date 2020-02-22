@@ -147,10 +147,10 @@
             <div class="col-2 add_feature">
                 <p>Module Code:</p>
                     <form>
-                        <input type="text" class="input" list="valid_modules" v-model="add_module_code"/>
-                        <datalist id="valid_modules">
-                            <option v-for="option in valid_modules" v-bind:value="option.mod">
-                                {{ option.name }}
+                        <input type="text" class="input" list="allmodules" v-model="add_module_code"/>
+                        <datalist id="allmodules">
+                            <option v-for="(item, key) in allmodules" v-bind:key="key">
+                                {{ item.fullname }}
                             </option>
                         </datalist>
                     </form>

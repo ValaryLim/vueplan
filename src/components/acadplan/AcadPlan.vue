@@ -102,6 +102,7 @@ export default {
                 }
         };
     },
+    props: ['allmodules'],
     computed: {
         sorted_y1s1: function() {
             this.sort_modules(this.acad_plan['y1s1']);
