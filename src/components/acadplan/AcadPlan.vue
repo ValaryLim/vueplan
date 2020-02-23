@@ -76,8 +76,14 @@ export default {
                 } else if (module === this.inserted_module) {
                     alert("Error: Module is already in academic plan"); 
                 } else {
-                    this.acadplan['y1s1'].push({ mod: module.code, mc: module.mc, move: true, index: index }); 
-                    index++;
+                    // check if all prerequisites have been met
+                    if (this.check_prerequisites(module.parseprereq) === true) {
+                        this.acadplan['y1s1'].push({ mod: module.code, mc: module.mc, move: true, index: index }); 
+                        module.inserted = true;
+                        index++;
+                    } else {
+                        alert("Error: Have not met all of module's prerequisites");
+                    }
                 }
             } else {
                 alert("Error: Field cannot be left blank");
@@ -88,8 +94,7 @@ export default {
                 // check if module exists
                 if (this.allmodules[key].fullname.toLowerCase().includes(module_name)) {
                     // check if module is already inserted
-                    if (this.allmodules[key].inserted === false) {
-                        this.allmodules[key].inserted = true;
+                    if (this.allmodules[key] && this.allmodules[key].inserted === false) {
                         return this.allmodules[key];
                     } else {
                         // module already inserted
@@ -121,6 +126,59 @@ export default {
             }
             return 0;
         }, 
+        check_prerequisites: function(prereq_tree) {
+            // if there are no prerequisites
+            if (Object.keys(prereq_tree).length === 0) {
+                return true;
+            }
+
+            // if there is only one prerequisite
+            if (typeof(prereq_tree) === "string") {
+                return (this.allmodules[prereq_tree] && this.allmodules[prereq_tree].inserted);
+            }
+
+            // if there is more than one prerequisite
+            for (var key in prereq_tree) {
+                var prereq_subtree = prereq_tree[key];
+                if (key === "and") {
+                    // need all requirements within "and"
+                    for (var req_index in prereq_subtree) {
+                        var req = prereq_subtree[req_index];
+                        if (typeof(req) === "string") {
+                            // if requirement is a string, check if module has been added to acadplan
+                            if (this.allmodules[req] && this.allmodules[req].inserted === false) {
+                                return false;
+                            }
+                        } else {
+                            // there is a nested dictionary (either "and" or "or")
+                            // recursively call check_prerequisites
+                            var check_subreq = this.check_prerequisites(req);
+                            if (check_subreq === false) {
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+                } else if (key === "or") {
+                    // only need to meet one of the requirements within "or"
+                    for (var req2_index in prereq_subtree) {
+                        var req2 = prereq_subtree[req2_index];
+                        if (typeof(req2) === "string") {
+                            if (this.allmodules[req2] && this.allmodules[req2].inserted === true) {
+                                return true;
+                            } 
+                        } else {
+                            // find at least one true
+                            var check_subreq2 = this.check_prerequisites(req2);
+                            if (check_subreq2 === true) {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
     },
 }
 </script>
