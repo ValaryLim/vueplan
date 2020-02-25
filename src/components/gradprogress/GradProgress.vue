@@ -1,10 +1,6 @@
 <template src="./GradProgress.html"></template>
 
-<<<<<<< HEAD
-<style src = "./GradProgress.css"></style>
-=======
 <style src = "../sepmapping/SEPMapping.css"></style>
->>>>>>> origin
 
 <script>
 export default {
