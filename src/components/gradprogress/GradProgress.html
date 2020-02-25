@@ -50,14 +50,28 @@
             <th>Status</th>
           </tr>
         </thead>
-  
+        
+
         <!-- table body -->
-        <tbody :records="CoreRecords">
-          <tr v-for="record in CoreRecords" v-bind:key="record" >
-            <td>{{record.requirement}}</td>
-            <td>{{record.moduleTaken}}</td>
-            <td>{{record.status}}</td>
+        <tbody :records="allmajors['Business Analytics']">
+          <tr v-for="record in allmajors['Business Analytics']" v-bind:key="record" >
+            <tr v-if="record.modType == 'core'">
+              <td> {record.modTitle}}</td>
+              <td>
+                  <h1 v-if="check_status(record.modCode)">{{record.modTitle}}</h1>
+                  <h1 v-else></h1>
+              </td>
+              <td>
+                  <h1 v-if="check_status(record.modCode)">✓</h1>
+                  <h1 v-else>✘</h1>
+              </td>
+            </tr> 
+           <!-- <td>{{record.moduleTaken}}</td>
+            <td>{{record.status}}</td> -->
           </tr>
+          <!-- Programme electives hard coded. May need to change in the future-->
+          <td>6 Programme Electives</td>
+
         </tbody>
       </table>
   
