@@ -46,7 +46,7 @@ export default {
            
 		//joining the substrings to form the necessary output
 		for(let i = 0; i<arr.length; i++){ 
-			document.getElementById('res').insertAdjacentHTML('beforeend',mod.prerequisite.substring(startIndex, arr[i][0]));        
+			document.getElementById('res').insertAdjacentHTML('beforeend',mod.prereq.substring(startIndex, arr[i][0]));        
 			var eventname = 'temp'.concat(i);
 			document.getElementById('res').insertAdjacentHTML('beforeend',"<a id = '"+ eventname + "'href='#'>"+ arr[i][1].code+ "</a>");        
 			startIndex = arr[i][0] + arr[i][1].code.length;
