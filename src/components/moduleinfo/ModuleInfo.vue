@@ -4,6 +4,7 @@
 <script>
 import modules from "../../assets/allmoduleinfo.json";
 import moduleReviews from '../../assets/moduleReviews.json';
+import users_table from '../../assets/users.json'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 export default {
 	name: "App",
@@ -95,7 +96,12 @@ export default {
 			var totalHours = workload.map(function(elt) {return parseInt(elt)}).reduce(function(a,b) {return a+b});
 			var totalString = totalHours + totalHours > 1 ? 'hrs' : 'hr';
 			var overallReviewNum = Object.values(moduleReviews[mod.code]).map(function(x) {return x['overall']}).reduce(function(a,b) {return a+b}) / Object.values(moduleReviews[mod.code]).length;
-			overallReviewNum = Math.round(overallReviewNum*10)/10	
+			var avgStaffAdmin = Object.values(moduleReviews[mod.code]).map(function(x) {return x['staffadmin']}).reduce(function(a,b) {return a+b}) / Object.values(moduleReviews[mod.code]).length;
+			var avgContent = Object.values(moduleReviews[mod.code]).map(function(x) {return x['content']}).reduce(function(a,b) {return a+b}) / Object.values(moduleReviews[mod.code]).length;
+
+			overallReviewNum = Math.round(overallReviewNum*10)/10;
+			avgStaffAdmin = Math.round(avgStaffAdmin*10)/10;
+			avgContent = Math.round(avgContent*10)/10;
 			res.insertAdjacentHTML('beforeend', '<h2>Workload - '+ totalHours + ' ' + totalString +'</h2>');
 			res.insertAdjacentHTML('beforeend','<h3>'+workload+'</h3>');
 			res.insertAdjacentHTML('beforeend','<div>Workload viusalisation here</div><br></br>');
@@ -103,13 +109,37 @@ export default {
 			res.insertAdjacentHTML('beforeend', '<div>Insert Prereq tree here</div><br></br>');
 			res.insertAdjacentHTML('beforeend', '<h2>Ratings and Reviews</h2><hr></hr>');
 			res.insertAdjacentHTML('beforeend','<h3 id = "OverallFeedbackNum">'+overallReviewNum+'</h3>');
-			res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><div id = "StarsInner"></div></div><div></div>');
+			res.insertAdjacentHTML('beforeend','<div>Learning Contents: ' + avgContent + " | Staff and Administration: " + avgStaffAdmin + "</div><br></br>");
+			
+			res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews</h4><hr></hr><table><tbody id = "tabody">');
+			//console.log(Object.entries(moduleReviews[mod.code]));
+			var writtenReviews = {};
+			for (let [id, written] of Object.entries(moduleReviews[mod.code])) {
+				if (written['written'].length > 0) {
+					writtenReviews[id] = written;
+				}
+			}
+			//console.log(writtenReviews);
+			var count = 0
+			for (let [id, review] of Object.entries(writtenReviews)) {
+				var r = document.getElementById("tabody");
+				console.log(count);
+				count+=1;
+				r.insertAdjacentHTML('beforeend','<tr>');
+				r.insertAdjacentHTML('beforeend','<td>'+ users_table[id]+'<br></br>Year & Semester taken: <br></br>'+ review["year"] +'</td>' + '<td>'+review['written']+'</td></tr>');
+				//r.insertAdjacentHTML('beforeend','<td>'+review['written']+'</td></tr>');
+			}
+			res.insertAdjacentHTML('beforeend','</tbody></table');
+
+			//res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><div id = "StarsInner"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div></div><div></div>');
+			//res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><font-awesome-icon icon="times" /><font-awesome-icon icon="times" /><font-awesome-icon icon="times" /><font-awesome-icon icon="times" /><div id = "StarsInner"></div></div><div></div>');
+			//res.insertAdjacentHTML('beforeend',);
 			var arr_all = arr.concat(arr_a).reverse();
-			console.log(arr_all.length)
+			//console.log(arr_all.length)
 			//onclick of the module code, brings you to the module page      
 			var matches = document.querySelectorAll("a");
-			console.log(matches);
-			console.log(arr_all);
+			//console.log(matches);
+			//console.log(arr_all);
 			var x = this;
 			for (let j = arr_all.length-1; j >= 0; j--) {
 				let button = matches[matches.length-j-1];
