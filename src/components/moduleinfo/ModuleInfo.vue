@@ -14,6 +14,7 @@ export default {
 	data: function() {
 		return {
 			search:'',
+<<<<<<< HEAD
 			mods: Object.values(modules),
 			mod:[
 				{code: 'BT1101', title: 'Introduction to Business Analytics', desc: 'This module provides students with an introduction to the fundamental concepts and tools needed to understand the emerging role of business analytics in business and non-profit organizations. The module aims to demonstrate to students how to apply basic business analytics tools in a spreadsheet environment, and how to communicate with analytics professionals to effectively use and interpret analytic models and results for making better and more well-informed business decisions', prerequisite: '', preclusion: 'DSC1007/DSC1007X'},
@@ -74,20 +75,26 @@ export default {
 			],
 			states : modules,
 			}
+=======
+			};
+>>>>>>> refs/remotes/origin/master
 		},
+
+	props: ['allmodules'],	
 
 	computed: {
 	filteredList() {
 		if(this.search != ''){
 			document.getElementById("res").innerHTML ="";
 		}
-		return this.mods.filter(mod => {
-			return mod.code.toLowerCase().includes(this.search.toLowerCase())||mod.title.toLowerCase().includes(this.search.toLowerCase())
-            }) 
+		return Object.keys(this.allmodules).filter(mod => {
+			return mod.toUpperCase().includes(this.search.toUpperCase())
+            })
 		}
 	},
 	
 	methods:{  
+<<<<<<< HEAD
 
 		modInfo:function(mod){
 			this.search ='';
@@ -130,6 +137,46 @@ export default {
 				if(index != -1){
 					arr_a.push([index,this.mods[i]])
 				}
+=======
+	modInfo:function(mod){
+		this.search ='';
+		var mods = Object.keys(this.allmodules);
+
+		document.getElementById("res").innerHTML = "<h1>" + mod.code + " " + mod.title + "</h1>" + "<p>" + mod.desc + "</p>" + "<h4>Prerequisites: ";      
+		//PREREQUISITES      
+		//getting the index the module is found at
+		
+		var arr = [];      
+		for(let i=0; i < mods.length; i++){
+			var index = mod.prereq.toUpperCase().indexOf(this.allmodules[mods[i]].code);
+			if(index != -1){
+				arr.push([index,this.allmodules[mods[i]]])
+			}
+		}
+      
+		var startIndex = 0;
+		arr.sort(function(a,b) {return a[0]-b[0]});
+           
+		//joining the substrings to form the necessary output
+		for(let i = 0; i<arr.length; i++){ 
+			document.getElementById('res').insertAdjacentHTML('beforeend',mod.prereq.substring(startIndex, arr[i][0]));        
+			var eventname = 'temp'.concat(i);
+			document.getElementById('res').insertAdjacentHTML('beforeend',"<a id = '"+ eventname + "'href='#'>"+ arr[i][1].code+ "</a>");        
+			startIndex = arr[i][0] + arr[i][1].code.length;
+		}
+
+		document.getElementById("res").insertAdjacentHTML('beforeend', mod.prereq.substring(startIndex, mod.prereq.length) +"</h4>");
+      
+      
+      
+		//PRECLUSIONS
+		document.getElementById('res').insertAdjacentHTML('beforeend',"<h4>Preclusions: ")
+		var arr_a = [];      
+		for(let i=0; i <mods.length; i++){
+			index = mod.preclusion.toUpperCase().indexOf(this.allmodules[mods[i]].code);
+			if(index != -1){
+				arr_a.push([index,this.allmodules[mods[i]]])
+>>>>>>> refs/remotes/origin/master
 			}
 		
 			startIndex = 0;

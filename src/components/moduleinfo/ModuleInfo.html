@@ -7,13 +7,12 @@
   <body>
     <div id = 'app'>
           <input id ='searchIn' type="text" v-model="search" placeholder="Search Module Code or Title..."/>
-      <div id = 'res1'></div>
-      <div class = "info" id = 'res'></div>
+      <div id = 'res'></div>
 
       <div v-if = "search != ''">
         <ul id = 'modules'>
-          <li v-for="mod in filteredList" v-on:click = 'modInfo(mod)'>
-            {{mod.code}} {{mod.title}} 
+          <li v-for="mod in filteredList" v-on:click = 'modInfo(allmodules[mod])'>
+            {{allmodules[mod].code}} {{allmodules[mod].title}} 
         </li>
         </ul>
 
