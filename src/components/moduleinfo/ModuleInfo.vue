@@ -62,7 +62,9 @@ export default {
 		for(let i=0; i <mods.length; i++){
 			index = mod.preclusion.toUpperCase().indexOf(this.allmodules[mods[i]].code);
 			if(index != -1){
-				arr_a.push([index,this.allmodules[mods[i]]])
+				if(this.allmodules[mods[i]].code != mod.code){
+					arr_a.push([index,this.allmodules[mods[i]]])
+				}
 			}
 		}
       
