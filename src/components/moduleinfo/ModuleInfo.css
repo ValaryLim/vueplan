@@ -53,11 +53,10 @@
 }
 
 #StarsOuter::before {
-  font-family: FontAwesome;
+  content: "\f006 \f006 \f006 \f006 \f006";
 }
 
 #StarsInner {
-  font-family: FontAwesome;
   position: absolute;
   top: 0;
   left: 0;
@@ -66,6 +65,13 @@
   width: 0;
   font-size: 20px;
 }
+#ContentFeedback::after {
+  content: " \f005";
+}
+#StaffFeedback::after {
+  content: " \f005";
+}
 #StarsInner::before {
+  content: "\f005 \f005 \f005 \f005 \f005";
   color: #f8ce0b;
 }

@@ -109,9 +109,8 @@ export default {
 			res.insertAdjacentHTML('beforeend', '<div>Insert Prereq tree here</div><br></br>');
 			res.insertAdjacentHTML('beforeend', '<h2>Ratings and Reviews</h2><hr></hr>');
 			res.insertAdjacentHTML('beforeend','<h3 id = "OverallFeedbackNum">'+overallReviewNum+'</h3>');
-			res.insertAdjacentHTML('beforeend','<i class="far fa-star"></i>');
-			res.insertAdjacentHTML('beforeend','<div>Learning Contents: ' + avgContent + " | Staff and Administration: " + avgStaffAdmin + "</div><br></br>");
-			
+			res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><div id = "StarsInner"></div></div><div></div>');
+			res.insertAdjacentHTML('beforeend','<div id = "ContentFeedback">Learning Contents: ' + avgContent + '</div><div id = "sep"> | </div><div id = "StaffFeedback">Staff and Administration: ' + avgStaffAdmin + "</div><br></br>");
 			res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews</h4><hr></hr><table><tbody id = "tabody">');
 			var writtenReviews = {};
 			for (let [id, written] of Object.entries(moduleReviews[mod.code])) {
@@ -127,6 +126,9 @@ export default {
 				r.insertAdjacentHTML('beforeend','<td>'+ users_table[id]+'<br></br>Year & Semester taken: <br></br>'+ year +'</td>' + '<td>'+review['written']+'</td></tr>');
 			}
 			res.insertAdjacentHTML('beforeend','</tbody></table');
+			const starPercentage = (overallReviewNum / 5) * 100;
+            const starPercentageRounded = `${(Math.round(starPercentage))}%`;
+            document.querySelector("#StarsInner").style.width = starPercentageRounded;
 
 			//res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><div id = "StarsInner"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div></div><div></div>');
 			//res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><font-awesome-icon icon="times" /><font-awesome-icon icon="times" /><font-awesome-icon icon="times" /><font-awesome-icon icon="times" /><div id = "StarsInner"></div></div><div></div>');
