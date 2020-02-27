@@ -1,3 +1,11 @@
+<!-- COLOUR SCHEME 
+  #F8E9A1
+  #F76C6C
+  #A8D0E6
+  #374785
+  #24305E 
+  #A6C2CE-->
+
 <template>
   <div id="app">
     <app-navbar></app-navbar>
