@@ -2,13 +2,20 @@
 <style src = "./ModuleInfo.css"> </style>
 
 <script>
+import modules from "../../assets/allmoduleinfo.json";
+import moduleReviews from '../../assets/moduleReviews.json';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 export default {
 	name: "App",
 	display: "Module Information",
+	components: {
+		FontAwesomeIcon
+	},
 	data: function() {
 		return {
 			search:'',
-			mods:[
+			mods: Object.values(modules),
+			mod:[
 				{code: 'BT1101', title: 'Introduction to Business Analytics', desc: 'This module provides students with an introduction to the fundamental concepts and tools needed to understand the emerging role of business analytics in business and non-profit organizations. The module aims to demonstrate to students how to apply basic business analytics tools in a spreadsheet environment, and how to communicate with analytics professionals to effectively use and interpret analytic models and results for making better and more well-informed business decisions', prerequisite: '', preclusion: 'DSC1007/DSC1007X'},
 
 				{code: 'BT2101', title: 'Decision Making Methods and Tools', desc: 'This module provides a general introduction to using various IT-driven tools, software and techniques for decision making support. The module will start off by describing the decision-making process in businesses today. It will proceed to cover methods such as prediction and classification methods, markov chain monte carlo, simulation, forecasting time series, and neural network among others. Examples will also be drawn from various industry domains and applications.', prerequisite: 'CS1010 and equivalent&(MA1521/MA1102R)&BT1101', preclusion: ''},
@@ -64,7 +71,9 @@ export default {
 				{code: 'ST2334', title: 'Proability and Statistics', desc: 'Basic concepts of probability, conditional probability, independence, random variables, joint and marginal distributions, mean and variance, some common probability distributions, sampling distributions, estimation and hypothesis testing based on a normal population. This module is targeted at students who are interested in Statistics and are able to meet the pre-requisites. Preclude ME students taking or have taken ME4273.', prerequisite: 'MA1102R/MA1312/MA1505/MA1507/MA1521', preclusion: 'ST1131/ST1131A/ST1232/ST2131/MA2216/CE2407/EC2231/EC2303/PR2103/DSC2008/ME students taking or having taken ME4273. All ISE students.'},
 
 				{code: 'MA1521', title: 'Calculus in Computing', desc: 'This module provides a basic foundation for calculus and its related subjects required by computing students. The objective is to train the students to be able to handle calculus techniques arising in their courses of specialization. In addition to the standard calculus material, the course also covers simple mathematical modeling techniques and numerical methods in connection with ordinary differential equations. Major topics: Preliminaries on sets and number systems. Calculus of functions of one variable and applications. Sequences, series and power series. Functions of several variables. Extrema. First and second order differential equations. Basic numerical methods for ordinary differential equations.', prerequisite: 'GCE ‘A’ Level Mathematics or H2 Mathematics or H2 Further Mathematics/MA1301/MA1301X', preclusion: 'Students reading a primary major in Mathematics or Applied Mathematics or Quantitative Finance or Data Science and Analytics/MA1102R/MA1312/MA1505/MA1507/MA2501/FoE students'}
-			]}
+			],
+			states : modules,
+			}
 		},
 
 	computed: {
@@ -80,74 +89,119 @@ export default {
 	
 	methods:{  
 
-	modInfo:function(mod){
-		this.search ='';
-		document.getElementById("res").innerHTML = "<h1>" + mod.code + " " + mod.title + "</h1>" + "<p>" + mod.desc + "</p>" + "<h4>Prerequisites: ";      
-		//PREREQUISITES      
-		//getting the index the module is found at
-		var arr = [];      
-		for(let i=0; i <this.mods.length; i++){
-			var index = mod.prerequisite.toUpperCase().indexOf(this.mods[i].code);
-			if(index != -1){
-				arr.push([index,this.mods[i]])
+		modInfo:function(mod){
+			this.search ='';
+			var res = document.getElementById("res");
+			res.innerHTML = "<h1>" + mod.code + " " + mod.title + "</h1>";
+			res.insertAdjacentHTML('beforeend', '<div id = indicators>' + mod.department + " | " + "4 MCs</div><hr></hr>");
+			res.insertAdjacentHTML('beforeend', "<p>" + mod.desc + "</p>" + "<h2>Prerequisites</h2><hr></hr><p>");
+			//PREREQUISITES      
+			//getting the index the module is found at
+			var arr = [];      
+			for(let i=0; i <this.mods.length; i++){
+				var index = mod.prereq.toUpperCase().indexOf(this.mods[i].code);
+				if(index != -1){
+					arr.push([index,this.mods[i]])
+				}
 			}
-		}
-      
-		var startIndex = 0;
-		arr.sort(function(a,b) {return a[0]-b[0]});
-           
-		//joining the substrings to form the necessary output
-		for(let i = 0; i<arr.length; i++){ 
-			document.getElementById('res').insertAdjacentHTML('beforeend',mod.prerequisite.substring(startIndex, arr[i][0]));        
-			var eventname = 'temp'.concat(i);
-			document.getElementById('res').insertAdjacentHTML('beforeend',"<a id = '"+ eventname + "'href='#'>"+ arr[i][1].code+ "</a>");        
-			startIndex = arr[i][0] + arr[i][1].code.length;
-		}
-
-		document.getElementById("res").insertAdjacentHTML('beforeend', mod.prerequisite.substring(startIndex, mod.prerequisite.length) +"</h4>");
-      
-      
-      
-		//PRECLUSIONS
-		document.getElementById('res').insertAdjacentHTML('beforeend',"<h4>Preclusions: ")
-		var arr_a = [];      
-		for(let i=0; i <this.mods.length; i++){
-			index = mod.preclusion.toUpperCase().indexOf(this.mods[i].code);
-			if(index != -1){
-				arr_a.push([index,this.mods[i]])
+		
+			var startIndex = 0;
+			arr.sort(function(a,b) {return a[0]-b[0]});
+			if (arr.length == 0 && mod.prereq.length == 0) {
+				res.insertAdjacentHTML('beforeend', "None");
+			}  
+			//joining the substrings to form the necessary output
+			for(let i = 0; i<arr.length; i++){ 
+				res.insertAdjacentHTML('beforeend',mod.prereq.substring(startIndex, arr[i][0]));        
+				var eventname = 'temp'.concat(i);
+				res.insertAdjacentHTML('beforeend',"<a id = '"+ eventname + "'href='#'>"+ arr[i][1].code+ "</a>");        
+				startIndex = arr[i][0] + arr[i][1].code.length;
 			}
-		}
-      
-		startIndex = 0;
-		arr_a.sort(function(a,b) {return a[0]-b[0]});
-           
-		//joining the substrings to form the necessary output
-		for(let i = 0; i<arr_a.length; i++){ 
-			document.getElementById('res').insertAdjacentHTML('beforeend',mod.preclusion.substring(startIndex, arr_a[i][0]));        
-			eventname = 'temp'.concat(i);
-			document.getElementById('res').insertAdjacentHTML('beforeend',"<a id = '"+ eventname + "'href='#'>"+arr_a[i][1].code+ "</a>");        
-			startIndex = arr_a[i][0] + arr_a[i][1].code.length;
-		}
-      
-		var arr_all = arr.concat(arr_a).reverse();
-		console.log(arr_all.length)
-		//onclick of the module code, brings you to the module page      
-		var matches = document.querySelectorAll("a");
-		console.log(matches);
 
-		var x = this;
-		for (let j = arr_all.length-1; j >= 0; j--) {
-			let button = matches[matches.length-j-1];
-
-			button.addEventListener('click', function() {
-			console.log(arr_all, "Array All")
-			console.log(arr_all[0][parseInt(j)], "Select Module");
-			x.modInfo(arr_all[j][1]);
+			res.insertAdjacentHTML('beforeend', mod.prereq.substring(startIndex, mod.prereq.length) +"</p>");
+		
+		
+		
+			//PRECLUSIONS
+			document.getElementById('res').insertAdjacentHTML('beforeend',"<h2>Preclusions</h2><hr></hr><p>")
+			var arr_a = [];      
+			for(let i=0; i <this.mods.length; i++){
+				index = mod.preclusion.toUpperCase().indexOf(this.mods[i].code);
+				if(index != -1){
+					arr_a.push([index,this.mods[i]])
+				}
 			}
-		)
-	}
-		document.getElementById("res").insertAdjacentHTML('beforeend', mod.preclusion.substring(startIndex, mod.preclusion.length) +"</h4>");
-	},      
+		
+			startIndex = 0;
+			arr_a.sort(function(a,b) {return a[0]-b[0]});
+			if (arr_a.length == 0 && mod.preclusion.length == 0) {
+				res.insertAdjacentHTML('beforeend', "None");
+			}
+			//joining the substrings to form the necessary output
+			for(let i = 0; i<arr_a.length; i++){ 
+				res.insertAdjacentHTML('beforeend',mod.preclusion.substring(startIndex, arr_a[i][0]));        
+				eventname = 'temp'.concat(i);
+				res.insertAdjacentHTML('beforeend',"<a id = '"+ eventname + "'href='#'>"+arr_a[i][1].code+ "</a>");
+				startIndex = arr_a[i][0] + arr_a[i][1].code.length;
+			}
+			res.insertAdjacentHTML('beforeend', '</p>')
+
+			
+			var workload = modules[mod.code]['workload'].split("-");
+			var totalHours = workload.map(function(elt) {return parseInt(elt)}).reduce(function(a,b) {return a+b});
+			var totalString = totalHours + totalHours > 1 ? 'hrs' : 'hr';
+			var overallReviewNum = Object.values(moduleReviews[mod.code]).map(function(x) {return x['overall']}).reduce(function(a,b) {return a+b}) / Object.values(moduleReviews[mod.code]).length;
+			overallReviewNum = Math.round(overallReviewNum*10)/10	
+			res.insertAdjacentHTML('beforeend', '<h2>Workload - '+ totalHours + ' ' + totalString +'</h2>');
+			res.insertAdjacentHTML('beforeend','<h3>'+workload+'</h3>');
+			res.insertAdjacentHTML('beforeend','<div>Workload viusalisation here</div><br></br>');
+			res.insertAdjacentHTML('beforeend','<h2>Prerequisite Tree</h2><hr></hr>');
+			res.insertAdjacentHTML('beforeend', '<div>Insert Prereq tree here</div><br></br>');
+			res.insertAdjacentHTML('beforeend', '<h2>Ratings and Reviews</h2><hr></hr>');
+			res.insertAdjacentHTML('beforeend','<h3 id = "OverallFeedbackNum">'+overallReviewNum+'</h3>');
+			res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><div id = "StarsInner"></div></div><div></div>');
+			res.insertAdjacentHTML('beforeend',"<style> #StarsOuter { display: inline-block;\
+  					position: relative;\
+  					font-family: FontAwesome;\
+  					font-size: 20px;\
+					}\
+
+					#StarsOuter::before {\
+					content: "\f006 \f006 \f006 \f006 \f006";\
+					}\
+
+					#StarsInner {\
+					position: absolute;\
+					top: 0;
+					left: 0;
+					white-space: nowrap;
+					overflow: hidden;
+					width: 0;
+					font-size: 20px;
+					}
+					#StarsInner::before {
+					content: "\f005 \f005 \f005 \f005 \f005";
+					color: #f8ce0b;
+					}</style>)
+
+			var arr_all = arr.concat(arr_a).reverse();
+			console.log(arr_all.length)
+			//onclick of the module code, brings you to the module page      
+			var matches = document.querySelectorAll("a");
+			console.log(matches);
+			console.log(arr_all);
+			var x = this;
+			for (let j = arr_all.length-1; j >= 0; j--) {
+				let button = matches[matches.length-j-1];
+
+				button.addEventListener('click', function() {
+						console.log(arr_all, "Array All")
+						console.log(arr_all[0][parseInt(j)], "Select Module");
+						x.modInfo(arr_all[j][1]);
+					}
+				)
+			}
+		},
 	}
 }
 
