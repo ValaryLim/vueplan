@@ -52,6 +52,8 @@ h6 {
     text-align: center;
     height: 50px;
     padding-top: 15px;
+    color: #fff;
+    background-color: #24305E;;
 }
 
 .add_feature {
@@ -61,8 +63,15 @@ h6 {
 
 .btn {
     margin-top: 35px;
+    background-color: #24305E;
+    color: #fff;
+    border-color: #24305E;
 }
 
 .input {
     width: 100%
+}
+
+#inputTitle {
+    font-weight: 600;
 }
