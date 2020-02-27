@@ -119,15 +119,12 @@ export default {
 					writtenReviews[id] = written;
 				}
 			}
-			//console.log(writtenReviews);
-			var count = 0
 			for (let [id, review] of Object.entries(writtenReviews)) {
 				var r = document.getElementById("tabody");
-				console.log(count);
-				count+=1;
+				var y = review["year"];
+				var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Semester " + y.slice(5,6);
 				r.insertAdjacentHTML('beforeend','<tr>');
-				r.insertAdjacentHTML('beforeend','<td>'+ users_table[id]+'<br></br>Year & Semester taken: <br></br>'+ review["year"] +'</td>' + '<td>'+review['written']+'</td></tr>');
-				//r.insertAdjacentHTML('beforeend','<td>'+review['written']+'</td></tr>');
+				r.insertAdjacentHTML('beforeend','<td>'+ users_table[id]+'<br></br>Year & Semester taken: <br></br>'+ year +'</td>' + '<td>'+review['written']+'</td></tr>');
 			}
 			res.insertAdjacentHTML('beforeend','</tbody></table');
 
