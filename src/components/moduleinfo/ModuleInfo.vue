@@ -33,7 +33,6 @@ export default {
 	},
 	
 	methods:{  
-
 		modInfo:function(mod){
 			this.search ='';
 			var res = document.getElementById("res");
@@ -63,20 +62,22 @@ export default {
 				startIndex = arr[i][0] + arr[i][1].code.length;
 			}
 
-			res.insertAdjacentHTML('beforeend', mod.prereq.substring(startIndex, mod.prereq.length) +"</p>");
-		
-		
-		
+			document.getElementById("res").insertAdjacentHTML('beforeend', mod.prereq.substring(startIndex, mod.prereq.length) +"</h4>");
+      
+      
+      
 			//PRECLUSIONS
-			document.getElementById('res').insertAdjacentHTML('beforeend',"<h2>Preclusions</h2><hr></hr><p>")
-			var arr_a = [];      
+			document.getElementById('res').insertAdjacentHTML('beforeend',"<h2>Preclusions</h2><hr></hr>")
+			var arr_a = [];
+			console.log(this.mods);
 			for(let i=0; i <this.mods.length; i++){
 				index = mod.preclusion.toUpperCase().indexOf(this.mods[i].code);
 				if(index != -1){
-					arr_a.push([index,this.mods[i]])
+					if(this.mods[i].code != mod.code){
+						arr_a.push([index,this.mods[i]])
+					}
 				}
 			}
-		
 			startIndex = 0;
 			arr_a.sort(function(a,b) {return a[0]-b[0]});
 			if (arr_a.length == 0 && mod.preclusion.length == 0) {
@@ -90,7 +91,6 @@ export default {
 				startIndex = arr_a[i][0] + arr_a[i][1].code.length;
 			}
 			res.insertAdjacentHTML('beforeend', '</p>')
-
 			
 			var workload = modules[mod.code]['workload'].split("-");
 			var totalHours = workload.map(function(elt) {return parseInt(elt)}).reduce(function(a,b) {return a+b});
@@ -109,10 +109,10 @@ export default {
 			res.insertAdjacentHTML('beforeend', '<div>Insert Prereq tree here</div><br></br>');
 			res.insertAdjacentHTML('beforeend', '<h2>Ratings and Reviews</h2><hr></hr>');
 			res.insertAdjacentHTML('beforeend','<h3 id = "OverallFeedbackNum">'+overallReviewNum+'</h3>');
+			res.insertAdjacentHTML('beforeend','<i class="far fa-star"></i>');
 			res.insertAdjacentHTML('beforeend','<div>Learning Contents: ' + avgContent + " | Staff and Administration: " + avgStaffAdmin + "</div><br></br>");
 			
 			res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews</h4><hr></hr><table><tbody id = "tabody">');
-			//console.log(Object.entries(moduleReviews[mod.code]));
 			var writtenReviews = {};
 			for (let [id, written] of Object.entries(moduleReviews[mod.code])) {
 				if (written['written'].length > 0) {
@@ -148,8 +148,7 @@ export default {
 					}
 				)
 			}
-		},
+		}
 	}
 }
-
 </script>
