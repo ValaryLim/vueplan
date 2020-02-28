@@ -35,4 +35,13 @@
         padding: 10px;
         color: #24305E;
     }
+    a:hover {
+        color: #F76C6C;
+    }
+    b-navbar {
+        background-color: #24305E;
+    }
+    /* .navbar.navbar-light.bg-light{
+        background-color: #FAFAFA!important;
+    } */
 </style>

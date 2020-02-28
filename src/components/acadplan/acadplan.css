@@ -57,11 +57,16 @@
     vertical-align: top;
 }
 
-.btn {
+.btn, .btn:active, .btn:focus {
     margin-top: 35px;
     background-color: #24305E;
     color: #fff;
     border-color: #24305E;
+}
+
+.btn:hover {
+    background-color: #F76C6C;
+    border-color: #F76C6C;
 }
 
 .input {
