@@ -36,4 +36,42 @@
 #res {
   align-items: left;
   text-align: left;
+  display: block;
+  width: 60%;
+}
+
+#sep {
+  display: inline-block;
+  white-space: pre-wrap;
+}
+
+#StarsOuter {
+  display: inline-block;
+  position: relative;
+  font-family: FontAwesome;
+  font-size: 20px;
+}
+
+#StarsOuter::before {
+  content: "\f006 \f006 \f006 \f006 \f006";
+}
+
+#StarsInner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+  font-size: 20px;
+}
+#ContentFeedback::after {
+  content: " \f005";
+}
+#StaffFeedback::after {
+  content: " \f005";
+}
+#StarsInner::before {
+  content: "\f005 \f005 \f005 \f005 \f005";
+  color: #f8ce0b;
 }
