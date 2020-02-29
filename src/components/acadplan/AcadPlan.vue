@@ -63,6 +63,7 @@ export default {
         add_module: function() {
             // remove whitespace and convert module name to lowercase
             var module_name = this.add_module_code.trim().toLowerCase();
+            
             // clear module slot after use
             this.add_module_code = ""; 
 
