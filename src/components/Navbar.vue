@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-navbar toggleable="lg" type="light" variant="light">
+        <b-navbar class="header" toggleable="lg" type="light" variant="light">
             <router-link to="/" class="navbar-brand">vuePlan</router-link>
 
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -40,6 +40,7 @@
     }
     b-navbar {
         background-color: #24305E;
+        position: sticky;
     }
     /* .navbar.navbar-light.bg-light{
         background-color: #FAFAFA!important;
