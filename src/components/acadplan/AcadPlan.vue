@@ -8,7 +8,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faTimes, faAlignJustify } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(faTimes, faAlignJustify)
-var index = 22;
+var index = 50;
 export default {
     name: "App",
     display: "Academic Planner",
@@ -124,9 +124,42 @@ export default {
         sort_modules: function(data, sem_num) {
             data.sort(this.compare_module);
 
+            var current_sem_name = this.num_semester_mapping[sem_num];
+
             // update module_semester_mapping dictionary after shifting the modules
-            for (var module in data) {
-                if (data[module].mod !== "") {
+            for (var module_index in this.acadplan[current_sem_name]) {
+                var module = this.acadplan[current_sem_name][module_index];
+                
+                // check that module isn't fixed (buffer cell)
+                if (module.move) {
+                    var previous_sem = this.module_semester_mapping[module.mod];
+
+                    // find the module that just got moved (num in module does not correspond to correct sem)
+                    if (previous_sem != sem_num) {
+                        // find the earliest date module can be shifted to
+                        var earliest_sem = this.check_prerequisites_sem(this.allmodules[module.mod].parseprereq);
+                        
+                        // if earliest sem is after current sem
+                        if (earliest_sem > sem_num) {
+                            // push module back to original position
+                            // get previous sem
+                            var previous_sem_name = this.num_semester_mapping[previous_sem];
+
+                            // delete module from current sem
+                            this.acadplan[current_sem_name] = this.acadplan[current_sem_name].filter((event) => {
+                                return event.index !== module.index   
+                            });
+                            
+                            // add module back to original sem
+                            this.acadplan[previous_sem_name].push({ mod: module.mod, mc: module.mc, move: true, index: index }); 
+                            this.module_semester_mapping[module.code] = previous_sem;
+                            index++;
+                            alert("Module cannot be shifted to this semester as not all prerequisites have been taken yet.");
+                        } else {
+                            // allow shift to happen, update module_semester_mapping
+                            this.module_semester_mapping[module.code] = sem_num;
+                        }
+                    }
                     this.module_semester_mapping[module.mod] = sem_num
                 }
             }
