@@ -23,28 +23,9 @@ export default {
             invalid_module: 0,
             inserted_module: 1,
             unmet_prereq: -1,
-            module_semester_mapping: {
-                "BT1101": 1,
-                "CS1010S": 1,
-                "IS1103": 1, 
-                "MA1521": 1,
-                "BT2101": 2,
-                "CS2030": 2,
-                "EC1301": 2,
-                "MA1101R": 2,
-                "BT2102": 3,
-                "CS2040": 3,
-                "ST2334": 3,
-                "BT3102": 4,
-                "BT3103": 4,
-                "MKT1705X": 5,
-            },
-            num_sem_mapping: {
-                1: "y1s1", 2: "y1s2", 3: "y2s1", 4: "y2s2", 5: "y3s1", 6: "y3s2", 7: "y4s1", 8: "y4s2"
-            }
         };
     },
-    props: ['allmodules', 'acadplan'],
+    props: ['allmodules', 'acadplan', 'module_semester_mapping', 'num_semester_mapping'],
     computed: {
         sorted_y1s1: function() {
             this.sort_modules(this.acadplan['y1s1'], 1);
@@ -98,20 +79,10 @@ export default {
                 } else if (module === this.inserted_module) {
                     alert("Error: Module is already in academic plan"); 
                 } else {
-                    // check if any preclusions to the module have been taken
-                    var mod_preclusions_check = this.get_all_preclu(module.parsepreclu, []);
-                    for (var preclu_index in mod_preclusions_check) {
-                        var preclu = mod_preclusions_check[preclu_index];
-                        if (preclu !== module.code && (preclu in this.module_semester_mapping)) {
-                            alert("Error: Precluded module taken");
-                            return; // don't add into academic plan
-                        }
-                    }
-
                     // check if all prerequisites have been met
                     var mod_prerequisites_check = this.check_prerequisites_sem(module.parseprereq);
                     if (mod_prerequisites_check !== this.unmet_prereq) {
-                        var add_in_semester = this.num_sem_mapping[mod_prerequisites_check];
+                        var add_in_semester = this.num_semester_mapping[mod_prerequisites_check];
                         this.acadplan[add_in_semester].push({ mod: module.code, mc: module.mc, move: true, index: index }); 
                         this.module_semester_mapping[module.code] = mod_prerequisites_check;
                         index++;
@@ -139,17 +110,14 @@ export default {
             return this.invalid_module;
         },
         delete_module: function(data_name, module) {
-            console.log("Delete 1");
             var module_name = module.mod;
 
             if (this.check_unlocked(module_name)) {
-                console.log("Delete 2");
                 // filter all modules
                 this.acadplan[data_name] = this.acadplan[data_name].filter((event) => {
                     return event.index !== module.index   
                 });
             } else {
-                console.log("Delete 3");
                 alert("Some modules in your academic plan depend on the module you are trying to delete.");
             }
         }, 
@@ -198,7 +166,8 @@ export default {
                         return insert_sem;
                     } else {
                         // check if any of the precluded modules are taken
-                        var req_precludes = this.get_all_preclu(this.allmodules[req].parsepreclu, []);
+                        var req_precludes = this.get_all_preclu(this.allmodules[prereq_tree].parsepreclu, []);
+                        
                         var met_preclu = false;
                         for (var preclu_index in req_precludes) {
                             var preclu = req_precludes[preclu_index];
@@ -324,6 +293,8 @@ export default {
                         return this.unmet_prereq;
                     }
                 }
+
+                return insert_sem
             }
         },
         check_unlocked: function(module_name) {
@@ -333,9 +304,7 @@ export default {
             */
 
             // get array of all modules that are locked by this module
-            console.log("Check Unlocked 1");
             var all_locked = this.get_locked(module_name);
-            console.log(all_locked, "ALL LOCKED");
 
             // attempt to remove module from acad_plan
             var sem_save = this.module_semester_mapping[module_name];
@@ -344,11 +313,8 @@ export default {
             // check if all locked modules still have prerequisites fulfilled
             // if true, can delete (return true)
             // if false, do not delete
-            console.log("Check Unlocked 2");
             for (var mod_index in all_locked) {
                 var locked_mod = all_locked[mod_index];
-                console.log(locked_mod, "Check Unlocked 3");
-            
                 // check if module is in acad plan
                 if (locked_mod in this.module_semester_mapping) {
                     // if module is in academic plan, check if prerequisites are still met
@@ -373,14 +339,11 @@ export default {
             // go through each module in preclu_arr to get locked mods
             for (var mod_index in preclu_arr) {
                 var preclu_mod = preclu_arr[mod_index];
-
                 // get all locked modules of that preclu mod
                 var preclu_locked = this.allmodules[preclu_mod].locked;
-
                 for (var locked_index in preclu_locked) {
                     // get locked module
                     var locked_mod = preclu_locked[locked_index]; 
-
                     // check if locked module is in locked_arr, if not, add it
                     if (locked_arr.includes(locked_mod) === false) {
                         locked_arr.push(locked_mod);
@@ -416,17 +379,23 @@ export default {
 
             // else, go through each nest and get the preclusions
             for (var key in preclu_tree) {
+                // access subtree
                 var preclu_subtree = preclu_tree[key];
+
                 for (var preclu_index in preclu_subtree) {
+                    // precluded module
                     var preclu = preclu_subtree[preclu_index];
+                    
+                    // if precluded module is a string
                     if (typeof(preclu) === "string" && this.allmodules[preclu]) {
-                        if (preclu_arr.includes(preclu) === false) {
+                        // and not yet included in preclu_arr
+                        if (!preclu_arr.includes(preclu)) {
+                            // add precluded module to preclu_arr
                             preclu_arr.push(preclu);
+                            
+                            // recursively call get_all_preclu on new modules
+                            preclu_arr = this.get_all_preclu(this.allmodules[preclu].parsepreclu, preclu_arr);
                         }
-                    } else {
-                        // another sub preclusion, recursively update preclu_arr
-                        break;
-                        // preclu_arr = this.get_all_preclu(preclu, preclu_arr);
                     }
                 }
             }
