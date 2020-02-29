@@ -113,7 +113,6 @@ export default {
                     if (mod_prerequisites_check !== this.unmet_prereq) {
                         var add_in_semester = this.num_sem_mapping[mod_prerequisites_check];
                         this.acadplan[add_in_semester].push({ mod: module.code, mc: module.mc, move: true, index: index }); 
-                        module.inserted = true;
                         this.module_semester_mapping[module.code] = mod_prerequisites_check;
                         index++;
                     } else {
@@ -129,7 +128,7 @@ export default {
                 // check if module exists
                 if (this.allmodules[key].fullname.toLowerCase().includes(module_name)) {
                     // check if module is already inserted
-                    if (this.allmodules[key] && this.allmodules[key].inserted === false) {
+                    if (this.allmodules[key] && !(key in this.module_semester_mapping)) {
                         return this.allmodules[key];
                     } else {
                         // module already inserted
@@ -140,14 +139,17 @@ export default {
             return this.invalid_module;
         },
         delete_module: function(data_name, module) {
+            console.log("Delete 1");
             var module_name = module.mod;
 
             if (this.check_unlocked(module_name)) {
+                console.log("Delete 2");
                 // filter all modules
                 this.acadplan[data_name] = this.acadplan[data_name].filter((event) => {
                     return event.index !== module.index   
                 });
             } else {
+                console.log("Delete 3");
                 alert("Some modules in your academic plan depend on the module you are trying to delete.");
             }
         }, 
@@ -331,23 +333,28 @@ export default {
             */
 
             // get array of all modules that are locked by this module
+            console.log("Check Unlocked 1");
             var all_locked = this.get_locked(module_name);
+            console.log(all_locked, "ALL LOCKED");
 
             // attempt to remove module from acad_plan
-            this.allmodules[module_name].inserted = false;
+            var sem_save = this.module_semester_mapping[module_name];
+            delete this.module_semester_mapping[module_name];
 
             // check if all locked modules still have prerequisites fulfilled
             // if true, can delete (return true)
             // if false, do not delete
+            console.log("Check Unlocked 2");
             for (var mod_index in all_locked) {
                 var locked_mod = all_locked[mod_index];
+                console.log(locked_mod, "Check Unlocked 3");
             
                 // check if module is in acad plan
-                if (this.allmodules[locked_mod].inserted === true) {
+                if (locked_mod in this.module_semester_mapping) {
                     // if module is in academic plan, check if prerequisites are still met
                     if (this.check_prerequisites_sem(this.allmodules[locked_mod].parseprereq) === this.unmet_prereq) {
                         // not met, reinsert module and return false
-                        this.allmodules[module_name].inserted = true;
+                        this.module_semester_mapping[module_name] = sem_save;
                         return false;
                     }
                 }
