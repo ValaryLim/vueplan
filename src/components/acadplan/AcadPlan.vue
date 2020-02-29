@@ -80,37 +80,6 @@ export default {
         },
     },
     methods: {
-        add_module: function() {
-            // remove whitespace and convert module name to lowercase
-            var module_name = this.add_module_code.trim().toLowerCase();
-
-            // clear module slot after use
-            this.add_module_code = ""; 
-
-            if (module_name !== "") {
-                // check valid module
-                var module = this.check_valid_module(module_name);
-
-                if (module === this.invalid_module) {
-                    alert("Error: Module is invalid");
-                } else if (module === this.inserted_module) {
-                    alert("Error: Module is already in academic plan"); 
-                } else {
-                    // check if all prerequisites have been met
-                    if (this.check_prerequisites(module.parseprereq) === true) {
-                        this.acadplan['y1s1'].push({ mod: module.code, mc: module.mc, move: true, index: index }); 
-                        module.inserted = true;
-                        // added to semester 1
-                        this.module_semester_mapping[module.code] = 1;
-                        index++;
-                    } else {
-                        alert("Error: Have not met all of module's prerequisites");
-                    }
-                }
-            } else {
-                alert("Error: Field cannot be left blank");
-            }
-        },
         add_module_sem: function() {
             /** adds module to the earliest possible semester the student can take it */
 
@@ -133,7 +102,6 @@ export default {
                     var mod_prerequisites_check = this.check_prerequisites_sem(module.parseprereq);
                     if (mod_prerequisites_check !== this.unmet_prereq) {
                         var add_in_semester = this.num_sem_mapping[mod_prerequisites_check];
-                        console.log(mod_prerequisites_check, "Semester to Add Module");
                         this.acadplan[add_in_semester].push({ mod: module.code, mc: module.mc, move: true, index: index }); 
                         module.inserted = true;
                         this.module_semester_mapping[module.code] = mod_prerequisites_check;
@@ -196,7 +164,6 @@ export default {
             return 0;
         }, 
         check_prerequisites_sem: function(prereq_tree) {
-            console.log("Check Prerequisites Sem Called");
             /** 
              * returns the earliest sem that the module can be taken, -1 otherwise. 
              */
@@ -204,63 +171,86 @@ export default {
             // tracker of earliest semester where module can be inserted
             var insert_sem = 1;
 
-            console.log("Check Prereq 1");
             // if there are no prerequisites, module can be inserted immediately after the first semester
             if (Object.keys(prereq_tree).length === 0) {
                 return insert_sem;
             }
 
-            console.log("Check Prereq 2");
             // if there is only one prerequisite
             if (typeof(prereq_tree) === "string") {
                 // check if module exists
                 if (this.allmodules[prereq_tree]) {
-                    console.log("Check Prereq 2A");
                     // check if prerequisite is taken
                     if (prereq_tree in this.module_semester_mapping) {
                         insert_sem = this.module_semester_mapping[prereq_tree] + 1;
                         return insert_sem;
                     } else {
-                        return this.unmet_prereq
+                        // check if any of the precluded modules are taken
+                        var req_precludes = this.get_all_preclu(this.allmodules[req].parsepreclu, []);
+                        var met_preclu = false;
+                        for (var preclu_index in req_precludes) {
+                            var preclu = req_precludes[preclu_index];
+                            // if preclusion exists and is in academic plan
+                            if (this.allmodules[preclu] && (preclu in this.module_semester_mapping)) {
+                                if (this.module_semester_mapping[preclu] + 1 > insert_sem) {
+                                    insert_sem = this.module_semester_mapping[preclu] + 1;
+                                    met_preclu = true;
+                                }
+                            }
+                        }
+                        
+                        // if prerequisites or its preclusions are not met, return unmet_prereq
+                        if (!met_preclu) {
+                            return this.unmet_prereq;
+                        }
                     }
                 } else {
-                    console.log("Check Prereq 2B");
                     return insert_sem; // let module get added since prereq no longer exists
                 }
             }
 
-            console.log("Check Prereq 3");
             // if there is more than one prerequisite
             for (var key in prereq_tree) {
-                console.log("Check Prereq 3A");
                 // get prerequisite subtree
                 var prereq_subtree = prereq_tree[key];
 
                 if (key === "and") {
-                    console.log("Check Prereq 3AND");
                     // need all requirements within "and"
                     for (var req_index in prereq_subtree) {
                         var req = prereq_subtree[req_index];
                         if (typeof(req) === "string") {
-                            console.log("Check Prereq 3AND1");
                             // if requirement is a string
                             // check if module is valid
                             if (this.allmodules[req]) {
                                 // if module is not met, return unmet_prereq
-                                if (!(req in this.module_semester_mapping)) {
-                                    return this.unmet_prereq;
-                                } else {
+                                if (req in this.module_semester_mapping) {
                                     // update insert_sem if required
-                                    console.log(this.module_semester_mapping[req], "SEM OF PREREQ");
                                     if (this.module_semester_mapping[req] + 1 > insert_sem) {
                                         insert_sem = this.module_semester_mapping[req] + 1;
+                                    }
+                                } else {
+                                    // try and check if any preclusions have been added
+                                    var req_precludes2 = this.get_all_preclu(this.allmodules[req].parsepreclu, []);
+                                    var met_preclu2 = false;
+                                    for (var preclu_index2 in req_precludes2) {
+                                        var preclu2 = req_precludes2[preclu_index2];
+                                        // if preclusion exists and is in academic plan
+                                        if (this.allmodules[preclu2] && (preclu2 in this.module_semester_mapping)) {
+                                            if (this.module_semester_mapping[preclu2] + 1 > insert_sem) {
+                                                insert_sem = this.module_semester_mapping[preclu2] + 1;
+                                                met_preclu2 = true;
+                                            }
+                                        }
+                                    }
+                                    // if prerequisites or its preclusions are not met, return unmet_prereq
+                                    if (!met_preclu2) {
+                                        return this.unmet_prereq;
                                     }
                                 }
                             }
                         } else {
-                            console.log("Check Prereq 3AND2");
                             // there is a nested dictionary (either "and" or "or")
-                            // recursively call check_prerequisites
+                            // recursively call check_prerequisites_sem
                             var check_subreq = this.check_prerequisites_sem(req);
                             // if prereqs are not met
                             if (check_subreq === this.unmet_prereq) {
@@ -275,7 +265,6 @@ export default {
                     }
                     return insert_sem;
                 } else if (key === "or") {
-                    console.log("Check Prereq 3OR");
                     // record earliest sem for "or" and if module can be taken or not
                     var earliest_or_sem = 1000;
                     var can_take = false;
@@ -284,7 +273,6 @@ export default {
                     for (var req2_index in prereq_subtree) {
                         var req2 = prereq_subtree[req2_index];
                         if (typeof(req2) === "string") {
-                            console.log("Check Prereq 3OR1");
                             // check if module is valid
                             if (this.allmodules[req2]) {
                                 if (req2 in this.module_semester_mapping) {
@@ -293,10 +281,23 @@ export default {
                                         earliest_or_sem = this.module_semester_mapping[req2] + 1;
                                         can_take = true;
                                     }
+                                } else {
+                                    // try and check if any preclusions have been added
+                                    var req_precludes3 = this.get_all_preclu(this.allmodules[req2].parsepreclu, []);
+
+                                    for (var preclu_index3 in req_precludes3) {
+                                        var preclu3 = req_precludes3[preclu_index3];
+                                        // if preclusion exists and is in academic plan
+                                        if (this.allmodules[preclu3] && (preclu3 in this.module_semester_mapping)) {
+                                            if (this.module_semester_mapping[preclu3] + 1 < earliest_or_sem) {
+                                                earliest_or_sem = this.module_semester_mapping[preclu3] + 1;
+                                                can_take = true;
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         } else {
-                            console.log("Check Prereq 3OR2");
                             // find at least one true
                             var check_subreq2 = this.check_prerequisites_sem(req2);
                             if ((check_subreq2 !== this.unmet_prereq) && (check_subreq2 < earliest_or_sem)) {
@@ -305,9 +306,7 @@ export default {
                             }
                         }
                     }
-                    console.log("Check Prereq 4");
                     if (can_take) {
-                        console.log(earliest_or_sem, "earliest or sem");
                         return earliest_or_sem;
                     } else {
                         return this.unmet_prereq;
@@ -315,60 +314,6 @@ export default {
                 }
             }
         },
-        check_prerequisites: function(prereq_tree) {
-            /** Returns true if prerequisites for the module are met, false otherwise */
-            // if there are no prerequisites
-            if (Object.keys(prereq_tree).length === 0) {
-                return true;
-            }
-
-            // if there is only one prerequisite
-            if (typeof(prereq_tree) === "string") {
-                return (this.allmodules[prereq_tree] && this.allmodules[prereq_tree].inserted);
-            }
-
-            // if there is more than one prerequisite
-            for (var key in prereq_tree) {
-                var prereq_subtree = prereq_tree[key];
-                if (key === "and") {
-                    // need all requirements within "and"
-                    for (var req_index in prereq_subtree) {
-                        var req = prereq_subtree[req_index];
-                        if (typeof(req) === "string") {
-                            // if requirement is a string, check if module has been added to acadplan
-                            if (this.allmodules[req] && this.allmodules[req].inserted === false) {
-                                return false;
-                            }
-                        } else {
-                            // there is a nested dictionary (either "and" or "or")
-                            // recursively call check_prerequisites
-                            var check_subreq = this.check_prerequisites(req);
-                            if (check_subreq === false) {
-                                return false;
-                            }
-                        }
-                    }
-                    return true;
-                } else if (key === "or") {
-                    // only need to meet one of the requirements within "or"
-                    for (var req2_index in prereq_subtree) {
-                        var req2 = prereq_subtree[req2_index];
-                        if (typeof(req2) === "string") {
-                            if (this.allmodules[req2] && this.allmodules[req2].inserted === true) {
-                                return true;
-                            } 
-                        } else {
-                            // find at least one true
-                            var check_subreq2 = this.check_prerequisites(req2);
-                            if (check_subreq2 === true) {
-                                return true;
-                            }
-                        }
-                    }
-                    return false;
-                }
-            }
-        }, 
         check_unlocked: function(module_name) {
             /** 
              * returns true if the module is not required for any other module, false otherwise. 
@@ -390,9 +335,8 @@ export default {
                 // check if module is in acad plan
                 if (this.allmodules[locked_mod].inserted === true) {
                     // if module is in academic plan, check if prerequisites are still met
-                    if (this.check_prerequisites(this.allmodules[locked_mod].parseprereq) === false) {
+                    if (this.check_prerequisites_sem(this.allmodules[locked_mod].parseprereq) === this.unmet_prereq) {
                         // not met, reinsert module and return false
-                        console.log(locked_mod, "LOCKED MODULE CHECKING");
                         this.allmodules[module_name].inserted = true;
                         return false;
                     }
@@ -408,7 +352,6 @@ export default {
             var preclu_arr = this.get_all_preclu(preclu_tree, []);
 
             var locked_arr = this.allmodules[module_name].locked;
-            console.log(locked_arr, "LOCKED 1");
 
             // go through each module in preclu_arr to get locked mods
             for (var mod_index in preclu_arr) {
@@ -427,7 +370,6 @@ export default {
                     }
                 }
             }
-            console.log(locked_arr, "LOCKED 2");
             return locked_arr;
         },
         get_all_preclu: function(preclu_tree, preclu_arr) {
@@ -444,27 +386,20 @@ export default {
                 if (this.allmodules[preclu_tree]) {
                     // check if preclu_arr already contains module
                     if (preclu_arr.includes(preclu_tree)) {
-                        console.log(preclu_arr, "PRECLU ARR1");
                         return preclu_arr;
                     } else {
                         // if not, push module into preclu_arr
-                        console.log(preclu_arr, "PRECLU ARR 2A");
                         preclu_arr.push(preclu_tree);
-                        console.log(preclu_arr, "PRECLU ARR 2B");
                         return preclu_arr;
                     }
                 } else {
-                    console.log(preclu_arr, "PRECLU ARR3");
                     return preclu_arr;
                 }
             }
 
             // else, go through each nest and get the preclusions
-            console.log(preclu_tree, "TREE");
-            console.log(typeof(preclu_tree) === "string", "CHECK IF STRING")
             for (var key in preclu_tree) {
                 var preclu_subtree = preclu_tree[key];
-                console.log(preclu_subtree, "SUBTREE");
                 for (var preclu_index in preclu_subtree) {
                     var preclu = preclu_subtree[preclu_index];
                     if (typeof(preclu) === "string" && this.allmodules[preclu]) {
@@ -473,7 +408,6 @@ export default {
                         }
                     } else {
                         // another sub preclusion, recursively update preclu_arr
-                        console.log(preclu, "PRECLU");
                         break;
                         // preclu_arr = this.get_all_preclu(preclu, preclu_arr);
                     }
