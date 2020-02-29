@@ -98,6 +98,16 @@ export default {
                 } else if (module === this.inserted_module) {
                     alert("Error: Module is already in academic plan"); 
                 } else {
+                    // check if any preclusions to the module have been taken
+                    var mod_preclusions_check = this.get_all_preclu(module.parsepreclu, []);
+                    for (var preclu_index in mod_preclusions_check) {
+                        var preclu = mod_preclusions_check[preclu_index];
+                        if (preclu !== module.code && (preclu in this.module_semester_mapping)) {
+                            alert("Error: Precluded module taken");
+                            return; // don't add into academic plan
+                        }
+                    }
+
                     // check if all prerequisites have been met
                     var mod_prerequisites_check = this.check_prerequisites_sem(module.parseprereq);
                     if (mod_prerequisites_check !== this.unmet_prereq) {
