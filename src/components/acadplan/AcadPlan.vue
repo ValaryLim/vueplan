@@ -125,6 +125,7 @@ export default {
             data.sort(this.compare_module);
 
             var current_sem_name = this.num_semester_mapping[sem_num];
+            var check_module = "";
 
             // update module_semester_mapping dictionary after shifting the modules
             for (var module_index in this.acadplan[current_sem_name]) {
@@ -136,31 +137,36 @@ export default {
 
                     // find the module that just got moved (num in module does not correspond to correct sem)
                     if (previous_sem != sem_num) {
-                        // find the earliest date module can be shifted to
-                        var earliest_sem = this.check_prerequisites_sem(this.allmodules[module.mod].parseprereq);
-                        
-                        // if earliest sem is after current sem
-                        if (earliest_sem > sem_num) {
-                            // push module back to original position
-                            // get previous sem
-                            var previous_sem_name = this.num_semester_mapping[previous_sem];
-
-                            // delete module from current sem
-                            this.acadplan[current_sem_name] = this.acadplan[current_sem_name].filter((event) => {
-                                return event.index !== module.index   
-                            });
-                            
-                            // add module back to original sem
-                            this.acadplan[previous_sem_name].push({ mod: module.mod, mc: module.mc, move: true, index: index }); 
-                            this.module_semester_mapping[module.code] = previous_sem;
-                            index++;
-                            alert("Module cannot be shifted to this semester as not all prerequisites have been taken yet.");
-                        } else {
-                            // allow shift to happen, update module_semester_mapping
-                            this.module_semester_mapping[module.code] = sem_num;
-                        }
+                        // mark it as the module to be checked
+                        check_module = module;
                     }
-                    this.module_semester_mapping[module.mod] = sem_num
+                }
+            }
+
+            // check the module
+            if (check_module !== "") {
+                // find the earliest date module can be shifted to
+                var earliest_sem = this.check_prerequisites_sem(this.allmodules[check_module.mod].parseprereq);
+                            
+                // if earliest sem is after current sem
+                if (earliest_sem > sem_num) {
+                    // push module back to original position
+                    // get previous sem
+                    var previous_sem_name = this.num_semester_mapping[this.module_semester_mapping[check_module.mod]];
+
+                    // delete module from current sem
+                    this.acadplan[current_sem_name] = this.acadplan[current_sem_name].filter((event) => {
+                        return event.index !== check_module.index   
+                    });
+                                
+                    // add module back to original sem
+                    this.acadplan[previous_sem_name].push({ mod: check_module.mod, mc: check_module.mc, move: true, index: index }); 
+                    this.module_semester_mapping[check_module.code] = previous_sem;
+                    index++;
+                    alert("Module cannot be shifted to this semester as not all prerequisites have been taken yet.");
+                } else {
+                    // allow shift to happen, update module_semester_mapping
+                    this.module_semester_mapping[module.code] = sem_num;
                 }
             }
         },
