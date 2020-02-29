@@ -127,48 +127,63 @@ export default {
             var current_sem_name = this.num_semester_mapping[sem_num];
             var check_module = "";
 
-            // update module_semester_mapping dictionary after shifting the modules
+            // find shifted module
             for (var module_index in this.acadplan[current_sem_name]) {
                 var module = this.acadplan[current_sem_name][module_index];
-                
                 // check that module isn't fixed (buffer cell)
-                if (module.move) {
-                    var previous_sem = this.module_semester_mapping[module.mod];
-
-                    // find the module that just got moved (num in module does not correspond to correct sem)
-                    if (previous_sem != sem_num) {
-                        // mark it as the module to be checked
-                        check_module = module;
-                    }
+                if (module.move && (this.module_semester_mapping[module.mod] != sem_num)) {
+                    check_module = module;
                 }
             }
 
-            // check the module
+            // check shifted module
             if (check_module !== "") {
+                // CHECK THAT PREREQUISITES ARE MET BEFORE MODULE CAN BE TAKEN
+                // get previous sem
+                var previous_sem = this.module_semester_mapping[check_module.mod];
+                var previous_sem_name = this.num_semester_mapping[previous_sem];
+                
                 // find the earliest date module can be shifted to
                 var earliest_sem = this.check_prerequisites_sem(this.allmodules[check_module.mod].parseprereq);
                             
                 // if earliest sem is after current sem
                 if (earliest_sem > sem_num) {
                     // push module back to original position
-                    // get previous sem
-                    var previous_sem_name = this.num_semester_mapping[this.module_semester_mapping[check_module.mod]];
-
                     // delete module from current sem
                     this.acadplan[current_sem_name] = this.acadplan[current_sem_name].filter((event) => {
-                        return event.index !== check_module.index   
+                        return event.index !== check_module.index; 
                     });
                                 
                     // add module back to original sem
                     this.acadplan[previous_sem_name].push({ mod: check_module.mod, mc: check_module.mc, move: true, index: index }); 
-                    this.module_semester_mapping[check_module.code] = previous_sem;
+                    this.module_semester_mapping[check_module.mod] = previous_sem;
                     index++;
                     alert("Module cannot be shifted to this semester as not all prerequisites have been taken yet.");
-                } else {
-                    // allow shift to happen, update module_semester_mapping
-                    this.module_semester_mapping[module.code] = sem_num;
+                    return;
                 }
+                
+                // CHECK THAT MODULE IS COMPLETED BEFORE ITS LOCKED MODULES
+                var latest_sem = this.check_locked_sem(check_module.mod);
+                if (latest_sem < sem_num) {
+                    // push module back to original position
+                    // delete module from current sem
+                    this.acadplan[current_sem_name] = this.acadplan[current_sem_name].filter((event) => {
+                        return event.index !== check_module.index;
+                    })
+
+                    // add module back to original sem
+                    this.acadplan[previous_sem_name].push({ mod: check_module.mod, mc: check_module.mc, move: true, index: index });
+                    this.module_semester_mapping[check_module.mod] = previous_sem;
+                    index++;
+                    alert("Module cannot be shifted to this semester as other modules are locked by it.");
+                    return;
+                }
+                
+                // CAN BE SHIFTED, UPDATE
+                this.module_semester_mapping[check_module.mod] = sem_num;
             }
+
+            console.log(this.module_semester_mapping);
         },
         compare_module: function(a, b) {
             if (a.move === false) { 
@@ -390,6 +405,28 @@ export default {
                 }
             }
             return locked_arr;
+        },
+        check_locked_sem: function(module_name) {
+            /** 
+             * Returns the latest sem that module can be added 
+             * (any later and it will be at the same time as a locked module)
+             */
+            var locked_modules = this.get_locked(module_name);
+            var latest_sem = 1000;
+            
+            for (var lmod_index in locked_modules) {
+                var lmod = locked_modules[lmod_index];
+                if (lmod in this.module_semester_mapping) {
+                    // get semester that module is in
+                    var lmod_sem = this.module_semester_mapping[lmod];
+
+                    if (lmod_sem - 1 < latest_sem) {
+                        latest_sem = lmod_sem - 1;
+                    }
+                }
+            }
+            
+            return latest_sem;
         },
         get_all_preclu: function(preclu_tree, preclu_arr) {
             /**
