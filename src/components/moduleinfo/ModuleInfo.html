@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <meta charset="UTF-8">
+  <title>MIDSEM PROJECT FINAL</title>
+   </head>
+  <body>
+    <div id = 'app'>
+          <input id ='searchIn' type="text" v-model="search" placeholder="Search Module Code or Title..."/>
+      <div id = 'res'></div>
+
+      <div v-if = "search != ''">
+        <ul id = 'modules'>
+          <li v-for="mod in filteredList" v-on:click = 'modInfo(allmodules[mod])'>
+            {{allmodules[mod].code}} {{allmodules[mod].title}} 
+        </li>
+        </ul>
+
+    </div> </div>
+   </body>
+</html>

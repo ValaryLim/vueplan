@@ -1,0 +1,68 @@
+{"CS1010S":
+    {
+        "e1234567" : {
+            "year": "1314s1",
+            "staffadmin": 4.5,
+            "content": 4.7,
+            "overall": 4.6,
+            "written": "I took this mod in Semester 1, AY13/14. The delivery of this module is a breath of fresh air. The concept of gamification is applied here through the Coursemology platform. Basically your 'homework' are called 'missions' and you can earn experience and achievements. There is even a leaderboard ranking system which is quite cool to be honest. Having said that, the workload for this module is quite heavy, there are quite a lot of missions to do and they are not easy - if you are new to programming that is. A problem can take either 15 minutes or 5 hours - it varies. Tutors are there to help you out so don't worry. :) Personally I find this module to be quite manageable and light. Mainly because the homework are really so much fun to complete - it's like problem solving. Or maybe because I have no life. To clarify - I had almost zero experience in programming prior to joining this module. In fact, it might be beneficial to have no experience as you do not have to unlearn bad habits. Just do your work consistently and you will be fine. Coursework takes up 35% of the final grade, which is achievable by most of the cohort. You just need to achieve Level 35 in Coursemology. I reached Level 38. (But you still only get 35%!) Another 5% is based on class participation. Try to prepare before your tutorials. Your tutor will appreciate it - and you can have a much more fruitful tutorial session as you can find out what is wrong with your answer that you have prepared. (Or ways to improve it.) 15% each for midterm and practical exam and 30% for the finals. Midterm was kind of easy, practical exam was kind of hard and finals was okay-ish hard. There is no bell curve, so try to score reasonably well for the exams. 80% for everything will likely give you an A."
+        },
+        "e1234568" : {
+            "year": "1415s1",
+            "staffadmin": 5.0,
+            "content": 5.0,
+            "overall": 5.0,
+            "written": "Statistics major here and took this module in Semester 1, AY14/15. This is one of my core mods and the bidpoint for it was quite high (most likely people are thinking to s/u it since it's the gradeless semester and CS has been warned by seniors that it's extremely taxing as it requires consistent effort). I was very intimidated at first due to the repeated warnings that this mod is crazily hard but as the lectures progresses, I realized that Prof Ben really taught the concepts well. Information are broken down into digestible pieces and as long as your foundations are solid, you can really do higher-level coding which actually is a revisitation of old concepts but with different lenses and applications. There are 4 main components to this module, namely: Lectures, Tutorials, Recitations and Missions.The 35% from Coursemology is really free marks and one should be able to attain them if consistent effort is placed.\n Good luck and don't fear CS1010S! Consistent effort is key (:\n Expected grade: A\nAttained grade: A\nNote: I took this in gradeless sem and although this mod has no bell-curve, the standard of the mid-terms and finals are rather easier than previous years. This was due to the whole cohort not doing well and the easier standards are to motivate students to buck up. Having said that, future semesters might have a harder time doing missions and all but nonetheless, I still believe that with consistent effort each week, attending lectures, recitations and tutorials regularly and submitting your missions before the dateline, an A is not unattainable."
+        },
+        "e1234569" : {
+            "year": "1314s1",
+            "staffadmin": 4.9,
+            "content": 4.5,
+            "overall": 4.7,
+            "written": "I agree with Yang Shun, who was our head tutor in semester 1 13/14. There will be many missions to complete on Coursmology. Every mission is tough but very interesting. Moreover, unlike CS1010, it will be taught in a very friendly programming language which can support much about everything - it's called Python. With it, your can focus more on the interesting part of programming thinking rather than syntax. After taking this one module, i felt that it has improve my productivity since most things in our age are going online. I think this will be the most worth-it module to take as your UE for students from other faculties if you ever thought of learning programming. Rest assured that python would become a popular and widely used language in data analysis or web programming and you won't ever need to learn other language again."    },
+        "e1234570" : {
+            "year": "1314s1",
+            "staffadmin": 4.5,
+            "content": 4.7,
+            "overall": 4.6,
+            "written": ""
+        },
+        "e1234571" : {
+            "year": "1314s1",
+            "staffadmin": 4.5,
+            "content": 4.7,
+            "overall": 4.6,
+            "written": ""
+        },
+        "e1234572" : {
+            "year": "1314s1",
+            "staffadmin": 4.5,
+            "content": 4.7,
+            "overall": 4.6,
+            "written": ""
+        }
+    },
+    "BT1101" : {
+        "e1234570" : {
+            "year": "1314s1",
+            "staffadmin": 4.5,
+            "content": 4.7,
+            "overall": 4.6,
+            "written": ""
+        },
+        "e1234571" : {
+            "year": "1314s1",
+            "staffadmin": 4.5,
+            "content": 4.7,
+            "overall": 4.6,
+            "written": ""
+        },
+        "e1234572" : {
+            "year": "1314s1",
+            "staffadmin": 4.5,
+            "content": 4.7,
+            "overall": 4.6,
+            "written": ""
+        }
+    }
+}

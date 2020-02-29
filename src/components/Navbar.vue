@@ -33,6 +33,6 @@
 <style>
     a {
         padding: 10px;
-        
+        color: #24305E;
     }
 </style>
