@@ -53,12 +53,15 @@ export default {
     data() {
         return {
             /* testing new dropdown */
-            value: [],
-            options: ['Technical University of Denmark', 'Technical University of Munich', 'Georgia Institute of Technology'],
+            pus: [],
+            allPus: ['Technical University of Denmark', 'Technical University of Munich', 'Georgia Institute of Technology'],
+
+            courses: [],
+            allCourses: ['Business Analytics', 'Economics'],
 
             /* default values for dropdown filters */
-            courses: ['Business Analytics', 'Economics'],
-            pus: ['Technical University of Denmark', 'Technical University of Munich', 'Georgia Institute of Technology'],
+            /* courses: ['Business Analytics', 'Economics'], */
+            /* pus: ['Technical University of Denmark', 'Technical University of Munich', 'Georgia Institute of Technology'], */
 
             /* sep module mapping data */
             modules: [  

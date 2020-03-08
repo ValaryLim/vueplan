@@ -8,67 +8,64 @@
   <body>
     <h2>SEP Module Mappings </h2>
     <br>
-    
-    <!-- Testing Multiselect -->
-    <div>
-      <label class="typo__label">Simple select / dropdown</label>
-      <multiselect v-model="value" :options="options" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" :preselect-first="true">
-        <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
-      </multiselect>
-      <pre class="language-json"><code>{{ value  }}</code></pre>
-    </div>
 
     <div id="app">
-      <div id = "filters">
-        <!-- Labels -->
-        <label for="Pus">Filter by PU(s) and Course(s):</label>
-        <label for="Courses"></label>
-        <br>
-
-        <!-- Filter by PU -->
-        <select class = "puFilter" v-model='pus' multiple>
-          <option :modules="modules" v-for="module in unique(modules, 'pu')">
-            {{ module.pu }}
-          </option>
-        </select>
-
-        <!-- Filter by Course -->
-        <select class = "courseFilter" v-model='courses' multiple>
-          <!-- retrieve data from props -->
-          <option :allmajors="allmajors" v-for="(value, name) in allmajors">
-            {{ name }}
-          </option>
-        </select>
-        <br> <br>
+      <!-- Testing Multiselect -->
+      <div id = "multiselect_title">
+        <label>Filter by Partner Universities and Courses:</label>
       </div>
 
-      <table :modules="modules" pus="pus" courses="courses">
-        <!-- table header -->
-        <thead>
-          <tr>
-            <th>Partner University</th>
-            <th>NUS Module Code</th>
-            <th>NUS Module Title</th>
-            <th>MCs</th>
-            <th>PU Module Code</th>
-            <th>PU Module Title</th>
-            <th>PU MCs</th>
-          </tr>
-        </thead>
+      <div id = "multiselect">
+        <!-- Filter by PU -->
+        <multiselect v-model="pus" :options="allPus" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Partner University" :preselect-first="true">
+          <template slot="selection" slot-scope="{ values, search, isOpen }">
+            <!-- <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span> --> 
+          </template>
+        </multiselect>
 
-        <!-- table body -->
-        <tbody :modules="modules" pus="pus" courses="courses">
-          <tr v-for="module in modules" v-show="relevant(allmajors, module.nusModuleCode) && pus.includes(module.pu)">
-            <td>{{module.pu}}</td>
-            <td>{{module.nusModuleCode}}</td>
-            <td>{{module.nusModuleTitle}}</td>
-            <td>{{module.mcs}}</td>
-            <td>{{module.puModuleCode}}</td>
-            <td>{{module.puModuleTitle}}</td>
-            <td>{{module.puMcs}}</td>
-          </tr>
-        </tbody>
-      </table>
+        <!-- Filter by Course -->
+        <multiselect v-model="courses" :options="allCourses" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Course" :preselect-first="true">
+          <template slot="selection" slot-scope="{ values, search, isOpen }">
+            <!-- <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span> -->
+          </template>
+        </multiselect>
+
+        <pre class="language-json"><code>{{ value  }}</code></pre>
+        
+      </div>
+
+      <br>
+
+      <div id = "datatable">
+        <table :modules="modules" pus="pus" courses="courses">
+          <!-- table header -->
+          <thead>
+            <tr>
+              <th>Partner University</th>
+              <th>NUS Module Code</th>
+              <th>NUS Module Title</th>
+              <th>MCs</th>
+              <th>PU Module Code</th>
+              <th>PU Module Title</th>
+              <th>PU MCs</th>
+            </tr>
+          </thead>
+
+          <!-- table body -->
+          <tbody :modules="modules" pus="pus" courses="courses">
+            <tr v-for="module in modules" v-show="relevant(allmajors, module.nusModuleCode) && pus.includes(module.pu)">
+              <td>{{module.pu}}</td>
+              <td>{{module.nusModuleCode}}</td>
+              <td>{{module.nusModuleTitle}}</td>
+              <td>{{module.mcs}}</td>
+              <td>{{module.puModuleCode}}</td>
+              <td>{{module.puModuleTitle}}</td>
+              <td>{{module.puMcs}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
     </div>
   </body>
 </html>
