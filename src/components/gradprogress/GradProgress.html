@@ -21,8 +21,9 @@
         <thead>
           <tr>
             <th>University Level Requirment</th>
-            <th>Module Taken</th>
-            <th>Status</th>
+            <th>Module Selected</th>
+            <th>Added</th>
+            <th>Completed</th>
           </tr>
         </thead>
   
@@ -30,8 +31,9 @@
         <tbody :records= "get_ulr_table()">
           <tr v-for="(record, idx) in get_ulr_table()" v-bind:key="idx" >
               <td> {{record.ulr}}</td>
-              <td> {{record.taken}}</td>
-              <td> {{record.status}}</td>
+              <td> {{record.selected}}</td>
+              <td> {{record.added}}</td>
+              <td> {{record.completed}}</td>
           </tr>
         </tbody>
       </table>
@@ -48,8 +50,9 @@
         <thead>
           <tr>
             <th>Programme Requirment</th>
-            <th>Module Taken</th>
-            <th>Status</th>
+            <th>Module Selected</th>
+            <th>Added</th>
+            <th>Completed</th>
           </tr>
         </thead>
         
@@ -58,8 +61,9 @@
         <tbody :records= "get_pr_table()">
           <tr v-for="(record, idx) in get_pr_table()" v-bind:key="idx" > 
               <td> {{record.requirement}}</td>
-              <td> {{record.taken}}</td>
-              <td> {{record.status}}</td>
+              <td> {{record.selected}}</td>
+              <td> {{record.added}}</td>
+              <td> {{record.completed}}</td>
           </tr>
           <!-- Programme electives hard coded. May need to change in the future-->
           <td>6 Programme Electives</td>
@@ -81,8 +85,9 @@
         <thead>
           <tr>
             <th>8 Unrestricted Electives</th>
-            <th>Module Taken</th>
-            <th>Status</th>
+            <th>Module Selected</th>
+            <th>Added</th>
+            <th>Completed</th>
           </tr>
         </thead>
   
@@ -90,8 +95,9 @@
         <tbody :records="get_ue_table()">
           <tr v-for="(record, idx) in get_ue_table()" v-bind:key="idx" >
             <td> {{record.requirement}}</td>
-            <td> {{record.taken}}</td>
-            <td> {{record.status}}</td>
+            <td> {{record.selected}}</td>
+            <td> {{record.added}}</td>
+            <td> {{record.completed}}</td>
         </tr>
         </tbody>
       </table>
