@@ -6,7 +6,7 @@
 export default {
   name:"App",
   display:"Graduation Requirement",
-  props: ['allmajors', 'acadplan'],
+  props: ['allmajors', 'acadplan', 'allmodules'],
 
   data() {
     return {  
@@ -23,12 +23,12 @@ export default {
         var info = this.check_fufill(ulr_types[type]);
         if (info.added) {
           if (info.completed) {
-            ulr_progress.push({"ulr": ulr_types[type], "taken": info.mod, "added": '✓', "completed": '✓'});
+            ulr_progress.push({"ulr": ulr_types[type], "code": info.mod, "selected": this.get_mod_title(info.mod), "added": '✓', "completed": '✓'});
           } else {
-            ulr_progress.push({"ulr": ulr_types[type], "taken": info.mod, "added": '✓', "completed": '✘'});
+            ulr_progress.push({"ulr": ulr_types[type], "code": info.mod, "selected": this.get_mod_title(info.mod), "added": '✓', "completed": '✘'});
           }
         } else {
-          ulr_progress.push({"ulr": ulr_types[type], "taken": info.mod, "added": '✘', "completed": '✘'});
+          ulr_progress.push({"ulr": ulr_types[type], "code": info.mod, "selected": ' ', "added": '✘', "completed": '✘'});
         }
       }  
       return ulr_progress;
@@ -56,6 +56,15 @@ export default {
 
     get_sem_number: function(semString) {
       return ((Number(semString.substring(1,2)) - 1) * 2 + (Number(semString.substring(3,4)) - 1));
+    },
+
+    get_mod_title: function(code) {
+      for (var key in this.allmodules){
+        if (key == code) {
+          var modInfo = this.allmodules[key];
+          return modInfo.code + " " + modInfo.title;
+        }
+      }
     },
 
     filter_core: function(modules) {
@@ -97,12 +106,12 @@ export default {
         var status = this.check_status(core.modCode);
         if (status.added) {
           if (status.completed) {
-            pr_progress.push({"requirement": core.modTitle, "taken": core.modCode, "added": '✓', "completed": '✓'});
+            pr_progress.push({"requirement": core.modTitle, "code": core.modCode, "selected": this.get_mod_title(core.modCode), "added": '✓', "completed": '✓'});
           } else {
-            pr_progress.push({"requirement": core.modTitle, "taken": core.modCode, "added": '✓', "completed": '✘'});
+            pr_progress.push({"requirement": core.modTitle, "code": core.modCode, "taken": this.get_mod_title(core.modCode), "added": '✓', "completed": '✘'});
           }
         } else {
-          pr_progress.push({"requirement": core.modTitle, "taken": " ", "added": '✘', "completed": '✘'});
+          pr_progress.push({"requirement": core.modTitle, "selected": ' ', "added": '✘', "completed": '✘'});
         }
       }
       return pr_progress;
@@ -114,11 +123,11 @@ export default {
       appeared.push(''); // handle empty string with 0 mc
       var ulr_progress = this.get_ulr_table();
       for (var ulr in ulr_progress) {
-        appeared.push(ulr_progress[ulr].taken);
+        appeared.push(ulr_progress[ulr].code);
       }
       var pr_progress = this.get_pr_table();
       for (var pr in pr_progress) {
-        appeared.push(pr_progress[pr].taken);
+        appeared.push(pr_progress[pr].code);
       }
 
       var ue_progress = [];
@@ -130,9 +139,9 @@ export default {
           if (!appeared.includes(taken.mod)) {
             var sem_taken = this.get_sem_number(key1);
             if (sem_taken < this.sem_completed) {
-              ue_progress.push({"requirement": ' ', "taken": taken.mod, "added": '✓', "completed": '✓'});
+              ue_progress.push({"requirement": ' ', "selected": this.get_mod_title(taken.mod), "added": '✓', "completed": '✓'});
             } else {
-              ue_progress.push({"requirement": ' ', "taken": taken.mod, "added": '✓', "completed": '✘'});
+              ue_progress.push({"requirement": ' ', "selected": this.get_mod_title(taken.mod), "added": '✓', "completed": '✘'});
             }
             completed += 1;
           } 
@@ -141,7 +150,7 @@ export default {
 
       // make up for 8 mods in total
       for (var i = 0; i < 8 - completed; i++) {
-        ue_progress.push({"requirement": ' ',  "taken": ' ', "added": '✘', "completed": '✘'});
+        ue_progress.push({"requirement": ' ',  "selected": ' ', "added": '✘', "completed": '✘'});
       }
 
       return ue_progress;
