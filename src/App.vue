@@ -12,7 +12,9 @@
     <div class="row">
       <div class="col-md-12">
         <!-- link allmajors data to components -->
-        <router-view :allmodules="allmodules" :allmajors="allmajors" :acadplan="acadplan"></router-view>
+        <router-view :allmodules="allmodules" :allmajors="allmajors" 
+          :acadplan="acadplan" :module_semester_mapping="module_semester_mapping"
+          :num_semester_mapping="num_semester_mapping"></router-view>
       </div>
     </div>
   </div>
@@ -122,6 +124,16 @@ export default {
         ],
         y4s1: [{ mod: "", mc: 0, move: false, index: 20 },],
         y4s2: [{ mod: "", mc: 0, move: false, index: 21 },],
+      },
+      module_semester_mapping: {
+        "BT1101": 1, "CS1010S": 1, "IS1103": 1, 
+        "MA1521": 1, "BT2101": 2, "CS2030": 2,
+        "EC1301": 2, "MA1101R": 2, "BT2102": 3,
+        "CS2040": 3, "ST2334": 3, "BT3102": 4,
+        "BT3103": 4, "MKT1705X": 5,
+      },
+      num_semester_mapping: {
+        1: "y1s1", 2: "y1s2", 3: "y2s1", 4: "y2s2", 5: "y3s1", 6: "y3s2", 7: "y4s1", 8: "y4s2"
       }
     }
   }
