@@ -3,6 +3,11 @@ h3 {
   text-align: left;
 }
 
+.multiselect__tags span {
+  background: #A8D0E6;
+  color: #2c3e50;
+}
+
 #multiselect_title {
   text-align: left;
 }
