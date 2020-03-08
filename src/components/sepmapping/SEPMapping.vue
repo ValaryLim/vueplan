@@ -2,9 +2,11 @@
 
 <style src = "./SEPMapping.css"></style>
 
+<!-- add style for multiselect -->
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+
 <script>
-import vueMultiSelect from 'vue-multi-select';
-import 'vue-multi-select/dist/lib/vue-multi-select.css';
+import Multiselect from 'vue-multiselect'
 
 export default {
     name: "App",
@@ -12,8 +14,9 @@ export default {
     /* set properties from parent */
     props: ['allmajors'],
 
-    components: {
-        vueMultiSelect
+    /* testing multiselect */
+    components: { 
+        Multiselect 
     },
 
     computed: {
@@ -49,6 +52,10 @@ export default {
 
     data() {
         return {
+            /* testing new dropdown */
+            value: [],
+            options: ['Technical University of Denmark', 'Technical University of Munich', 'Georgia Institute of Technology'],
+
             /* default values for dropdown filters */
             courses: ['Business Analytics', 'Economics'],
             pus: ['Technical University of Denmark', 'Technical University of Munich', 'Georgia Institute of Technology'],
