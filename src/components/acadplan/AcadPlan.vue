@@ -23,6 +23,7 @@ export default {
             invalid_module: 0,
             inserted_module: 1,
             unmet_prereq: -1,
+            sem_completed: 3,
         };
     },
     props: ['allmodules', 'acadplan', 'module_semester_mapping', 'num_semester_mapping'],

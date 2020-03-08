@@ -10,6 +10,7 @@ export default {
 
   data() {
     return {  
+      sem_completed: 3,
     }
   },
 
@@ -20,10 +21,14 @@ export default {
       var ulr_types = ['Human Cultures', 'Thinking and Expression', 'Singapore Studies', 'Asking Questions', 'Quantitative Reasoning'];
       for (var type in ulr_types) {
         var info = this.check_fufill(ulr_types[type]);
-        if (info.status) {
-          ulr_progress.push({"ulr": ulr_types[type], "taken": info.mod, "status": '✓'})
+        if (info.added) {
+          if (info.completed) {
+            ulr_progress.push({"ulr": ulr_types[type], "taken": info.mod, "added": '✓', "completed": '✓'});
+          } else {
+            ulr_progress.push({"ulr": ulr_types[type], "taken": info.mod, "added": '✓', "completed": '✘'});
+          }
         } else {
-          ulr_progress.push({"ulr": ulr_types[type], "taken": info.mod, "status": '✘'})
+          ulr_progress.push({"ulr": ulr_types[type], "taken": info.mod, "added": '✘', "completed": '✘'});
         }
       }  
       return ulr_progress;
@@ -37,13 +42,21 @@ export default {
         for (var key2 in sem) {
           var taken = sem[key2];
           if (taken.mod.substring(0,3) == type_dic[type]) {
-            return {"mod": taken.mod, "status": true};
+            var sem_taken = this.get_sem_number(key1);
+            if (sem_taken < this.sem_completed) {
+              return {"mod": taken.mod, "added": true, "completed": true};
+            } else {
+              return {"mod": taken.mod, "added": true, "completed": false};
+            }
           } 
         } 
       }
-      return {"mod": ' ', "status": false};
+      return {"mod": taken.mod, "added": false, "completed": false};
     },
-    
+
+    get_sem_number: function(semString) {
+      return ((Number(semString.substring(1,2)) - 1) * 2 + (Number(semString.substring(3,4)) - 1));
+    },
 
     filter_core: function(modules) {
       var cores = [];
@@ -62,11 +75,16 @@ export default {
         for (var key2 in sem) {
           var module = sem[key2];
           if (module.mod == modcode) {
-            return true;
+            var sem_taken = this.get_sem_number(key1);
+            if (sem_taken < this.sem_completed) {
+              return {"added": true, "completed": true};
+            } else {
+              return {"added": true, "completed": false};
+            }
           } 
         } 
       }
-      return false;
+      return {"added": false, "completed": false};
     },
 
 
@@ -76,10 +94,15 @@ export default {
       for (var key in pr_mods){
         // Error occurs if we want to return false
         var core = pr_mods[key];
-        if (this.check_status(core.modCode)) { 
-          pr_progress.push({"requirement": core.modTitle, "taken": core.modCode, "status": '✓'});
+        var status = this.check_status(core.modCode);
+        if (status.added) {
+          if (status.completed) {
+            pr_progress.push({"requirement": core.modTitle, "taken": core.modCode, "added": '✓', "completed": '✓'});
+          } else {
+            pr_progress.push({"requirement": core.modTitle, "taken": core.modCode, "added": '✓', "completed": '✘'});
+          }
         } else {
-          pr_progress.push({"requirement": core.modTitle, "taken": " ", "status": '✘'});
+          pr_progress.push({"requirement": core.modTitle, "taken": " ", "added": '✘', "completed": '✘'});
         }
       }
       return pr_progress;
@@ -105,8 +128,12 @@ export default {
         for (var key2 in sem) {
           var taken = sem[key2];
           if (!appeared.includes(taken.mod)) {
-            console.log(taken, "taken");
-            ue_progress.push({"requirement": ' ', "taken": taken.mod, "status": '✓'});
+            var sem_taken = this.get_sem_number(key1);
+            if (sem_taken < this.sem_completed) {
+              ue_progress.push({"requirement": ' ', "taken": taken.mod, "added": '✓', "completed": '✓'});
+            } else {
+              ue_progress.push({"requirement": ' ', "taken": taken.mod, "added": '✓', "completed": '✘'});
+            }
             completed += 1;
           } 
         } 
@@ -114,8 +141,7 @@ export default {
 
       // make up for 8 mods in total
       for (var i = 0; i < 8 - completed; i++) {
-        console.log("for loop entered");
-        ue_progress.push({"requirement": ' ',  "taken": ' ', "status": '✘'});
+        ue_progress.push({"requirement": ' ',  "taken": ' ', "added": '✘', "completed": '✘'});
       }
 
       return ue_progress;
