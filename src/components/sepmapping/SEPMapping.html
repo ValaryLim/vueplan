@@ -35,7 +35,7 @@
       <br>
 
       <div id = "datatable">
-        <table :modules="modules" pus="pus" courses="courses">
+        <table :sepMappings="sepMappings" pus="pus" courses="courses">
           <!-- table header -->
           <thead>
             <tr>
@@ -50,15 +50,15 @@
           </thead>
 
           <!-- table body -->
-          <tbody :modules="modules" pus="pus" courses="courses">
-            <tr v-for="module in modules" v-show="relevant(allmajors, module.nusModuleCode) && pus.includes(module.pu)">
-              <td>{{module.pu}}</td>
-              <td>{{module.nusModuleCode}}</td>
-              <td>{{module.nusModuleTitle}}</td>
-              <td>{{module.mcs}}</td>
-              <td>{{module.puModuleCode}}</td>
-              <td>{{module.puModuleTitle}}</td>
-              <td>{{module.puMcs}}</td>
+          <tbody :sepMappings="sepMappings" pus="pus" courses="courses">
+            <tr v-for="mapping in sepMappings" v-show="relevant(allmajors, mapping.nusModuleCode) && pus.includes(mapping.pu)">
+              <td>{{mapping.pu}}</td>
+              <td>{{mapping.nusModuleCode}}</td>
+              <td>{{mapping.nusModuleTitle}}</td>
+              <td>{{mapping.mcs}}</td>
+              <td>{{mapping.puModuleCode}}</td>
+              <td>{{mapping.puModuleTitle}}</td>
+              <td>{{mapping.puMcs}}</td>
             </tr>
           </tbody>
         </table>

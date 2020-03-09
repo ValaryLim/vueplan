@@ -14,7 +14,8 @@
         <!-- link allmajors data to components -->
         <router-view :allmodules="allmodules" :allmajors="allmajors" 
           :acadplan="acadplan" :module_semester_mapping="module_semester_mapping"
-          :num_semester_mapping="num_semester_mapping"></router-view>
+          :num_semester_mapping="num_semester_mapping"
+          :sepMappings="sepMappings"></router-view>
       </div>
     </div>
   </div>
@@ -23,6 +24,7 @@
 <script>
 import Navbar from './components/Navbar.vue';
 import allModules from './assets/allmoduleinfo.json';
+import sepMappings from './assets/sepWithoutBiz.json';
 
 export default {
   name: 'App',
@@ -134,7 +136,8 @@ export default {
       },
       num_semester_mapping: {
         1: "y1s1", 2: "y1s2", 3: "y2s1", 4: "y2s2", 5: "y3s1", 6: "y3s2", 7: "y4s1", 8: "y4s2"
-      }
+      },
+      sepMappings: sepMappings
     }
   }
 }

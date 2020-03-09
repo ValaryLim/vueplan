@@ -12,7 +12,7 @@ export default {
     name: "App",
     display: "SEP Mappings",
     /* set properties from parent */
-    props: ['allmajors'],
+    props: ['allmajors', 'sepMappings'],
 
     /* testing multiselect */
     components: { 
@@ -58,10 +58,6 @@ export default {
 
             courses: [],
             allCourses: ['Business Analytics', 'Economics'],
-
-            /* default values for dropdown filters */
-            /* courses: ['Business Analytics', 'Economics'], */
-            /* pus: ['Technical University of Denmark', 'Technical University of Munich', 'Georgia Institute of Technology'], */
 
             /* sep module mapping data */
             modules: [  
