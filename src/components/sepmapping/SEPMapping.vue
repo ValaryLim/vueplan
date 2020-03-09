@@ -42,7 +42,7 @@ export default {
                 for (var i = 0; i < arr.length; i++) {
                     if (!usedKeys[arr[i][key]]) {
                         usedKeys[arr[i][key]] = true
-                        output.push(arr[i])
+                        output.push(arr[i][key])
                     }
                 }
                 return output
@@ -52,6 +52,8 @@ export default {
 
     data() {
         return {
+            test:[],
+
             pus: [],
             allPus: ['Technical University of Denmark', 'Technical University of Munich', 'Georgia Institute of Technology'],
 

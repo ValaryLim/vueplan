@@ -11,21 +11,24 @@
 
     <div id="app">
       <!-- Testing Multiselect -->
-      <div id = "multiselect_title">
-        <label>Filter by Partner Universities and Courses:</label>
-      </div>
 
       <div id = "multiselect">
         <!-- Filter by PU -->
-        <multiselect v-model="pus" :options="allPus" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Partner University" :preselect-first="true">
+        <div id = "multiselect_title">
+          <label>Filter by Partner Universities:</label>
+        </div>
+        <multiselect v-model="pus" :options="unique(sepMappings, 'pu')" :custom-labels="customLabels" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Partner University" :preselect-first="true">
           <template slot="selection" slot-scope="{ values, search, isOpen }">
             <!-- <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span> --> 
           </template>
         </multiselect>
 
-        {{pus}}
+        <br>
 
         <!-- Filter by Course -->
+        <div id = "multiselect_title">
+          <label>Filter by Courses:</label>
+        </div>
         <multiselect v-model="courses" :options="allCourses" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Course" :preselect-first="true">
           <template slot="selection" slot-scope="{ values, search, isOpen }">
             <!-- <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span> -->
