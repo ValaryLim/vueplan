@@ -81,7 +81,7 @@ export default {
                     this.printError("Attempted to Add Invalid Module", 
                     module_name + " cannot be found in our database. This can happen when the module has been discontinued or if the module name is incorrect. Please try a different module instead.");
                 } else if (module === this.inserted_module) {
-                    alert("Error: Module is already in academic plan"); 
+                    this.printError("Module in Academic Plan", module_name + " is already in your academic plan. Please do not add duplicate modules.");
                 } else {
                     // check if all prerequisites have been met
                     var mod_prerequisites_check = this.check_prerequisites_sem(module.parseprereq);
