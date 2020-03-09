@@ -19,13 +19,23 @@ export default {
     },
     data() {
         return {
+            // add module data
             add_module_code: "",
             invalid_module: 0,
             inserted_module: 1,
             unmet_prereq: -1,
+
+            // user semester data
             sem_completed: 3,
+
+            // error message data
             modal_header: "Default header",
             modal_body: "Default body",
+
+            // edit module credits
+            add_mc: 1,
+            subtract_mc: -1,
+            total_mc: 56,
         };
     },
     props: ['allmodules', 'acadplan', 'module_semester_mapping', 'num_semester_mapping'],
@@ -92,12 +102,25 @@ export default {
                         this.acadplan[add_in_semester].push({ mod: module.code, mc: module.mc, move: true, index: index }); 
                         this.module_semester_mapping[module.code] = mod_prerequisites_check;
                         index++;
+                        this.update_module_credits(this.add_mc, add_in_semester, module.mc);
+                        this.total_mc += module.mc;
                     } else {
                         this.printError("Incomplete Prerequisites", "This module cannot be added to your academic plan because you have yet to add all of its' prerequisites. Please do so first.");
                     }
                 }
             } else {
                 this.printError("Attempted to Add Blank Module", "Please type the module you wish to add in the textbox before pressing the Add button.");
+            }
+        },
+        update_module_credits: function(add_subtract, sem, mc) {
+            for (var module_index in this.acadplan[sem]) {
+                // get module
+                var module = this.acadplan[sem][module_index];
+                // update modular credits
+                if (module.mod === "") {
+                    module.mc = module.mc + mc * add_subtract;
+                    return;
+                }
             }
         },
         check_valid_module: function(module_name) {
@@ -115,12 +138,16 @@ export default {
             }
             return this.invalid_module;
         },
-        delete_module: function(data_name, module) {
+        delete_module: function(sem, module) {
             var module_name = module.mod;
 
             if (this.check_unlocked(module_name)) {
-                // filter all modules
-                this.acadplan[data_name] = this.acadplan[data_name].filter((event) => {
+                // update number of modular credits
+                this.update_module_credits(this.subtract_mc, sem, module.mc);
+                this.total_mc -= module.mc;
+
+                // remove module using filter
+                this.acadplan[sem] = this.acadplan[sem].filter((event) => {
                     return event.index !== module.index   
                 });
             } else {
@@ -130,12 +157,12 @@ export default {
         sort_modules: function(data, sem_num) {
             data.sort(this.compare_module);
 
-            var current_sem_name = this.num_semester_mapping[sem_num];
+            var current_sem = this.num_semester_mapping[sem_num];
             var check_module = "";
 
             // find shifted module
-            for (var module_index in this.acadplan[current_sem_name]) {
-                var module = this.acadplan[current_sem_name][module_index];
+            for (var module_index in this.acadplan[current_sem]) {
+                var module = this.acadplan[current_sem][module_index];
                 // check that module isn't fixed (buffer cell)
                 if (module.move && (this.module_semester_mapping[module.mod] != sem_num)) {
                     check_module = module;
@@ -150,7 +177,7 @@ export default {
                 // check that prerequisites are met before module can be taken
                 var meet_prerequisites = this.sort_modules_prereq_check(check_module, previous_sem, sem_num);
                 if (!meet_prerequisites) {
-                    this.printError("Incomplete Prerequisites in Semester", "Module cannot be shifted to this semester as not all prerequisites for the module have been taken. Please shift this module to a semester where you have completed all the necessary prerequisites");
+                    this.printError("Incomplete Prerequisites in Semester", "Module cannot be shifted to this semester as not all prerequisites for the module have been taken. Please shift this module to a semester where you have completed all the necessary prerequisites.");
                     return; // stop the function
                 }
                 
@@ -163,6 +190,10 @@ export default {
                 
                 // module can be shifted, update the module
                 this.module_semester_mapping[check_module.mod] = sem_num;
+
+                // update module credits in old and new semester
+                this.update_module_credits(this.subtract_mc, previous_sem, check_module.mc);
+                this.update_module_credits(this.add_mc, current_sem, check_module.mc);
             }
         },
         sort_modules_prereq_check: function(check_module, previous_sem, sem_num) {
@@ -265,9 +296,8 @@ export default {
              */
             // tracker of earliest semester where module can be inserted
             var insert_sem = 1;
-
             // check if module exists
-            if (this.allmodules[prereq_tree]) {
+            if (this.allmodules[prereq_tree]) {                
                 // check if prerequisite is taken
                 if (prereq_tree in this.module_semester_mapping) {
                     insert_sem = this.module_semester_mapping[prereq_tree] + 1;
@@ -275,8 +305,8 @@ export default {
                 } else {
                     // check if any of the precluded modules are taken
                     var req_precludes = this.get_all_preclu(this.allmodules[prereq_tree].parsepreclu, []);
-                    
                     var met_preclu = false;
+
                     for (var preclu_index in req_precludes) {
                         var preclu = req_precludes[preclu_index];
                         // if preclusion exists and is in academic plan
@@ -293,9 +323,8 @@ export default {
                         return this.unmet_prereq;
                     }
                 }
-            } else {
-                return insert_sem; // let module get added since prereq no longer exists
-            }
+            } 
+            return insert_sem;          
         },
         check_prerequisites_sem_or: function(prereq_subtree) {
             // record earliest sem for "or" and if module can be taken or not
