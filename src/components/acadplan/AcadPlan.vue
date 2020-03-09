@@ -78,7 +78,8 @@ export default {
                 var module = this.check_valid_module(module_name);
 
                 if (module === this.invalid_module) {
-                    this.printError("header", "message");
+                    this.printError("Attempted to Add Invalid Module", 
+                    module_name + " cannot be found in our database. This can happen when the module has been discontinued or if the module name is incorrect. Please try a different module instead.");
                 } else if (module === this.inserted_module) {
                     alert("Error: Module is already in academic plan"); 
                 } else {
@@ -90,11 +91,11 @@ export default {
                         this.module_semester_mapping[module.code] = mod_prerequisites_check;
                         index++;
                     } else {
-                        alert("Error: Have not met all of module's prerequisites");
+                        this.printError("Incomplete Prerequisites", "This module cannot be added to your academic plan because you have yet to add all of its' prerequisites. Please do so first.");
                     }
                 }
             } else {
-                alert("Error: Field cannot be left blank");
+                this.printError("Attempted to Add Blank Module", "Please type the module you wish to add in the textbox before pressing the Add button.");
             }
         },
         check_valid_module: function(module_name) {
@@ -121,7 +122,7 @@ export default {
                     return event.index !== module.index   
                 });
             } else {
-                alert("Some modules in your academic plan depend on the module you are trying to delete.");
+                this.printError("Deletion Error", "This module cannot be deleted as some modules in your academic plan depend on the module you are trying to delete.");
             }
         }, 
         sort_modules: function(data, sem_num) {
@@ -161,8 +162,7 @@ export default {
                     this.acadplan[previous_sem_name].push({ mod: check_module.mod, mc: check_module.mc, move: true, index: index }); 
                     this.module_semester_mapping[check_module.mod] = previous_sem;
                     index++;
-                    alert("Module cannot be shifted to this semester as not all prerequisites have been taken yet.");
-                    return;
+                    this.printError("Incomplete Prerequisites in Semester", "Module cannot be shifted to this semester as not all prerequisites for the module have been taken. Please shift this module to a semester where you have completed all the necessary prerequisites");
                 }
                 
                 // CHECK THAT MODULE IS COMPLETED BEFORE ITS LOCKED MODULES
@@ -178,7 +178,7 @@ export default {
                     this.acadplan[previous_sem_name].push({ mod: check_module.mod, mc: check_module.mc, move: true, index: index });
                     this.module_semester_mapping[check_module.mod] = previous_sem;
                     index++;
-                    alert("Module cannot be shifted to this semester as other modules are locked by it.");
+                    this.printError("Locked Modules in Semester", "Module cannot be shifted to this semester as other modules in your academic plan have this module as a prerequisite. You are required to read this module in an earlier semester.");
                     return;
                 }
                 

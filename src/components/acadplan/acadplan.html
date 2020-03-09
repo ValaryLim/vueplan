@@ -154,7 +154,7 @@
                         </option>
                     </datalist>
                 </form>
-                <b-modal id="error-modal" :title="modal_header" hide-footer v-show=>
+                <b-modal id="error-modal" :title="modal_header" hide-footer>
                     <p>{{ this.modal_body }}</p>
                     <b-button id="modal-ok-btn" @click="$bvModal.hide('error-modal')">OK</b-button>
                 </b-modal>
