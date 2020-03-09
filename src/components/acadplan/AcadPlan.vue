@@ -65,7 +65,9 @@ export default {
     },
     methods: {
         add_module_sem: function() {
-            /** adds module to the earliest possible semester the student can take it */
+            /** 
+             * adds module to the earliest possible semester the student can take it 
+             */
 
             // remove whitespace and convert module name to lowercase
             var module_name = this.add_module_code.trim().toLowerCase();
@@ -140,53 +142,80 @@ export default {
                 }
             }
 
-            // check shifted module
+            // check prerequisites and locked modules for shifted module
             if (check_module !== "") {
-                // CHECK THAT PREREQUISITES ARE MET BEFORE MODULE CAN BE TAKEN
                 // get previous sem
                 var previous_sem = this.module_semester_mapping[check_module.mod];
-                var previous_sem_name = this.num_semester_mapping[previous_sem];
-                
-                // find the earliest date module can be shifted to
-                var earliest_sem = this.check_prerequisites_sem(this.allmodules[check_module.mod].parseprereq);
-                            
-                // if earliest sem is after current sem
-                if (earliest_sem > sem_num) {
-                    // push module back to original position
-                    // delete module from current sem
-                    this.acadplan[current_sem_name] = this.acadplan[current_sem_name].filter((event) => {
-                        return event.index !== check_module.index; 
-                    });
-                                
-                    // add module back to original sem
-                    this.acadplan[previous_sem_name].push({ mod: check_module.mod, mc: check_module.mc, move: true, index: index }); 
-                    this.module_semester_mapping[check_module.mod] = previous_sem;
-                    index++;
+
+                // check that prerequisites are met before module can be taken
+                var meet_prerequisites = this.sort_modules_prereq_check(check_module, previous_sem, sem_num);
+                if (!meet_prerequisites) {
                     this.printError("Incomplete Prerequisites in Semester", "Module cannot be shifted to this semester as not all prerequisites for the module have been taken. Please shift this module to a semester where you have completed all the necessary prerequisites");
+                    return; // stop the function
                 }
                 
-                // CHECK THAT MODULE IS COMPLETED BEFORE ITS LOCKED MODULES
-                var latest_sem = this.check_locked_sem(check_module.mod);
-                if (latest_sem < sem_num) {
-                    // push module back to original position
-                    // delete module from current sem
-                    this.acadplan[current_sem_name] = this.acadplan[current_sem_name].filter((event) => {
-                        return event.index !== check_module.index;
-                    })
-
-                    // add module back to original sem
-                    this.acadplan[previous_sem_name].push({ mod: check_module.mod, mc: check_module.mc, move: true, index: index });
-                    this.module_semester_mapping[check_module.mod] = previous_sem;
-                    index++;
+                // check that module is completed before its locked modules
+                var meet_locked = this.sort_modules_locked_check(check_module, previous_sem, sem_num);
+                if (!meet_locked) {
                     this.printError("Locked Modules in Semester", "Module cannot be shifted to this semester as other modules in your academic plan have this module as a prerequisite. You are required to read this module in an earlier semester.");
                     return;
                 }
                 
-                // CAN BE SHIFTED, UPDATE
+                // module can be shifted, update the module
                 this.module_semester_mapping[check_module.mod] = sem_num;
             }
+        },
+        sort_modules_prereq_check: function(check_module, previous_sem, sem_num) {
+            /**
+             * Checks that prerequisites are met before module can be taken
+             * Returns true if module can be taken in that semester, false otherwise
+             */
+            var current_sem_name = this.num_semester_mapping[sem_num];
+            var previous_sem_name = this.num_semester_mapping[previous_sem];
 
-            console.log(this.module_semester_mapping);
+            // find the earliest date module can be shifted to
+            var earliest_sem = this.check_prerequisites_sem(this.allmodules[check_module.mod].parseprereq);
+                        
+            // if earliest sem is after current sem
+            if (earliest_sem > sem_num) {
+                // push module back to original position
+                // delete module from current sem
+                this.acadplan[current_sem_name] = this.acadplan[current_sem_name].filter((event) => {
+                    return event.index !== check_module.index; 
+                });
+                            
+                // add module back to original sem
+                this.acadplan[previous_sem_name].push({ mod: check_module.mod, mc: check_module.mc, move: true, index: index }); 
+                this.module_semester_mapping[check_module.mod] = previous_sem;
+                index++;
+                return false;
+            }
+            return true;
+        },
+        sort_modules_locked_check: function(check_module, previous_sem, sem_num) {
+            /**
+             * Checks that locked modules are taken after the module
+             * Returns true if module can be taken in that semester, false otherwise
+             */
+            var current_sem_name = this.num_semester_mapping[sem_num];
+            var previous_sem_name = this.num_semester_mapping[previous_sem];
+
+            var latest_sem = this.check_locked_sem(check_module.mod);
+
+            if (latest_sem < sem_num) {
+                // push module back to original position
+                // delete module from current sem
+                this.acadplan[current_sem_name] = this.acadplan[current_sem_name].filter((event) => {
+                    return event.index !== check_module.index;
+                })
+
+                // add module back to original sem
+                this.acadplan[previous_sem_name].push({ mod: check_module.mod, mc: check_module.mc, move: true, index: index });
+                this.module_semester_mapping[check_module.mod] = previous_sem;
+                index++;
+                return false;
+            }
+            return true;
         },
         compare_module: function(a, b) {
             if (a.move === false) { 
@@ -204,48 +233,17 @@ export default {
             /** 
              * returns the earliest sem that the module can be taken, -1 otherwise. 
              */
-            
-            // tracker of earliest semester where module can be inserted
-            var insert_sem = 1;
-
             // if there are no prerequisites, module can be inserted immediately after the first semester
             if (Object.keys(prereq_tree).length === 0) {
-                return insert_sem;
+                return 1; // can insert into first semester
             }
 
             // if there is only one prerequisite
             if (typeof(prereq_tree) === "string") {
-                // check if module exists
-                if (this.allmodules[prereq_tree]) {
-                    // check if prerequisite is taken
-                    if (prereq_tree in this.module_semester_mapping) {
-                        insert_sem = this.module_semester_mapping[prereq_tree] + 1;
-                        return insert_sem;
-                    } else {
-                        // check if any of the precluded modules are taken
-                        var req_precludes = this.get_all_preclu(this.allmodules[prereq_tree].parsepreclu, []);
-                        
-                        var met_preclu = false;
-                        for (var preclu_index in req_precludes) {
-                            var preclu = req_precludes[preclu_index];
-                            // if preclusion exists and is in academic plan
-                            if (this.allmodules[preclu] && (preclu in this.module_semester_mapping)) {
-                                if (this.module_semester_mapping[preclu] + 1 > insert_sem) {
-                                    insert_sem = this.module_semester_mapping[preclu] + 1;
-                                    met_preclu = true;
-                                }
-                            }
-                        }
-                        
-                        // if prerequisites or its preclusions are not met, return unmet_prereq
-                        if (!met_preclu) {
-                            return this.unmet_prereq;
-                        }
-                    }
-                } else {
-                    return insert_sem; // let module get added since prereq no longer exists
-                }
+                return this.check_prerequisites_sem_string(prereq_tree);
             }
+            // tracker of earliest semester where module can be inserted
+            var insert_sem = 1;
 
             // if there is more than one prerequisite
             for (var key in prereq_tree) {
@@ -253,106 +251,130 @@ export default {
                 var prereq_subtree = prereq_tree[key];
 
                 if (key === "and") {
-                    // need all requirements within "and"
-                    for (var req_index in prereq_subtree) {
-                        var req = prereq_subtree[req_index];
-                        if (typeof(req) === "string") {
-                            // if requirement is a string
-                            // check if module is valid
-                            if (this.allmodules[req]) {
-                                // if module is not met, return unmet_prereq
-                                if (req in this.module_semester_mapping) {
-                                    // update insert_sem if required
-                                    if (this.module_semester_mapping[req] + 1 > insert_sem) {
-                                        insert_sem = this.module_semester_mapping[req] + 1;
-                                    }
-                                } else {
-                                    // try and check if any preclusions have been added
-                                    var req_precludes2 = this.get_all_preclu(this.allmodules[req].parsepreclu, []);
-                                    var met_preclu2 = false;
-                                    for (var preclu_index2 in req_precludes2) {
-                                        var preclu2 = req_precludes2[preclu_index2];
-                                        // if preclusion exists and is in academic plan
-                                        if (this.allmodules[preclu2] && (preclu2 in this.module_semester_mapping)) {
-                                            if (this.module_semester_mapping[preclu2] + 1 > insert_sem) {
-                                                insert_sem = this.module_semester_mapping[preclu2] + 1;
-                                                met_preclu2 = true;
-                                            }
-                                        }
-                                    }
-                                    // if prerequisites or its preclusions are not met, return unmet_prereq
-                                    if (!met_preclu2) {
-                                        return this.unmet_prereq;
-                                    }
-                                }
-                            }
-                        } else {
-                            // there is a nested dictionary (either "and" or "or")
-                            // recursively call check_prerequisites_sem
-                            var check_subreq = this.check_prerequisites_sem(req);
-                            // if prereqs are not met
-                            if (check_subreq === this.unmet_prereq) {
-                                return this.unmet_prereq;
-                            } else {
-                                // update insert_sem
-                                if (check_subreq > insert_sem) {
-                                    insert_sem = check_subreq;
-                                }
-                            }
-                        }
-                    }
-                    return insert_sem;
+                    return this.check_prerequisites_sem_and(prereq_subtree);
                 } else if (key === "or") {
-                    // record earliest sem for "or" and if module can be taken or not
-                    var earliest_or_sem = 1000;
-                    var can_take = false;
-
-                    // only need to meet one of the requirements within "or"
-                    for (var req2_index in prereq_subtree) {
-                        var req2 = prereq_subtree[req2_index];
-                        if (typeof(req2) === "string") {
-                            // check if module is valid
-                            if (this.allmodules[req2]) {
-                                if (req2 in this.module_semester_mapping) {
-                                    // find the earliest possible semester to take the mod
-                                    if (this.module_semester_mapping[req2] + 1 < earliest_or_sem) {
-                                        earliest_or_sem = this.module_semester_mapping[req2] + 1;
-                                        can_take = true;
-                                    }
-                                } else {
-                                    // try and check if any preclusions have been added
-                                    var req_precludes3 = this.get_all_preclu(this.allmodules[req2].parsepreclu, []);
-
-                                    for (var preclu_index3 in req_precludes3) {
-                                        var preclu3 = req_precludes3[preclu_index3];
-                                        // if preclusion exists and is in academic plan
-                                        if (this.allmodules[preclu3] && (preclu3 in this.module_semester_mapping)) {
-                                            if (this.module_semester_mapping[preclu3] + 1 < earliest_or_sem) {
-                                                earliest_or_sem = this.module_semester_mapping[preclu3] + 1;
-                                                can_take = true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            // find at least one true
-                            var check_subreq2 = this.check_prerequisites_sem(req2);
-                            if ((check_subreq2 !== this.unmet_prereq) && (check_subreq2 < earliest_or_sem)) {
-                                earliest_or_sem = check_subreq2;
-                                can_take = true;
-                            }
-                        }
-                    }
-                    if (can_take) {
-                        return earliest_or_sem;
-                    } else {
-                        return this.unmet_prereq;
-                    }
+                    return this.check_prerequisites_sem_or(prereq_subtree);
                 }
 
                 return insert_sem
             }
+        },
+        check_prerequisites_sem_string: function(prereq_tree) {
+            /** 
+             * Returns first semester that module can be inserted, -1 otherwise.
+             */
+            // tracker of earliest semester where module can be inserted
+            var insert_sem = 1;
+
+            // check if module exists
+            if (this.allmodules[prereq_tree]) {
+                // check if prerequisite is taken
+                if (prereq_tree in this.module_semester_mapping) {
+                    insert_sem = this.module_semester_mapping[prereq_tree] + 1;
+                    return insert_sem;
+                } else {
+                    // check if any of the precluded modules are taken
+                    var req_precludes = this.get_all_preclu(this.allmodules[prereq_tree].parsepreclu, []);
+                    
+                    var met_preclu = false;
+                    for (var preclu_index in req_precludes) {
+                        var preclu = req_precludes[preclu_index];
+                        // if preclusion exists and is in academic plan
+                        if (this.allmodules[preclu] 
+                        && (preclu in this.module_semester_mapping)
+                        && (this.module_semester_mapping[preclu] + 1 > insert_sem)) {
+                            insert_sem = this.module_semester_mapping[preclu] + 1;
+                            met_preclu = true;
+                        }
+                    }
+                    
+                    // if prerequisites or its preclusions are not met, return unmet_prereq
+                    if (!met_preclu) {
+                        return this.unmet_prereq;
+                    }
+                }
+            } else {
+                return insert_sem; // let module get added since prereq no longer exists
+            }
+        },
+        check_prerequisites_sem_or: function(prereq_subtree) {
+            // record earliest sem for "or" and if module can be taken or not
+            var earliest_or_sem = 1000;
+            var can_take = false;
+
+            // only need to meet one of the requirements within "or"
+            for (var req_index in prereq_subtree) {
+                var req = prereq_subtree[req_index];
+                if (typeof(req) === "string") {
+                    // check if module is valid
+                    if (this.allmodules[req]) {
+                        if (req in this.module_semester_mapping) {
+                            // find the earliest possible semester to take the mod
+                            if (this.module_semester_mapping[req] + 1 < earliest_or_sem) {
+                                earliest_or_sem = this.module_semester_mapping[req] + 1;
+                                can_take = true;
+                            }
+                        } else {
+                            // try and check if any preclusions have been added
+                            var req_precludes2 = this.get_all_preclu(this.allmodules[req].parsepreclu, []);
+
+                            for (var preclu_index2 in req_precludes2) {
+                                var preclu2 = req_precludes2[preclu_index2];
+                                // if preclusion exists and is in academic plan
+                                if (this.allmodules[preclu2] 
+                                && (preclu2 in this.module_semester_mapping)
+                                && (this.module_semester_mapping[preclu2] + 1 < earliest_or_sem)) {
+                                    earliest_or_sem = this.module_semester_mapping[preclu2] + 1;
+                                    can_take = true;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    // find at least one true
+                    var check_subreq = this.check_prerequisites_sem(req);
+                    if ((check_subreq !== this.unmet_prereq) && (check_subreq < earliest_or_sem)) {
+                        earliest_or_sem = check_subreq;
+                        can_take = true;
+                    }
+                }
+            }
+            if (can_take) {
+                return earliest_or_sem;
+            } else {
+                return this.unmet_prereq;
+            }
+        },
+        check_prerequisites_sem_and: function(prereq_subtree) {
+            // tracker of earliest semester where module can be inserted
+            var insert_sem = 1;
+            
+            // need all requirements within "and"
+            for (var req_index in prereq_subtree) {
+                var req = prereq_subtree[req_index];
+                if (typeof(req) === "string") {
+                    var req_insert_sem = this.check_prerequisites_sem_string(req);
+                    if (req_insert_sem === this.unmet_prereq) {
+                        return this.unmet_prereq;
+                    } else if (req_insert_sem > insert_sem) {
+                        insert_sem = req_insert_sem;
+                    }
+                } else {
+                    // there is a nested dictionary (either "and" or "or")
+                    // recursively call check_prerequisites_sem
+                    var check_subreq = this.check_prerequisites_sem(req);
+                    // if prereqs are not met
+                    if (check_subreq === this.unmet_prereq) {
+                        return this.unmet_prereq;
+                    } else {
+                        // update insert_sem
+                        if (check_subreq > insert_sem) {
+                            insert_sem = check_subreq;
+                        }
+                    }
+                }
+            }
+            return insert_sem;
         },
         check_unlocked: function(module_name) {
             /** 
@@ -372,14 +394,13 @@ export default {
             // if false, do not delete
             for (var mod_index in all_locked) {
                 var locked_mod = all_locked[mod_index];
-                // check if module is in acad plan
-                if (locked_mod in this.module_semester_mapping) {
-                    // if module is in academic plan, check if prerequisites are still met
-                    if (this.check_prerequisites_sem(this.allmodules[locked_mod].parseprereq) === this.unmet_prereq) {
-                        // not met, reinsert module and return false
-                        this.module_semester_mapping[module_name] = sem_save;
-                        return false;
-                    }
+                // check if module is in acad plan and
+                // if module is in academic plan, check if prerequisites are still met
+                if (locked_mod in this.module_semester_mapping && 
+                (this.check_prerequisites_sem(this.allmodules[locked_mod].parseprereq) === this.unmet_prereq)) {
+                    // not met, reinsert module and return false
+                    this.module_semester_mapping[module_name] = sem_save;
+                    return false;
                 }
             }
             return true;
@@ -390,8 +411,8 @@ export default {
              */
             var preclu_tree = this.allmodules[module_name].parsepreclu;
             var preclu_arr = this.get_all_preclu(preclu_tree, []);
+            var locked_arr = this.allmodules[module_name].locked.slice();
 
-            var locked_arr = this.allmodules[module_name].locked;
 
             // go through each module in preclu_arr to get locked mods
             for (var mod_index in preclu_arr) {
@@ -419,13 +440,9 @@ export default {
             
             for (var lmod_index in locked_modules) {
                 var lmod = locked_modules[lmod_index];
-                if (lmod in this.module_semester_mapping) {
-                    // get semester that module is in
-                    var lmod_sem = this.module_semester_mapping[lmod];
-
-                    if (lmod_sem - 1 < latest_sem) {
-                        latest_sem = lmod_sem - 1;
-                    }
+                if (lmod in this.module_semester_mapping && (this.module_semester_mapping[lmod] - 1 < latest_sem)) {
+                    // update latest sem
+                    latest_sem = this.module_semester_mapping[lmod] - 1;
                 }
             }
             
@@ -442,7 +459,7 @@ export default {
 
             // if there is only one prerequisite
             if (typeof(preclu_tree) === "string") {
-                if (this.allmodules[preclu_tree]) {
+                if (this.allmodules[preclu_tree]) { // not null
                     // check if preclu_arr already contains module
                     if (preclu_arr.includes(preclu_tree)) {
                         return preclu_arr;
@@ -465,16 +482,13 @@ export default {
                     // precluded module
                     var preclu = preclu_subtree[preclu_index];
                     
-                    // if precluded module is a string
-                    if (typeof(preclu) === "string" && this.allmodules[preclu]) {
-                        // and not yet included in preclu_arr
-                        if (!preclu_arr.includes(preclu)) {
-                            // add precluded module to preclu_arr
-                            preclu_arr.push(preclu);
-                            
-                            // recursively call get_all_preclu on new modules
-                            preclu_arr = this.get_all_preclu(this.allmodules[preclu].parsepreclu, preclu_arr);
-                        }
+                    // if precluded module is a string and not yet included in preclu_arr
+                    if (typeof(preclu) === "string" && this.allmodules[preclu] && !preclu_arr.includes(preclu)) {
+                        // add precluded module to preclu_arr
+                        preclu_arr.push(preclu);
+                        
+                        // recursively call get_all_preclu on new modules
+                        preclu_arr = this.get_all_preclu(this.allmodules[preclu].parsepreclu, preclu_arr);
                     }
                 }
             }
