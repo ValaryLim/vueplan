@@ -24,6 +24,8 @@ export default {
             inserted_module: 1,
             unmet_prereq: -1,
             sem_completed: 3,
+            modal_header: "Default header",
+            modal_body: "Default body",
         };
     },
     props: ['allmodules', 'acadplan', 'module_semester_mapping', 'num_semester_mapping'],
@@ -76,7 +78,7 @@ export default {
                 var module = this.check_valid_module(module_name);
 
                 if (module === this.invalid_module) {
-                    alert("Error: Module is invalid");
+                    this.printError("header", "message");
                 } else if (module === this.inserted_module) {
                     alert("Error: Module is already in academic plan"); 
                 } else {
@@ -478,6 +480,11 @@ export default {
             }
 
             return preclu_arr;  
+        },
+        printError: function(header, message) {
+            this.modal_header = header;
+            this.modal_body = message;
+            this.$bvModal.show('error-modal');
         }
     },
 }

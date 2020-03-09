@@ -146,14 +146,18 @@
             <!-- add module button -->
             <div class="col-2 add_feature">
                 <p id = "inputTitle">Module Code:</p>
-                    <form>
-                        <input type="text" class="input" list="allmodules" v-model="add_module_code"/>
-                        <datalist id="allmodules">
-                            <option v-for="(item, key) in allmodules" v-bind:key="key">
-                                {{ item.fullname }}
-                            </option>
-                        </datalist>
-                    </form>
+                <form>
+                    <input type="text" class="input" list="allmodules" v-model="add_module_code"/>
+                    <datalist id="allmodules">
+                        <option v-for="(item, key) in allmodules" v-bind:key="key">
+                            {{ item.fullname }}
+                        </option>
+                    </datalist>
+                </form>
+                <b-modal id="error-modal" :title="modal_header" hide-footer v-show=>
+                    <p>{{ this.modal_body }}</p>
+                    <b-button id="modal-ok-btn" @click="$bvModal.hide('error-modal')">OK</b-button>
+                </b-modal>
             </div>
             <div class="col-1">
                 <button class="btn btn-secondary" @click = "add_module_sem">
