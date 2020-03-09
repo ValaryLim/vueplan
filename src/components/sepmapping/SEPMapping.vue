@@ -52,19 +52,9 @@ export default {
 
     data() {
         return {
-            test:[],
-
             pus: [],
-            allPus: ['Technical University of Denmark', 'Technical University of Munich', 'Georgia Institute of Technology'],
-
             courses: [],
-            allCourses: ['Business Analytics', 'Economics'],
-        }
-    },
-
-    methods: {
-        customLabel ({ pu }) {
-            return `${pu}`
+            allCourses: ['Business Analytics', 'Computer Science', 'Information Systems', 'Information Security', 'Economics'],
         }
     }
 }

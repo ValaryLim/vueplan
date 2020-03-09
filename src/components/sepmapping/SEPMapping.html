@@ -29,7 +29,7 @@
         <div id = "multiselect_title">
           <label>Filter by Courses:</label>
         </div>
-        <multiselect v-model="courses" :options="allCourses" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Course" :preselect-first="true">
+        <multiselect v-model="courses" :options="allCourses" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Course" :preselect-first="true" open-direction="bottom">
           <template slot="selection" slot-scope="{ values, search, isOpen }">
             <!-- <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span> -->
           </template>
@@ -39,11 +39,12 @@
 
       <br>
 
-      <div id = "datatable">
-        <table :sepMappings="sepMappings" pus="pus" courses="courses">
+      <div>
+        <table class = "datatable" :sepMappings="sepMappings" pus="pus" courses="courses">
           <!-- table header -->
           <thead>
             <tr>
+              
               <th>Partner University</th>
               <th>NUS Module Code</th>
               <th>NUS Module Title</th>
