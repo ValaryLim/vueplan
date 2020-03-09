@@ -23,6 +23,8 @@
           </template>
         </multiselect>
 
+        {{pus}}
+
         <!-- Filter by Course -->
         <multiselect v-model="courses" :options="allCourses" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Course" :preselect-first="true">
           <template slot="selection" slot-scope="{ values, search, isOpen }">

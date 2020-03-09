@@ -52,12 +52,17 @@ export default {
 
     data() {
         return {
-            /* testing new dropdown */
             pus: [],
             allPus: ['Technical University of Denmark', 'Technical University of Munich', 'Georgia Institute of Technology'],
 
             courses: [],
             allCourses: ['Business Analytics', 'Economics'],
+        }
+    },
+
+    methods: {
+        customLabel ({ pu }) {
+            return `${pu}`
         }
     }
 }
