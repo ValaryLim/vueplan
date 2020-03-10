@@ -27,7 +27,11 @@
 }
 
 .list-group {
-    background-color: #B9CCED;
+    background-color: #374785;
+}
+
+h6 {
+    color: white;
 }
 
 .handle {

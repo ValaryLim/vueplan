@@ -10,7 +10,6 @@
                 <router-link to="/acadplan" activeClass="active" tag="li"><a>Academic Plan</a></router-link>
                 <router-link to="/gradprogress" activeClass="active" tag="li"><a>Graduation Progress</a></router-link>
                 <router-link to="/moduleinfo" activeClass="active" tag="li"><a>Module Information</a></router-link>
-                <router-link to="/reviews" activeClass="active" tag="li"><a>Module Reviews</a></router-link>
                 <router-link to="/sepmapping" activeClass="active" tag="li"><a>SEP Mapping</a></router-link>
             </b-navbar-nav>
 

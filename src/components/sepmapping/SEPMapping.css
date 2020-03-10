@@ -1,19 +1,19 @@
-/* table generator */
-
-/* SEPMapping filters for PU and University */
-#filters {
-  text-align: left;
-}
-
 /* headers for Grad Progress tables */
 h3 {
   text-align: left;
 }
 
-select {
-  color: #24305E;
-  border-width: 0;
-  padding-right: 25px;
+.multiselect__tags span {
+  background: #A8D0E6;
+  color: #2c3e50;
+}
+
+#multiselect_title {
+  text-align: left;
+}
+
+#multiselect {
+  width: 800px;
 }
 
 table {
@@ -36,7 +36,7 @@ th {
   border-color:#aaa;
   color:#fff;
   background-color:#374785;
-  text-align:center;
+  text-align:left;
   vertical-align:middle;
 }
 
@@ -44,6 +44,7 @@ th {
 td { 
   font-family: Avenir, Helvetica, Arial, sans-serif;
   font-size:14px;
+  text-align: left;
   padding:10px 5px;
   border-style:solid;
   border-width:0px;
