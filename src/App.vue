@@ -363,32 +363,32 @@ export default {
       },
       acadplan: {
         y1s1: [
-          { mod: "", mc: 0, move: false, index: 0 },
+          { mod: "", mc: 16, move: false, index: 0 },
           { mod: "BT1101", mc: 4, move: true, index: 1 },
           { mod: "CS1010S", mc: 4, move: true, index: 2 },
           { mod: "MA1521", mc: 4, move: true, index: 3 },
           { mod: "IS1103", mc: 4, move: true, index: 4 }
         ], 
         y1s2: [
-          { mod: "", mc: 0, move: false, index: 5 },
+          { mod: "", mc: 16, move: false, index: 5 },
           { mod: "BT2101", mc: 4, move: true, index: 6 },
           { mod: "CS2030", mc: 4, move: true, index: 7 },
           { mod: "MA1101R", mc: 4, move: true, index: 8 },
           { mod: "EC1301", mc: 4, move: true, index: 9 }
         ],
         y2s1: [
-          { mod: "", mc: 0, move: false, index: 10 }, 
+          { mod: "", mc: 12, move: false, index: 10 }, 
           { mod: "BT2102", mc: 4, move: true, index: 11 }, 
           { mod: "CS2040", mc: 4, move: true, index: 12 },
           { mod: "ST2334", mc: 4, move: true, index: 13 }
         ], 
         y2s2: [
-          { mod: "", mc: 0, move: false, index: 14 }, 
+          { mod: "", mc: 8, move: false, index: 14 }, 
           { mod: "BT3102", mc: 4, move: true, index: 15 }, 
           { mod: "BT3103", mc: 4, move: true, index: 16 },
         ],
         y3s1: [
-          { mod: "", mc: 0,move: false, index: 17 },
+          { mod: "", mc: 4,move: false, index: 17 },
           { mod: "MKT1705X", mc: 4, move: true, index: 18 }
         ],
         y3s2: [

@@ -18,8 +18,9 @@
                             <font-awesome-icon icon="times" />
                         </button>
                         <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
-                        <br>
+                        <br v-if="element.move===true">
                         <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
+                        <span class="text" v-if="element.move===false">Total: {{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
@@ -35,8 +36,9 @@
                             <font-awesome-icon icon="times" />
                         </button>
                         <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
-                        <br>
+                        <br v-if="element.move===true">
                         <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
+                        <span class="text" v-if="element.move===false">Total: {{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
@@ -52,8 +54,9 @@
                             <font-awesome-icon icon="times" />
                         </button>
                         <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
-                        <br>
+                        <br v-if="element.move===true">
                         <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
+                        <span class="text" v-if="element.move===false">Total: {{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
@@ -69,8 +72,9 @@
                             <font-awesome-icon icon="times" />
                         </button>
                         <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
-                        <br>
+                        <br v-if="element.move===true">
                         <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
+                        <span class="text" v-if="element.move===false">Total: {{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
@@ -86,8 +90,9 @@
                             <font-awesome-icon icon="times" />
                         </button>
                         <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
-                        <br>
+                        <br v-if="element.move===true">
                         <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
+                        <span class="text" v-if="element.move===false">Total: {{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
@@ -103,8 +108,9 @@
                             <font-awesome-icon icon="times" />
                         </button>
                         <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
-                        <br>
+                        <br v-if="element.move===true">
                         <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
+                        <span class="text" v-if="element.move===false">Total: {{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
@@ -120,8 +126,9 @@
                             <font-awesome-icon icon="times" />
                         </button>
                         <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
-                        <br>
+                        <br v-if="element.move===true">
                         <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
+                        <span class="text" v-if="element.move===false">Total: {{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
@@ -137,8 +144,9 @@
                             <font-awesome-icon icon="times" />
                         </button>
                         <span class="text module_code handle" v-if="element.move===true">{{ element.mod }}</span>
-                        <br>
+                        <br v-if="element.move===true">
                         <span class="text handle" v-if="element.move===true">{{ element.mc }} MCs</span>
+                        <span class="text" v-if="element.move===false">Total: {{ element.mc }} MCs</span>
                     </div>
                 </draggable>
             </div>
@@ -146,14 +154,18 @@
             <!-- add module button -->
             <div class="col-2 add_feature">
                 <p id = "inputTitle">Module Code:</p>
-                    <form>
-                        <input type="text" class="input" list="allmodules" v-model="add_module_code"/>
-                        <datalist id="allmodules">
-                            <option v-for="(item, key) in allmodules" v-bind:key="key">
-                                {{ item.fullname }}
-                            </option>
-                        </datalist>
-                    </form>
+                <form>
+                    <input type="text" class="input" list="allmodules" v-model="add_module_code"/>
+                    <datalist id="allmodules">
+                        <option v-for="(item, key) in allmodules" v-bind:key="key">
+                            {{ item.fullname }}
+                        </option>
+                    </datalist>
+                </form>
+                <b-modal id="error-modal" :title="modal_header" hide-footer>
+                    <p>{{ this.modal_body }}</p>
+                    <b-button id="modal-ok-btn" @click="$bvModal.hide('error-modal')">OK</b-button>
+                </b-modal>
             </div>
             <div class="col-1">
                 <button class="btn btn-secondary" @click = "add_module_sem">
@@ -161,5 +173,6 @@
                 </button>
             </div>
         </div>
+        <div class="row">Total: {{ this.total_mc }} MCs</div>
     </body>
 </html>
