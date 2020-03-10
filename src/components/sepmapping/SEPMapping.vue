@@ -6,7 +6,7 @@
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <script>
-import Multiselect from 'vue-multiselect'
+import Multiselect from 'vue-multiselect';
 
 export default {
     name: "App",
@@ -14,9 +14,16 @@ export default {
     /* set properties from parent */
     props: ['allmajors', 'sepMappings'],
 
-    /* testing multiselect */
     components: { 
-        Multiselect 
+        Multiselect,
+    },
+
+    data() {
+        return {
+            pus: [],
+            courses: [],
+            allCourses: ['Business Analytics', 'Computer Science', 'Information Systems', 'Information Security', 'Economics'],
+        }
     },
 
     computed: {
@@ -48,14 +55,6 @@ export default {
                 return output
             }
         },
-    },
-
-    data() {
-        return {
-            pus: [],
-            courses: [],
-            allCourses: ['Business Analytics', 'Computer Science', 'Information Systems', 'Information Security', 'Economics'],
-        }
     }
 }
 </script>

@@ -10,16 +10,14 @@
     <br>
 
     <div id="app">
-      <!-- Testing Multiselect -->
-
+      
       <div id = "multiselect">
-        <!-- Filter by PU -->
+        <!-- Filter by Partner Universities -->
         <div id = "multiselect_title">
           <label>Filter by Partner Universities:</label>
         </div>
-        <multiselect v-model="pus" :options="unique(sepMappings, 'pu')" :custom-labels="customLabels" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Partner University" :preselect-first="true">
+        <multiselect v-model="pus" :options="unique(sepMappings, 'pu')" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Partner University" :preselect-first="true">
           <template slot="selection" slot-scope="{ values, search, isOpen }">
-            <!-- <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span> --> 
           </template>
         </multiselect>
 
@@ -31,10 +29,8 @@
         </div>
         <multiselect v-model="courses" :options="allCourses" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Course" :preselect-first="true" open-direction="bottom">
           <template slot="selection" slot-scope="{ values, search, isOpen }">
-            <!-- <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span> -->
           </template>
         </multiselect>
-
       </div>
 
       <br>
@@ -42,9 +38,8 @@
       <div>
         <table class = "datatable" :sepMappings="sepMappings" pus="pus" courses="courses">
           <!-- table header -->
-          <thead>
+          <thead :sepMappings="sepMappings" pus="pus" courses="courses">
             <tr>
-              
               <th>Partner University</th>
               <th>NUS Module Code</th>
               <th>NUS Module Title</th>
