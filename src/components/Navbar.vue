@@ -1,21 +1,24 @@
 <template>
-    <div>
+    <div id="header">
+        <div id="main">
+            <router-link to="/"><a id="main-first">vue</a><a id="main-second">Plan</a></router-link>
+        </div>
         <b-navbar toggleable="lg" type="light" variant="light">
-            <router-link to="/" class="navbar-brand">vuePlan</router-link>
+            <!-- <router-link to="/" class="navbar-brand">vuePlan</router-link> -->
 
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
             <b-collapse id="nav-collapse" is-nav>
             <b-navbar-nav>
-                <router-link to="/acadplan" activeClass="active" tag="li"><a>Academic Plan</a></router-link>
-                <router-link to="/gradprogress" activeClass="active" tag="li"><a>Graduation Progress</a></router-link>
-                <router-link to="/moduleinfo" activeClass="active" tag="li"><a>Module Information</a></router-link>
-                <router-link to="/sepmapping" activeClass="active" tag="li"><a>SEP Mapping</a></router-link>
+                <router-link to="/acadplan" activeClass="active" tag="li"><a class="nav-tab">Academic Plan</a></router-link>
+                <router-link to="/gradprogress" activeClass="active" tag="li"><a class="nav-tab">Graduation Progress</a></router-link>
+                <router-link to="/moduleinfo" activeClass="active" tag="li"><a class="nav-tab">Module Information</a></router-link>
+                <router-link to="/sepmapping" activeClass="active" tag="li"><a class="nav-tab">SEP Mapping</a></router-link>
             </b-navbar-nav>
 
             <!-- Right aligned nav items -->
-            <b-navbar-nav class="ml-auto">
-                <b-nav-item-dropdown right>
+            <b-navbar-nav>
+                <b-nav-item-dropdown>
                 <!-- Using 'button-content' slot -->
                 <template v-slot:button-content>
                     <em>User</em>
@@ -30,8 +33,25 @@
 </template>
 
 <style>
-    a {
-        padding: 10px;
+    #header {
+        background: #fff;
+    }
+
+    #main {
+        font-size: 60px;
+        font-weight: bold;
+        padding: 25px;
+    }
+
+    #main #main-first {
+        color: grey;
+    }
+
+    #main #main-second {
         color: #24305E;
+    }
+
+    .nav-tab {
+        padding: 20px;
     }
 </style>
