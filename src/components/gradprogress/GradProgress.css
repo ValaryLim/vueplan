@@ -1,1 +1,56 @@
+/* headers for Grad Progress tables */
+h3 {
+  text-align: left;
+}
 
+.multiselect__tags span {
+  background: #A8D0E6;
+  color: #2c3e50;
+}
+
+#multiselect_title {
+  text-align: left;
+}
+
+#multiselect {
+  width: 800px;
+}
+
+table {
+  align-items: left;
+  border-collapse:collapse;
+  border-spacing:0;
+  border-color:#aaa;
+}
+
+/* table header */
+th {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-size:14px;
+  font-weight:bold;
+  padding:10px 5px;
+  border-style:solid;
+  border-width:0px;
+  overflow:hidden;
+  word-break:normal;
+  border-color:#aaa;
+  color:#fff;
+  background-color:#374785;
+  text-align:left;
+  vertical-align:middle;
+}
+
+/* table data */
+td { 
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-size:14px;
+  text-align: left;
+  padding:10px 5px;
+  border-style:solid;
+  border-width:0px;
+  overflow:hidden;
+  word-break:normal;
+  border-color:#aaa;
+  color:#333;
+  background-color:#fff;
+}

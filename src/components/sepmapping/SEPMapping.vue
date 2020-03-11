@@ -1,9 +1,6 @@
 <template src="./SEPMapping.html"></template>
 
-<style src = "./SEPMapping.css"></style>
-
-<!-- add style for multiselect -->
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<style scoped src="./SEPMapping.css"></style>
 
 <script>
 import Multiselect from 'vue-multiselect'
