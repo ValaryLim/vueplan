@@ -18,15 +18,16 @@
                 <b-nav-item-dropdown right>
                     <!-- Using 'button-content' slot -->
                     <template v-slot:button-content>
-                        <em>User</em>
+                        <em v-if="user.loggedIn">{{user.data.email}}</em>
+                        <em v-if="!user.loggedIn">User</em>
                     </template>
-                    <div class="logged-in">
-                        <b-dropdown-item href="#">Account</b-dropdown-item>
-                        <b-dropdown-item href="#">Logout</b-dropdown-item>
+                    <div class="logged-in" v-if="user.loggedIn">
+                        <b-dropdown-item href="/userprofile">Account</b-dropdown-item>
+                        <b-dropdown-item @click.prevent="signOut">Logout</b-dropdown-item>
                     </div>
-                    <div class="logged-out">
-                        <b-dropdown-item href="#">Login</b-dropdown-item>
-                        <b-dropdown-item href="#">Register</b-dropdown-item>
+                    <div class="logged-out" v-if="!user.loggedIn">
+                        <b-dropdown-item href="/login">Login</b-dropdown-item>
+                        <b-dropdown-item href="/register">Register</b-dropdown-item>
                     </div>
                 </b-nav-item-dropdown>
             </b-navbar-nav>
@@ -34,6 +35,32 @@
         </b-navbar>
     </div>
 </template>
+
+<script>
+import { mapGetters } from "vuex";
+import firebase from "firebase";
+
+export default {
+    computed: {
+        ...mapGetters({
+            // map `this.user` to `this.$store.getters.user`
+            user: "user"
+        })
+    },
+    methods: {
+        signOut() {
+            firebase
+            .auth()
+            .signOut()
+            .then(() => {
+                this.$router.replace({
+                    name: "Home"
+                });
+            });
+        }
+    }
+};
+</script>
 
 <style>
     a {

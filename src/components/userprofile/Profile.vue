@@ -3,13 +3,13 @@
         <h2> Profile Page </h2>
 
         <div id = "details">
-            <label v-if="$auth.isAuthenticated" class="is-size-3 has-background-dark welcome">
+            <label v-if="user.loggedIn" class="is-size-3 has-background-dark welcome">
                 <br>
-                <!-- PROFILE PIC -->
+                {{ user.photoURL }}
                 <br>
-                <b>Username:</b> {{ $auth.user.nickname }}
+                <b>Username:</b> {{ user.displayName }}
                 <br>
-                <b>Email:</b> {{ $auth.user.email }}
+                <b>Email:</b> {{ user.data.email }}
                 <br>
                 <b>Year of Study:</b>
                 <br>
@@ -22,13 +22,15 @@
 <style src = "./Profile.css"></style>
 
 <script>
+import { mapGetters } from "vuex";
 
 export default {
-    data() {
-        return {
-
-        }
+    computed: {
+        // map `this.user` to `this.$store.getters.user`
+        ...mapGetters({
+            user: "user"
+        })
     }
-}
+};
 </script>
 

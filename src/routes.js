@@ -7,12 +7,12 @@ import Register from './components/userprofile/Register.vue';
 import UserProfile from './components/userprofile/Profile.vue';
 
 export const routes = [
-    { path: '/', component: AcadPlan },
+    { path: '/', name: 'Home', component: AcadPlan },
     { path: '/acadplan', component: AcadPlan },
     { path: '/gradprogress', component: GradProgress },
     { path: '/moduleinfo', component: ModuleInfo },
     { path: '/sepmapping', component: SEPMapping },
-    { path: '/login', component: Login},
+    { path: '/login', component: Login },
     { path: '/register', component: Register },
-    { path: '/userprofile', component: UserProfile},
+    { path: '/userprofile', name: 'Profile', component: UserProfile },
 ];
