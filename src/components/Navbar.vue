@@ -21,18 +21,16 @@
                     <em v-if="!$auth.isAuthenticated" class="button is-xl is-dark">User</em>
                     <em v-if="$auth.isAuthenticated" class="is-size-3 has-background-dark welcome">{{ $auth.user.nickname }}</em>
                 </template>
-                <b-dropdown-item href="#">Profile</b-dropdown-item>
-                <b-dropdown-item>
-                    <div class="buttons">
-                        <!-- Check that the SDK client is not currently loading before accessing is methods -->
-                        <div v-if="!$auth.loading">
-                            <!-- show login when not authenticated -->
-                            <a v-if="!$auth.isAuthenticated" @click="login" class="button is-dark"><strong>Sign in</strong></a>
-                            <!-- show logout when authenticated -->
-                            <a v-if="$auth.isAuthenticated" @click="logout" class="button is-dark"><strong>Log out</strong></a>
-                        </div>
+                <b-dropdown-item v-if="$auth.isAuthenticated" href="#">Profile</b-dropdown-item>
+                <div class="buttons">
+                    <!-- Check that the SDK client is not currently loading before accessing is methods -->
+                    <div v-if="!$auth.loading">
+                        <!-- show login when not authenticated -->
+                        <b-dropdown-item v-if="!$auth.isAuthenticated" @click="login" class="button is-dark"><strong>Sign in</strong></b-dropdown-item>
+                        <!-- show logout when authenticated -->
+                        <b-dropdown-item v-if="$auth.isAuthenticated" @click="logout" class="button is-dark"><strong>Log out</strong></b-dropdown-item>
                     </div>
-                </b-dropdown-item>
+                </div>
                 </b-nav-item-dropdown>
             </b-navbar-nav>
             </b-collapse>
