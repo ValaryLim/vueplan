@@ -1,6 +1,7 @@
 <template>
     <div id = "profile">
         <h2> Update Profile </h2>
+        Note: Still fixing some bugs on this page, it's not working now.
 
         <form action="#" @submit.prevent="save">
             <div class="form-group row">
@@ -111,7 +112,7 @@ export default {
                 year: this.form.year,
                 exemptions: this.form.exemptions,
             }).then(function() {
-                this.$router.replace({ name: "Profile" })
+                this.$router.replace({ name: 'Profile' })
                 // Update successful.
             }).catch(function(error) {
                 this.error = error;

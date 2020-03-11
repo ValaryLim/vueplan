@@ -21,8 +21,8 @@
                             <a @click.prevent="signOut">Logout</a>
                         </div>
                         <div class="logged-out" v-if="!user.loggedIn">
-                            <b-dropdown-item href="/login">Login</b-dropdown-item>
-                            <b-dropdown-item href="/register">Register</b-dropdown-item>
+                            <a href="/login">Login</a>
+                            <a href="/register">Register</a>
                         </div>
                         <!--<a href="#">Settings</a>
                         <a href="#">Logout</a>-->
