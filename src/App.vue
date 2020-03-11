@@ -1,10 +1,7 @@
 <!-- COLOUR SCHEME 
-  #F8E9A1
   #F76C6C
-  #A8D0E6
-  #374785
   #24305E 
-  #A6C2CE-->
+  #EBEFF2-->
 
 <template>
   <div id="app">
@@ -419,6 +416,17 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+}
+
+body {
+  height: 100%;
+  top: 0;
+  margin-top: 0;
+  padding: 0;
+  background-color: #EBEFF2;
+}
+
+.row {
+  margin: 30px;
 }
 </style>

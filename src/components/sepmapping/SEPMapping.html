@@ -6,6 +6,7 @@
   </head>
   
   <body>
+<<<<<<< HEAD
     <h2>SEP Module Mappings </h2>
     <br>
 
@@ -63,8 +64,61 @@
             </tr>
           </tbody>
         </table>
+=======
+    <div class="row">
+      <h2>SEP Module Mappings</h2>
+    </div>
+    <div class="row multiselect-module">
+      <!-- Filter by PU -->
+      <div class = "multiselect_title">
+        <label>Filter by Partner Universities</label>
       </div>
+      <multiselect v-model="pus" :options="unique(sepMappings, 'pu')" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Partner University" :preselect-first="true">
+        <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
+        </template>
+      </multiselect>
+    </div>
+    <div class="row multiselect-module">
+      <!-- Filter by Course -->
+      <div class = "multiselect_title">
+        <label>Filter by Courses</label>
+>>>>>>> master
+      </div>
+      <multiselect v-model="courses" :options="allCourses" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Course" :preselect-first="true" open-direction="bottom">
+        <template slot="selection" slot-scope="{ values, search, isOpen }">
+          <!-- <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span> -->
+        </template>
+      </multiselect>
+    </div>
+      
+    <div class="row">
+      <table class="datatable" :sepMappings="sepMappings" pus="pus" courses="courses">
+        <!-- table header -->
+        <thead>
+          <tr>
+            <th>Partner University</th>
+            <th>NUS Module Code</th>
+            <th>NUS Module Title</th>
+            <th>MCs</th>
+            <th>PU Module Code</th>
+            <th>PU Module Title</th>
+            <th>PU MCs</th>
+          </tr>
+        </thead>
 
+        <!-- table body -->
+        <tbody :sepMappings="sepMappings" pus="pus" courses="courses">
+          <tr v-for="mapping in sepMappings" v-show="relevant(allmajors, mapping.nusModuleCode) && pus.includes(mapping.pu)">
+            <td>{{mapping.pu}}</td>
+            <td>{{mapping.nusModuleCode}}</td>
+            <td>{{mapping.nusModuleTitle}}</td>
+            <td>{{mapping.mcs}}</td>
+            <td>{{mapping.puModuleCode}}</td>
+            <td>{{mapping.puModuleTitle}}</td>
+            <td>{{mapping.puMcs}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </body>
 </html>
