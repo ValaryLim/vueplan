@@ -1,8 +1,23 @@
-/* headers for Grad Progress tables */
+/* header */
 h3 {
   text-align: left;
 }
 
+h4 {
+  padding: 10px 0;
+}
+/* grad progress spacing */
+.grad-prog-row {
+  padding: 15px 0;
+  display: block;
+}
+
+.add-complete {
+  width: 10%;
+  text-align: center;
+}
+
+/* table styling */
 table {
   align-items: left;
   border-collapse: collapse;
@@ -10,14 +25,14 @@ table {
   padding: 0;
   margin: 0;
   border: none;
+  width: 80%;
 }
 
 /* table header */
 th {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   font-size:14px;
   font-weight:bold;
-  padding:10px 5px;
+  padding:20px 15px;
   border-style:solid;
   border-width:0px;
   overflow:hidden;
@@ -31,20 +46,23 @@ th {
 
 /* table data */
 td { 
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   font-size:14px;
   text-align: left;
-  padding:10px 5px;
+  padding:15px 15px;
   border-style:solid;
   border-width:0px;
   overflow:hidden;
   word-break:normal;
-  border-color:#aaa;
-  color:#333;
+  border-color:#EBEFF2;
+  color: #333333;
   background-color:#fff;
 }
 
 /* MULTISELECT STYLING */
+.multiselect-module {
+  width: 50%;
+}
+
 fieldset[disabled] .multiselect {
   pointer-events: none;
 }
@@ -315,7 +333,6 @@ fieldset[disabled] .multiselect {
   line-height: 16px;
   text-decoration: none;
   text-transform: none;
-  vertical-align: middle;
   position: relative;
   cursor: pointer;
   white-space: nowrap;

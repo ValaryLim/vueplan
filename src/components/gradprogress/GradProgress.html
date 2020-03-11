@@ -7,43 +7,36 @@
 </head>
 
 <body>
- 
-  <h2>Graduation Progress</h2>
-
-  <div id="app">
-      <br>
-      <br>
-      <h3>University Level Requirements</h3>
+  <div class="row">
+    <h2>Graduation Progress</h2>
+  </div>
   
-      
-      <table :records="get_ulr_table()">
-       
-        <thead>
-          <tr>
-            <th>University Level Requirment</th>
-            <th>Module Selected</th>
-            <th>Added</th>
-            <th>Completed</th>
-          </tr>
-        </thead>
+  <div class="row grad-prog-row">
+    <h4>University Level Requirements</h4>
   
-        
-        <tbody :records= "get_ulr_table()">
-          <tr v-for="(record, idx) in get_ulr_table()" v-bind:key="idx" >
-              <td> {{record.ulr}}</td>
-              <td> {{record.selected}}</td>
-              <td> {{record.added}}</td>
-              <td> {{record.completed}}</td>
-          </tr>
-        </tbody>
+    <table :records="get_ulr_table()">
+      <thead>
+        <tr>
+          <th>University Level Requirment</th>
+          <th>Module Selected</th>
+          <th class="add-complete">Added</th>
+          <th class="add-complete">Completed</th>
+        </tr>
+      </thead>
+  
+      <tbody :records= "get_ulr_table()">
+        <tr v-for="(record, idx) in get_ulr_table()" v-bind:key="idx" >
+          <td> {{record.ulr}}</td>
+          <td> {{record.selected}}</td>
+          <td class="add-complete"> {{record.added}}</td>
+          <td class="add-complete"> {{record.completed}}</td>
+        </tr>
+      </tbody>
       </table>
-  
-      <br>
-      <br>
+    </div>
 
-  
-      <h3>Programme Requirements</h3>
-  
+    <div class="row grad-prog-row">
+      <h4>Programme Requirements</h4>
       <!-- table for programme requirements-->
       <table :records="get_pr_table()">
         <!-- table header -->
@@ -51,60 +44,53 @@
           <tr>
             <th>Programme Requirment</th>
             <th>Module Selected</th>
-            <th>Added</th>
-            <th>Completed</th>
+            <th class="add-complete">Added</th>
+            <th class="add-complete">Completed</th>
           </tr>
         </thead>
-        
 
         <!-- table body -->
         <tbody :records= "get_pr_table()">
           <tr v-for="(record, idx) in get_pr_table()" v-bind:key="idx" > 
               <td> {{record.requirement}}</td>
               <td> {{record.selected}}</td>
-              <td> {{record.added}}</td>
-              <td> {{record.completed}}</td>
+              <td class="add-complete"> {{record.added}}</td>
+              <td class="add-complete"> {{record.completed}}</td>
           </tr>
+
           <!-- Programme electives hard coded. May need to change in the future-->
           <td>6 Programme Electives</td>
           <td> </td>
-          <td>✘</td>
+          <td class="add-complete">✘</td>
+          <td class="add-complete">✘</td>
 
         </tbody>
       </table>
-  
-      <br>
-      <br>
-  
+    </div>
 
-      <h3>Unrestricted Electives</h3>
-  
-      
+    <div class="row grad-prog-row">
+      <h4>Unrestricted Electives</h4>
+
       <table :records="get_ue_table()">
-      
         <thead>
           <tr>
             <th>8 Unrestricted Electives</th>
             <th>Module Selected</th>
-            <th>Added</th>
-            <th>Completed</th>
+            <th class="add-complete">Added</th>
+            <th class="add-complete">Completed</th>
           </tr>
         </thead>
-  
        
         <tbody :records="get_ue_table()">
           <tr v-for="(record, idx) in get_ue_table()" v-bind:key="idx" >
             <td> {{record.requirement}}</td>
             <td> {{record.selected}}</td>
-            <td> {{record.added}}</td>
-            <td> {{record.completed}}</td>
+            <td class="add-complete"> {{record.added}}</td>
+            <td class="add-complete"> {{record.completed}}</td>
         </tr>
         </tbody>
       </table>
-  
-  
-  
-
+    </div>
   </div>
 </body>
 
