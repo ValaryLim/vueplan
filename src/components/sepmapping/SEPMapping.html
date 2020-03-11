@@ -14,9 +14,8 @@
       <div class = "multiselect_title">
         <label>Filter by Partner Universities</label>
       </div>
-      <multiselect v-model="pus" :options="unique(sepMappings, 'pu')" :custom-labels="customLabels" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Partner University" :preselect-first="true">
+      <multiselect v-model="pus" :options="unique(sepMappings, 'pu')" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Partner University" :preselect-first="true">
         <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
-          <!-- <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span> --> 
         </template>
       </multiselect>
     </div>

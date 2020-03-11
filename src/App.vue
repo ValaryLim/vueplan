@@ -21,7 +21,7 @@
 <script>
 import Navbar from './components/Navbar.vue';
 import allModules from './assets/allmoduleinfo.json';
-import sepMappings from './assets/sepWithoutBiz.json';
+import sepMappings from './assets/allsepmappings_sorted.json';
 
 export default {
   name: 'App',
