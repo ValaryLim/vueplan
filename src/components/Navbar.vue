@@ -18,16 +18,45 @@
                 <b-nav-item-dropdown right>
                 <!-- Using 'button-content' slot -->
                 <template v-slot:button-content>
-                    <em>User</em>
+                    <em v-if="!$auth.isAuthenticated" class="button is-xl is-dark">User</em>
+                    <em v-if="$auth.isAuthenticated" class="is-size-3 has-background-dark welcome">{{ $auth.user.nickname }}</em>
                 </template>
                 <b-dropdown-item href="#">Profile</b-dropdown-item>
-                <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+                <b-dropdown-item>
+                    <div class="buttons">
+                        <!-- Check that the SDK client is not currently loading before accessing is methods -->
+                        <div v-if="!$auth.loading">
+                            <!-- show login when not authenticated -->
+                            <a v-if="!$auth.isAuthenticated" @click="login" class="button is-dark"><strong>Sign in</strong></a>
+                            <!-- show logout when authenticated -->
+                            <a v-if="$auth.isAuthenticated" @click="logout" class="button is-dark"><strong>Log out</strong></a>
+                        </div>
+                    </div>
+                </b-dropdown-item>
                 </b-nav-item-dropdown>
             </b-navbar-nav>
             </b-collapse>
         </b-navbar>
     </div>
 </template>
+
+<script>
+export default {
+    name: 'Navbar',
+    methods: {
+        // Log the user in
+        login() {
+        this.$auth.loginWithRedirect();
+        },
+        // Log the user out
+        logout() {
+        this.$auth.logout({
+            returnTo: window.location.origin
+        });
+        }
+    }
+}
+</script>
 
 <style>
     a {
