@@ -3,17 +3,14 @@
     </head>
     <body>
         <div class="row">
-            <h2 id="title">Academic Plan</h2>
-        </div>
-        <div class="row">
-            <div class="col-1">
+            <div class="col-sm-4 col-md-3 col-lg-2 col-xl-1">
                 <draggable
                     :list="acadplan['y1s1']" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header" class="header">
+                    <div slot="header" class="acad-plan-header">
                         <h6>Y1S1</h6>
                     </div>
-                    <div class="list-group-item item" v-for="element in sorted_y1s1" :key="element.mod">
+                    <div class="list-group-item item" v-for="element in sorted_y1s1" :key="element.mod" v-bind:class="{ 'move-false': element.move===false }">
                         <button type="button" class="close" v-if="element.move===true" @click="delete_module('y1s1', element)">
                             <font-awesome-icon icon="times" />
                         </button>
@@ -24,14 +21,14 @@
                     </div>
                 </draggable>
             </div>
-            <div class="col-1">
+            <div class="col-sm-4 col-md-3 col-lg-2 col-xl-1">
                 <draggable
                     :list="acadplan['y1s2']" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header" class="header">
+                    <div slot="header" class="acad-plan-header">
                         <h6>Y1S2</h6>
                     </div>
-                    <div class="list-group-item item" v-for="element in sorted_y1s2" :key="element.mod">
+                    <div class="list-group-item item" v-for="element in sorted_y1s2" :key="element.mod" v-bind:class="{ 'move-false': element.move===false }">
                         <button type="button" class="close" v-if="element.move===true" @click="delete_module('y1s2', element)">
                             <font-awesome-icon icon="times" />
                         </button>
@@ -42,14 +39,14 @@
                     </div>
                 </draggable>
             </div>
-            <div class="col-1">
+            <div class="col-sm-4 col-md-3 col-lg-2 col-xl-1">
                 <draggable
                     :list="acadplan['y2s1']" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header" class="header">
+                    <div slot="header" class="acad-plan-header">
                         <h6>Y2S1</h6>
                     </div>
-                    <div class="list-group-item item" v-for="element in sorted_y2s1" :key="element.mod">
+                    <div class="list-group-item item" v-for="element in sorted_y2s1" :key="element.mod" v-bind:class="{ 'move-false': element.move===false }">
                         <button type="button" class="close" v-if="element.move===true" @click="delete_module('y2s1', element)">
                             <font-awesome-icon icon="times" />
                         </button>
@@ -60,14 +57,14 @@
                     </div>
                 </draggable>
             </div>
-            <div class="col-1">
+            <div class="col-sm-4 col-md-3 col-lg-2 col-xl-1">
                 <draggable
                     :list="acadplan['y2s2']" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header" class="header">
+                    <div slot="header" class="acad-plan-header">
                         <h6>Y2S2</h6>
                     </div>
-                    <div class="list-group-item item" v-for="element in sorted_y2s2" :key="element.mod">
+                    <div class="list-group-item item" v-for="element in sorted_y2s2" :key="element.mod" v-bind:class="{ 'move-false': element.move===false }">
                         <button type="button" class="close" v-if="element.move===true" @click="delete_module('y2s2', element)">
                             <font-awesome-icon icon="times" />
                         </button>
@@ -78,14 +75,14 @@
                     </div>
                 </draggable>
             </div>
-            <div class="col-1">
+            <div class="col-sm-4 col-md-3 col-lg-2 col-xl-1">
                 <draggable
                     :list="acadplan['y3s1']" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header" class="header">
+                    <div slot="header" class="acad-plan-header">
                         <h6>Y3S1</h6>
                     </div>
-                    <div class="list-group-item item" v-for="element in sorted_y3s1" :key="element.mod">
+                    <div class="list-group-item item" v-for="element in sorted_y3s1" :key="element.mod" v-bind:class="{ 'move-false': element.move===false }">
                         <button type="button" class="close" v-if="element.move===true" @click="delete_module('y3s1', element)">
                             <font-awesome-icon icon="times" />
                         </button>
@@ -96,14 +93,14 @@
                     </div>
                 </draggable>
             </div>
-            <div class="col-1">
+            <div class="col-sm-4 col-md-3 col-lg-2 col-xl-1">
                 <draggable
                     :list="acadplan['y3s2']" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header" class="header">
+                    <div slot="header" class="acad-plan-header">
                         <h6>Y3S2</h6>
                     </div>
-                    <div class="list-group-item item" v-for="element in sorted_y3s2" :key="element.mod">
+                    <div class="list-group-item item" v-for="element in sorted_y3s2" :key="element.mod" v-bind:class="{ 'move-false': element.move===false }">
                         <button type="button" class="close" v-if="element.move===true" @click="delete_module('y3s2', element)">
                             <font-awesome-icon icon="times" />
                         </button>
@@ -114,14 +111,14 @@
                     </div>
                 </draggable>
             </div>
-            <div class="col-1">
+            <div class="col-sm-4 col-md-3 col-lg-2 col-xl-1">
                 <draggable
                     :list="acadplan['y4s1']" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header" class="header">
+                    <div slot="header" class="acad-plan-header">
                         <h6>Y4S1</h6>
                     </div>
-                    <div class="list-group-item item" v-for="element in sorted_y4s1" :key="element.mod">
+                    <div class="list-group-item item" v-for="element in sorted_y4s1" :key="element.mod" v-bind:class="{ 'move-false': element.move===false }">
                         <button type="button" class="close" v-if="element.move===true" @click="delete_module('y4s1', element)">
                             <font-awesome-icon icon="times" />
                         </button>
@@ -132,14 +129,14 @@
                     </div>
                 </draggable>
             </div>
-            <div class="col-1">
+            <div class="col-sm-4 col-md-3 col-lg-2 col-xl-1">
                 <draggable
                     :list="acadplan['y4s2']" class="list-group" handle=".handle" group="a"
                 >
-                    <div slot="header" class="header">
+                    <div slot="header" class="acad-plan-header">
                         <h6>Y4S2</h6>
                     </div>
-                    <div class="list-group-item item" v-for="element in sorted_y4s2" :key="element.mod">
+                    <div class="list-group-item item" v-for="element in sorted_y4s2" :key="element.mod" v-bind:class="{ 'move-false': element.move===false }">
                         <button type="button" class="close" v-if="element.move===true" @click="delete_module('y4s2', element)">
                             <font-awesome-icon icon="times" />
                         </button>
@@ -152,27 +149,30 @@
             </div>
             
             <!-- add module button -->
-            <div class="col-2 add_feature">
-                <p id = "inputTitle">Module Code:</p>
+            <div class="col-3 add_feature">
+                <p class="inputTitle">Add Module</p>
+                <p>Use the textbox below to search and add modules.</p>
                 <form>
                     <input type="text" class="input" list="allmodules" v-model="add_module_code"/>
                     <datalist id="allmodules">
-                        <option v-for="(item, key) in allmodules" v-bind:key="key">
+                        <option class="datalist-style" v-for="(item, key) in allmodules" v-bind:key="key">
                             {{ item.fullname }}
                         </option>
                     </datalist>
                 </form>
-                <b-modal id="error-modal" :title="modal_header" hide-footer>
-                    <p>{{ this.modal_body }}</p>
-                    <b-button id="modal-ok-btn" @click="$bvModal.hide('error-modal')">OK</b-button>
-                </b-modal>
-            </div>
-            <div class="col-1">
                 <button class="btn btn-secondary" @click = "add_module_sem">
                     Add
                 </button>
             </div>
+            <b-modal id="error-modal" :title="modal_header" hide-footer>
+                <p>{{ this.modal_body }}</p>
+                <b-button id="modal-ok-btn" @click="$bvModal.hide('error-modal')">OK</b-button>
+            </b-modal>
         </div>
-        <div class="row">Total: {{ this.total_mc }} MCs</div>
+        <div class="row">
+            <div class="col-8 acad-plan-total">
+                Total: {{ this.total_mc }} MCs
+            </div>
+        </div>
     </body>
 </html>

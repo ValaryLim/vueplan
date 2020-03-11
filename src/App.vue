@@ -424,4 +424,8 @@ body {
   padding: 0;
   background-color: #EBEFF2;
 }
+
+.row {
+  margin: 30px;
+}
 </style>

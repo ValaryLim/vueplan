@@ -10,13 +10,12 @@
                 <span class="header-tab"><router-link to="/moduleinfo"><a>Module Information</a></router-link></span>
                 <span class="header-tab"><router-link to="/sepmapping"><a>SEP Mapping</a></router-link></span>
                 <span class="header-tab header-tab-dropdown">
-                    <button class="dropdown-button">User
+                    <button class="dropdown-button">Account
                         <font-awesome-icon icon="caret-down" />
                     </button>
                     <span class="dropdown-content">
-                        <a href="#">Link 1</a>
-                        <a href="#">Link 2</a>
-                        <a href="#">Link 3</a>
+                        <a href="#">Settings</a>
+                        <a href="#">Logout</a>
                     </span>
                 </span>
             </div>
