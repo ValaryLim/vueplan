@@ -16,45 +16,24 @@
             <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
                 <b-nav-item-dropdown right>
-                <!-- Using 'button-content' slot -->
-                <template v-slot:button-content>
-                    <em v-if="!$auth.isAuthenticated" class="button is-xl is-dark">User</em>
-                    <em v-if="$auth.isAuthenticated" class="is-size-3 has-background-dark welcome">{{ $auth.user.nickname }}</em>
-                </template>
-                <b-dropdown-item v-if="$auth.isAuthenticated" href="#">Profile</b-dropdown-item>
-                <div class="buttons">
-                    <!-- Check that the SDK client is not currently loading before accessing is methods -->
-                    <div v-if="!$auth.loading">
-                        <!-- show login when not authenticated -->
-                        <b-dropdown-item v-if="!$auth.isAuthenticated" @click="login" class="button is-dark"><strong>Sign in</strong></b-dropdown-item>
-                        <!-- show logout when authenticated -->
-                        <b-dropdown-item v-if="$auth.isAuthenticated" @click="logout" class="button is-dark"><strong>Log out</strong></b-dropdown-item>
+                    <!-- Using 'button-content' slot -->
+                    <template v-slot:button-content>
+                        <em>User</em>
+                    </template>
+                    <div class="logged-in">
+                        <b-dropdown-item href="#">Account</b-dropdown-item>
+                        <b-dropdown-item href="#">Logout</b-dropdown-item>
                     </div>
-                </div>
+                    <div class="logged-out">
+                        <b-dropdown-item href="#">Login</b-dropdown-item>
+                        <b-dropdown-item href="#">Register</b-dropdown-item>
+                    </div>
                 </b-nav-item-dropdown>
             </b-navbar-nav>
             </b-collapse>
         </b-navbar>
     </div>
 </template>
-
-<script>
-export default {
-    name: 'Navbar',
-    methods: {
-        // Log the user in
-        login() {
-        this.$auth.loginWithRedirect();
-        },
-        // Log the user out
-        logout() {
-        this.$auth.logout({
-            returnTo: window.location.origin
-        });
-        }
-    }
-}
-</script>
 
 <style>
     a {
