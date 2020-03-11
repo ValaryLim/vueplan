@@ -420,7 +420,8 @@ export default {
 
 body {
   height: 100%;
-  margin: 0;
+  top: 0;
+  margin-top: 0;
   padding: 0;
   background-color: #EBEFF2;
 }
