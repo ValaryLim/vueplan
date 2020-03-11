@@ -7,14 +7,18 @@
                 <br>
                 {{ user.photoURL }}
                 <br>
-                <b>Username:</b> {{ user.displayName }}
+                <b>Username:</b> {{ user.data.displayName }}
                 <br>
                 <b>Email:</b> {{ user.data.email }}
                 <br>
-                <b>Year of Study:</b>
+                <b>Year of Study:</b> {{ user.data.year }}
                 <br>
-                <b>Module Exemptions:</b>
+                <b>Module Exemptions:</b> {{ user.data.exemptions }}
             </label>
+        </div>
+
+        <div id = "updateProfile">
+            <button onclick="window.location.href = './updateprofile';" type="update" class="btn btn-primary">Update Profile</button>
         </div>
     </div>
 </template>

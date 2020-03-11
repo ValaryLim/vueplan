@@ -7,8 +7,8 @@ import App from './App.vue';
 import VueRouter from 'vue-router';
 import { routes } from './routes.js';
 
-import firebase from "firebase";
-import store from "./store.js";
+import firebase from 'firebase';
+import store from './store.js';
 
 Vue.use(VueRouter);
 
@@ -36,8 +36,8 @@ firebase.auth().onAuthStateChanged(user => {
   store.dispatch("fetchUser", user);
 });
 
-// var database = firebase.firestore();
-// export default database;
+var database = firebase.firestore();
+export default database;
 
 new Vue({
   router,

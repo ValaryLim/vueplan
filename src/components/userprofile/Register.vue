@@ -71,7 +71,9 @@
 
 
 <script>
-import firebase from "firebase";
+import firebase from 'firebase';
+//import database from '../main.js'
+
 const firebaseConfig = {
   apiKey: "AIzaSyBm9ZkRvTPHK5CQ-uZMSQt1RsekW9efOcs",
   authDomain: "vueplan.firebaseapp.com",

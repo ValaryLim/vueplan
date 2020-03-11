@@ -5,6 +5,7 @@ import SEPMapping from './components/sepmapping/SEPMapping.vue';
 import Login from './components/userprofile/Login.vue';
 import Register from './components/userprofile/Register.vue';
 import UserProfile from './components/userprofile/Profile.vue';
+import UpdateProfile from './components/userprofile/UpdateProfile.vue';
 
 export const routes = [
     { path: '/', name: 'Home', component: AcadPlan },
@@ -15,4 +16,5 @@ export const routes = [
     { path: '/login', component: Login },
     { path: '/register', component: Register },
     { path: '/userprofile', name: 'Profile', component: UserProfile },
+    { path: '/updateprofile', component: UpdateProfile },
 ];
