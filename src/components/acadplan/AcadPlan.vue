@@ -24,6 +24,7 @@ export default {
             invalid_module: 0,
             inserted_module: 1,
             unmet_prereq: -1,
+            exempted_module: 2,
 
             // user semester data
             sem_completed: 3,
@@ -38,7 +39,7 @@ export default {
             total_mc: 56,
         };
     },
-    props: ['allmodules', 'acadplan', 'module_semester_mapping', 'num_semester_mapping'],
+    props: ['allmodules', 'acadplan', 'module_semester_mapping', 'num_semester_mapping', 'acadplan_exemptions'],
     computed: {
         sorted_y1s1: function() {
             this.sort_modules(this.acadplan['y1s1'], 1);
@@ -91,9 +92,14 @@ export default {
 
                 if (module === this.invalid_module) {
                     this.printError("Attempted to Add Invalid Module", 
-                    module_name + " cannot be found in our database. This can happen when the module has been discontinued or if the module name is incorrect. Please try a different module instead.");
+                    module_name.toUpperCase() + " cannot be found in our database. This can happen when the module has been discontinued or if the module name is incorrect. Please try a different module instead."
+                    );
+                } else if (module === this.exempted_module) {
+                    this.printError("Attempted to Add Exempted Module",
+                    "You are exempted from reading " + module_name.toUpperCase() + ". You do not need to add it into your academic plan."
+                    );
                 } else if (module === this.inserted_module) {
-                    this.printError("Module in Academic Plan", module_name + " is already in your academic plan. Please do not add duplicate modules.");
+                    this.printError("Module in Academic Plan", module_name.toUpperCase() + " is already in your academic plan. Please do not add duplicate modules.");
                 } else {
                     // check if all prerequisites have been met
                     var mod_prerequisites_check = this.check_prerequisites_sem(module.parseprereq);
@@ -124,19 +130,27 @@ export default {
             }
         },
         check_valid_module: function(module_name) {
+            /** 
+             * Check if module exists and can be inserted
+             * If module can be inserted, returns the module code. 
+             * Else, returns inserted_module, exempted_module or invalid_module.
+             */
             for (var key in this.allmodules) {
-                // check if module exists
+                // check if module_name is the key
                 if (this.allmodules[key].fullname.toLowerCase().includes(module_name)) {
-                    // check if module is already inserted
-                    if (this.allmodules[key] && !(key in this.module_semester_mapping)) {
-                        return this.allmodules[key];
-                    } else {
-                        // module already inserted
+                    // check if code is already in acadplan
+                    if (key in this.module_semester_mapping) {
                         return this.inserted_module;
+                    } else if (this.acadplan_exemptions.includes(key)) { // check if code is exempted
+                        return this.exempted_module;
+                    } else {
+                        console.log(key, this.acadplan_exemptions);
+                        console.log(key in this.acadplan_exemptions);
+                        return this.allmodules[key]; // can be added
                     }
                 }
             }
-            return this.invalid_module;
+            return this.invalid_module; // module does not exist
         },
         delete_module: function(sem, module) {
             var module_name = module.mod;
