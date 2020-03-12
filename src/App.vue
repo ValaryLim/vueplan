@@ -394,7 +394,7 @@ export default {
         y4s1: [{ mod: "", mc: 0, move: false, index: 20 },],
         y4s2: [{ mod: "", mc: 0, move: false, index: 21 },],
       },
-      acadplan_exemptions: ["ES1000", "BT4012"],
+      acadplan_exemptions: ["ES1000"],
       module_semester_mapping: {
         "BT1101": 1, "CS1010S": 1, "IS1103": 1, 
         "MA1521": 1, "BT2101": 2, "CS2030": 2,

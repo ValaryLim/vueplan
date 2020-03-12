@@ -316,6 +316,9 @@ export default {
                 if (prereq_tree in this.module_semester_mapping) {
                     insert_sem = this.module_semester_mapping[prereq_tree] + 1;
                     return insert_sem;
+                } else if (this.acadplan_exemptions.includes(prereq_tree)) {
+                    // exempted from module, no need to increment
+                    return insert_sem;
                 } else {
                     // check if any of the precluded modules are taken
                     var req_precludes = this.get_all_preclu(this.allmodules[prereq_tree].parsepreclu, []);
@@ -323,10 +326,14 @@ export default {
 
                     for (var preclu_index in req_precludes) {
                         var preclu = req_precludes[preclu_index];
-                        // if preclusion exists and is in academic plan
-                        if (this.allmodules[preclu] 
+                        // if exempted from preclusion
+                        if (this.acadplan_exemptions.includes(preclu)) {
+                            // no need to increment insert_sem
+                            met_preclu = true;
+                        } else if (this.allmodules[preclu] 
                         && (preclu in this.module_semester_mapping)
                         && (this.module_semester_mapping[preclu] + 1 > insert_sem)) {
+                            // if preclusion exists and is in academic plan
                             insert_sem = this.module_semester_mapping[preclu] + 1;
                             met_preclu = true;
                         }
@@ -357,6 +364,9 @@ export default {
                                 earliest_or_sem = this.module_semester_mapping[req] + 1;
                                 can_take = true;
                             }
+                        } else if (this.acadplan_exemptions.includes(req)) {
+                            earliest_or_sem = 1; // set to first semester
+                            can_take = true;
                         } else {
                             // try and check if any preclusions have been added
                             var req_precludes2 = this.get_all_preclu(this.allmodules[req].parsepreclu, []);
@@ -368,6 +378,11 @@ export default {
                                 && (preclu2 in this.module_semester_mapping)
                                 && (this.module_semester_mapping[preclu2] + 1 < earliest_or_sem)) {
                                     earliest_or_sem = this.module_semester_mapping[preclu2] + 1;
+                                    can_take = true;
+                                }
+                                // or if exempted from module
+                                if (this.acadplan_exemptions.includes(preclu2)) {
+                                    earliest_or_sem = 1;
                                     can_take = true;
                                 }
                             }
