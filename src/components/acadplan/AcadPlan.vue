@@ -41,37 +41,14 @@ export default {
     },
     props: ['allmodules', 'acadplan', 'module_semester_mapping', 'num_semester_mapping', 'acadplan_exemptions'],
     computed: {
-        sorted_y1s1: function() {
-            this.sort_modules(this.acadplan['y1s1'], 1);
-            return this.acadplan['y1s1'];
-        },
-        sorted_y1s2: function() {
-            this.sort_modules(this.acadplan['y1s2'], 2);
-            return this.acadplan['y1s2'];
-        },
-        sorted_y2s1: function() {
-            this.sort_modules(this.acadplan['y2s1'], 3);
-            return this.acadplan['y2s1'];
-        },
-        sorted_y2s2: function() {
-            this.sort_modules(this.acadplan['y2s2'], 4);
-            return this.acadplan['y2s2'];
-        },
-        sorted_y3s1: function() {
-            this.sort_modules(this.acadplan['y3s1'], 5);
-            return this.acadplan['y3s1'];
-        },
-        sorted_y3s2: function() {
-            this.sort_modules(this.acadplan['y3s2'], 6);
-            return this.acadplan['y3s2'];
-        },
-        sorted_y4s1: function() {
-            this.sort_modules(this.acadplan['y4s1'], 7);
-            return this.acadplan['y4s1'];
-        },
-        sorted_y4s2: function() {
-            this.sort_modules(this.acadplan['y4s2'], 8);
-            return this.acadplan['y4s2'];
+        sorted_sems: function() {
+            console.log("called")
+            var result_arr = []
+            for (var i in this.acadplan) {
+                this.sort_modules(this.acadplan[i], i)
+                result_arr = result_arr.concat([this.acadplan[i]]);
+            }
+            return result_arr
         },
     },
     methods: {
@@ -104,11 +81,11 @@ export default {
                     // check if all prerequisites have been met
                     var mod_prerequisites_check = this.check_prerequisites_sem(module.parseprereq);
                     if (mod_prerequisites_check !== this.unmet_prereq) {
-                        var add_in_semester = this.num_semester_mapping[mod_prerequisites_check];
-                        this.acadplan[add_in_semester].push({ mod: module.code, mc: module.mc, move: true, index: index }); 
+                        // var add_in_semester = this.num_semester_mapping[mod_prerequisites_check];
+                        this.acadplan[mod_prerequisites_check].push({ mod: module.code, mc: module.mc, move: true, index: index }); 
                         this.module_semester_mapping[module.code] = mod_prerequisites_check;
                         index++;
-                        this.update_module_credits(this.add_mc, add_in_semester, module.mc);
+                        this.update_module_credits(this.add_mc, mod_prerequisites_check, module.mc);
                         this.total_mc += module.mc;
                     } else {
                         this.printError("Incomplete Prerequisites", "This module cannot be added to your academic plan because you have yet to add all of its' prerequisites. Please do so first.");
@@ -164,19 +141,21 @@ export default {
                 this.acadplan[sem] = this.acadplan[sem].filter((event) => {
                     return event.index !== module.index   
                 });
+                this.acadplan = this.acadplan.slice();
             } else {
                 this.printError("Deletion Error", "This module cannot be deleted as some modules in your academic plan depend on the module you are trying to delete.");
             }
+            this.$forceUpdate();
         }, 
         sort_modules: function(data, sem_num) {
             data.sort(this.compare_module);
 
-            var current_sem = this.num_semester_mapping[sem_num];
+            // var current_sem = this.num_semester_mapping[sem_num];
             var check_module = "";
 
             // find shifted module
-            for (var module_index in this.acadplan[current_sem]) {
-                var module = this.acadplan[current_sem][module_index];
+            for (var module_index in this.acadplan[sem_num]) {
+                var module = this.acadplan[sem_num][module_index];
                 // check that module isn't fixed (buffer cell)
                 if (module.move && (this.module_semester_mapping[module.mod] != sem_num)) {
                     check_module = module;
@@ -207,7 +186,7 @@ export default {
 
                 // update module credits in old and new semester
                 this.update_module_credits(this.subtract_mc, previous_sem, check_module.mc);
-                this.update_module_credits(this.add_mc, current_sem, check_module.mc);
+                this.update_module_credits(this.add_mc, sem_num, check_module.mc);
             }
         },
         sort_modules_prereq_check: function(check_module, previous_sem, sem_num) {
@@ -215,8 +194,8 @@ export default {
              * Checks that prerequisites are met before module can be taken
              * Returns true if module can be taken in that semester, false otherwise
              */
-            var current_sem_name = this.num_semester_mapping[sem_num];
-            var previous_sem_name = this.num_semester_mapping[previous_sem];
+            // var current_sem_name = this.num_semester_mapping[sem_num];
+            // var previous_sem_name = this.num_semester_mapping[previous_sem];
 
             // find the earliest date module can be shifted to
             var earliest_sem = this.check_prerequisites_sem(this.allmodules[check_module.mod].parseprereq);
@@ -225,12 +204,12 @@ export default {
             if (earliest_sem > sem_num) {
                 // push module back to original position
                 // delete module from current sem
-                this.acadplan[current_sem_name] = this.acadplan[current_sem_name].filter((event) => {
+                this.acadplan[sem_num] = this.acadplan[sem_num].filter((event) => {
                     return event.index !== check_module.index; 
                 });
                             
                 // add module back to original sem
-                this.acadplan[previous_sem_name].push({ mod: check_module.mod, mc: check_module.mc, move: true, index: index }); 
+                this.acadplan[previous_sem].push({ mod: check_module.mod, mc: check_module.mc, move: true, index: index }); 
                 this.module_semester_mapping[check_module.mod] = previous_sem;
                 index++;
                 return false;
@@ -242,20 +221,20 @@ export default {
              * Checks that locked modules are taken after the module
              * Returns true if module can be taken in that semester, false otherwise
              */
-            var current_sem_name = this.num_semester_mapping[sem_num];
-            var previous_sem_name = this.num_semester_mapping[previous_sem];
+            // var current_sem_name = this.num_semester_mapping[sem_num];
+            // var previous_sem_name = this.num_semester_mapping[previous_sem];
 
             var latest_sem = this.check_locked_sem(check_module.mod);
 
             if (latest_sem < sem_num) {
                 // push module back to original position
                 // delete module from current sem
-                this.acadplan[current_sem_name] = this.acadplan[current_sem_name].filter((event) => {
+                this.acadplan[sem_num] = this.acadplan[sem_num].filter((event) => {
                     return event.index !== check_module.index;
                 })
 
                 // add module back to original sem
-                this.acadplan[previous_sem_name].push({ mod: check_module.mod, mc: check_module.mc, move: true, index: index });
+                this.acadplan[previous_sem].push({ mod: check_module.mod, mc: check_module.mc, move: true, index: index });
                 this.module_semester_mapping[check_module.mod] = previous_sem;
                 index++;
                 return false;
@@ -280,7 +259,7 @@ export default {
              */
             // if there are no prerequisites, module can be inserted immediately after the first semester
             if (Object.keys(prereq_tree).length === 0) {
-                return 1; // can insert into first semester
+                return 0; // can insert into first semester
             }
 
             // if there is only one prerequisite
@@ -288,7 +267,7 @@ export default {
                 return this.check_prerequisites_sem_string(prereq_tree);
             }
             // tracker of earliest semester where module can be inserted
-            var insert_sem = 1;
+            var insert_sem = 0;
 
             // if there is more than one prerequisite
             for (var key in prereq_tree) {
@@ -309,7 +288,7 @@ export default {
              * Returns first semester that module can be inserted, -1 otherwise.
              */
             // tracker of earliest semester where module can be inserted
-            var insert_sem = 1;
+            var insert_sem = 0;
             // check if module exists
             if (this.allmodules[prereq_tree]) {                
                 // check if prerequisite is taken
@@ -405,7 +384,7 @@ export default {
         },
         check_prerequisites_sem_and: function(prereq_subtree) {
             // tracker of earliest semester where module can be inserted
-            var insert_sem = 1;
+            var insert_sem = 0;
             
             // need all requirements within "and"
             for (var req_index in prereq_subtree) {
