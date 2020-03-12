@@ -76,6 +76,16 @@ export default {
       }
       return cores;
     },
+
+    filter_elective: function(modules) {
+      var electives = [];
+      for (var mod in modules) {
+        if (modules[mod].modType == 'elective') {
+          electives.push(modules[mod]);
+        }
+      }
+      return electives;
+    },
     
     
     check_status: function(modcode) {
@@ -114,6 +124,31 @@ export default {
           pr_progress.push({"requirement": core.modTitle, "selected": ' ', "added": 'x', "completed": 'x'});
         }
       }
+      // add programme electives
+      var electives = this.filter_elective(this.allmajors['Business Analytics']);
+      
+      var i = 0;
+      for (var key1 in electives){
+        // Error occurs if we want to return false
+        var elective = electives[key1];
+        var status1 = this.check_status(elective.modCode);
+        if (status1.added) {
+          if (status1.completed) {
+            i += 1;
+            pr_progress.push({"requirement": 'Programme Elective ' + i, "code": elective.modCode, "selected": this.get_mod_title(elective.modCode), "added": '✓', "completed": '✓'});
+          } else {
+            i += 1;
+            pr_progress.push({"requirement": 'Programme Elective ' + i, "code": elective.modCode, "selected": this.get_mod_title(elective.modCode), "added": '✓', "completed": 'x'});
+          }
+        }
+      }
+      if(i < 6){
+        for(var j = i + 1; j <= 6; j++) {
+
+          pr_progress.push({"requirement": 'Programme Elective ' + j, "code": '', "selected": ' ', "added": 'x', "completed": 'x'});
+        }
+      }
+      
       return pr_progress;
     },
     
