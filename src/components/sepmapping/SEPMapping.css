@@ -428,3 +428,15 @@ fieldset[disabled] .multiselect {
     right: auto;
     left: 1px;
 }
+
+/* For GradProgress page */
+p.courseLabel {
+  margin-left: 30px;
+  font-weight: 600;
+}
+
+select.course {
+  margin-left: 30px;
+}
+
+

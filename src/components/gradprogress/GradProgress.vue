@@ -2,6 +2,7 @@
 
 <style src = "../sepmapping/SEPMapping.css"></style>
 
+
 <script>
 export default {
   name:"App",
@@ -11,10 +12,23 @@ export default {
   data() {
     return {  
       sem_completed: 3,
+      major:''
     }
   },
 
   methods: {
+
+    get_mod_added: function() {
+      var mod_added = [];
+      for (var key1 in this.acadplan) {
+        var sem = this.acadplan[key1];
+        for (var key2 in sem) {
+          var taken = sem[key2];
+          mod_added.push({'code': taken.mod, 'sem': key1});
+        }
+      }
+      return mod_added;
+    },
     
     get_ulr_table: function() {
       var ulr_progress = [];
@@ -109,7 +123,7 @@ export default {
 
     get_pr_table: function() {
       var pr_progress = [];
-      var pr_mods = this.filter_core(this.allmajors['Business Analytics']);
+      var pr_mods = this.filter_core(this.allmajors[this.major]);
       for (var key in pr_mods){
         // Error occurs if we want to return false
         var core = pr_mods[key];
@@ -124,8 +138,11 @@ export default {
           pr_progress.push({"requirement": core.modTitle, "selected": ' ', "added": 'x', "completed": 'x'});
         }
       }
-      // add programme electives
-      var electives = this.filter_elective(this.allmajors['Business Analytics']);
+      // add electives
+
+      // Business Analytics
+    if(this.major == 'Business Analytics') {
+      var electives = this.filter_elective(this.allmajors[this.major]);
       
       var i = 0;
       for (var key1 in electives){
@@ -147,8 +164,74 @@ export default {
 
           pr_progress.push({"requirement": 'Programme Elective ' + j, "code": '', "selected": ' ', "added": 'x', "completed": 'x'});
         }
+      } 
+    } else if(this.major == 'Computer Science') {
+      var mods_added = this.get_mod_added(this.acadplan);
+
+      // add focus area
+      var k = 0;
+      for (var key2 in mods_added) {
+        var mod = mods_added[key2];
+        var mod_substring = mod.code.substring(0,3);
+        if(mod_substring == 'CS3'|| mod_substring == 'CS4'||mod_substring == 'CS5') {
+          k += 1;
+          var status2 = this.check_status(mod.code);
+          if(status2.completed) {
+            pr_progress.push({"requirement": 'Focus Area ' + k, "code": mod.code, "selected": this.get_mod_title(mod.code), "added": '✓', "completed": '✓'});
+          } else {
+            pr_progress.push({"requirement": 'Focus Area ' + k, "code": mod.code, "selected": this.get_mod_title(mod.code), "added": '✓', "completed": 'x'});
+          }
+        }
       }
-      
+
+      if(k < 3){
+        for(var l = k + 1; l <= 3; l++) {
+
+          pr_progress.push({"requirement": 'Focus Area ' + l, "code": '', "selected": ' ', "added": 'x', "completed": 'x'});
+        }
+      } 
+
+      // add independent project module
+      var m = 0;
+      for (var key3 in mods_added) {
+        var mod1 = mods_added[key3];
+        if(mod1.code.substring(0,2) == 'CP') {
+          m += 1;
+          var status3 = this.check_status(mod1.code);
+          if(status3.completed) {
+            pr_progress.push({"requirement": 'Independent Project ' + m, "code": mod1.code, "selected": this.get_mod_title(mod1.code), "added": '✓', "completed": '✓'});
+          } else {
+            pr_progress.push({"requirement": 'Independent Project ' + m, "code": mod1.code, "selected": this.get_mod_title(mod1.code), "added": '✓', "completed": 'x'});
+          }
+        }
+      }
+
+      if(m < 3){
+        for(var n = m + 1; n <= 3; n++) {
+          pr_progress.push({"requirement": 'Independent Project ' + n, "code": '', "selected": ' ', "added": 'x', "completed": 'x'});
+        }
+      } 
+    
+    // add industrial experience
+      var industry = 0;
+      for (var key4 in mods_added) {
+        var mod2 = mods_added[key4];
+        if(mod2.code == 'CP3880' || mod2.code == 'IS4010'|| mod2.code == 'CP3200') {
+          industry += 1;
+          var status4 = this.check_status(mod2.code);
+          if(status4.completed) {
+            pr_progress.push({"requirement": 'Industrial Experience' , "code": mod2.code, "selected": this.get_mod_title(mod2.code), "added": '✓', "completed": '✓'});
+          } else {
+            pr_progress.push({"requirement": 'Industrial Experience', "code": mod2.code, "selected": this.get_mod_title(mod2.code), "added": '✓', "completed": 'x'});
+          }
+        }
+      }
+
+      if(industry == 0) {
+        pr_progress.push({"requirement": 'Industrial Experience', "code": '', "selected": ' ', "added": 'x', "completed": 'x'});
+      }
+
+    }
       return pr_progress;
     },
     
