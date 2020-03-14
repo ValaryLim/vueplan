@@ -25,10 +25,10 @@ export default {
           if (info.completed) {
             ulr_progress.push({"ulr": ulr_types[type], "code": info.mod, "selected": this.get_mod_title(info.mod), "added": '✓', "completed": '✓'});
           } else {
-            ulr_progress.push({"ulr": ulr_types[type], "code": info.mod, "selected": this.get_mod_title(info.mod), "added": '✓', "completed": '✘'});
+            ulr_progress.push({"ulr": ulr_types[type], "code": info.mod, "selected": this.get_mod_title(info.mod), "added": '✓', "completed": 'x'});
           }
         } else {
-          ulr_progress.push({"ulr": ulr_types[type], "code": info.mod, "selected": ' ', "added": '✘', "completed": '✘'});
+          ulr_progress.push({"ulr": ulr_types[type], "code": info.mod, "selected": ' ', "added": 'x', "completed": 'x'});
         }
       }  
       return ulr_progress;
@@ -108,10 +108,10 @@ export default {
           if (status.completed) {
             pr_progress.push({"requirement": core.modTitle, "code": core.modCode, "selected": this.get_mod_title(core.modCode), "added": '✓', "completed": '✓'});
           } else {
-            pr_progress.push({"requirement": core.modTitle, "code": core.modCode, "taken": this.get_mod_title(core.modCode), "added": '✓', "completed": '✘'});
+            pr_progress.push({"requirement": core.modTitle, "code": core.modCode, "taken": this.get_mod_title(core.modCode), "added": '✓', "completed": 'x'});
           }
         } else {
-          pr_progress.push({"requirement": core.modTitle, "selected": ' ', "added": '✘', "completed": '✘'});
+          pr_progress.push({"requirement": core.modTitle, "selected": ' ', "added": 'x', "completed": 'x'});
         }
       }
       return pr_progress;
@@ -141,7 +141,7 @@ export default {
             if (sem_taken < this.sem_completed) {
               ue_progress.push({"requirement": ' ', "selected": this.get_mod_title(taken.mod), "added": '✓', "completed": '✓'});
             } else {
-              ue_progress.push({"requirement": ' ', "selected": this.get_mod_title(taken.mod), "added": '✓', "completed": '✘'});
+              ue_progress.push({"requirement": ' ', "selected": this.get_mod_title(taken.mod), "added": '✓', "completed": 'x'});
             }
             completed += 1;
           } 
@@ -150,7 +150,7 @@ export default {
 
       // make up for 8 mods in total
       for (var i = 0; i < 8 - completed; i++) {
-        ue_progress.push({"requirement": ' ',  "selected": ' ', "added": '✘', "completed": '✘'});
+        ue_progress.push({"requirement": ' ',  "selected": ' ', "added": 'x', "completed": 'x'});
       }
 
       return ue_progress;
