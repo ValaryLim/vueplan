@@ -16,6 +16,7 @@ export default {
 		return {
 			search:'',
 			mods: Object.values(modules),
+			showModal: false,
 			}
 		},
 
@@ -32,7 +33,12 @@ export default {
 		}
 	},
 	
-	methods:{  
+	methods:{
+		addOverlay:function(){
+			var over = document.getElementById('overlain')
+			over.insertAdjacentHTML('beforebegin', '<button id="show-modal" @click="showModal = true">Show Modal</button><modal v-if="showModal" @close="showModal = false"><h3 slot="header">custom header</h3></modal>')
+		},
+
 		modInfo:function(mod){
 			this.search ='';
 			var res = document.getElementById("res");
@@ -111,6 +117,7 @@ export default {
 			res.insertAdjacentHTML('beforeend','<h3 id = "OverallFeedbackNum">'+overallReviewNum+'</h3>');
 			res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><div id = "StarsInner"></div></div><div></div>');
 			res.insertAdjacentHTML('beforeend','<div id = "ContentFeedback">Learning Contents: ' + avgContent + '</div><div id = "sep"> | </div><div id = "StaffFeedback">Staff and Administration: ' + avgStaffAdmin + "</div><br></br>");
+			res.insertAdjacentHTML('beforeend', '<div id = "overlain"></div>')
 			res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews</h4><hr></hr><table><tbody id = "tabody">');
 			var writtenReviews = {};
 			for (let [id, written] of Object.entries(moduleReviews[mod.code])) {
@@ -130,15 +137,9 @@ export default {
             const starPercentageRounded = `${(Math.round(starPercentage))}%`;
             document.querySelector("#StarsInner").style.width = starPercentageRounded;
 
-			//res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><div id = "StarsInner"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div></div><div></div>');
-			//res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><font-awesome-icon icon="times" /><font-awesome-icon icon="times" /><font-awesome-icon icon="times" /><font-awesome-icon icon="times" /><div id = "StarsInner"></div></div><div></div>');
-			//res.insertAdjacentHTML('beforeend',);
 			var arr_all = arr.concat(arr_a).reverse();
-			//console.log(arr_all.length)
 			//onclick of the module code, brings you to the module page      
 			var matches = document.querySelectorAll("a");
-			//console.log(matches);
-			//console.log(arr_all);
 			var x = this;
 			for (let j = arr_all.length-1; j >= 0; j--) {
 				let button = matches[matches.length-j-1];
