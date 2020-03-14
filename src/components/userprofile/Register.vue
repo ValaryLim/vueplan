@@ -58,6 +58,11 @@
               <div class="form-group row mb-0">
                   <button type="submit" class="btn btn-primary">Register</button>
               </div>
+
+              <br>
+              <div>
+                <router-link to="/login"><a>Already have an account? Login here</a></router-link>
+              </div>
             </form>
           </div>
         </div>

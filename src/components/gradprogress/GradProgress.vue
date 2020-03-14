@@ -15,7 +15,7 @@ export default {
 
   data() {
     return {
-      sem_completed: 3,
+      sem_completed: 0,
       majors: [
         "Business Analytics",
         "Computer Science",

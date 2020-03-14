@@ -11,12 +11,12 @@
                 </router-link>
             </div>
             <div class="header-tabs">
-                <span class="header-tab"><router-link to="/acadplan"><a>Academic Plan</a></router-link></span>            
-                <span class="header-tab"><router-link to="/gradprogress"><a>Graduation Progress</a></router-link></span>
-                <span class="header-tab"><router-link to="/moduleinfo"><a>Module Information</a></router-link></span>
-                <span class="header-tab"><router-link to="/sepmapping"><a>SEP Mapping</a></router-link></span>
+                <span class="header-tab"><router-link to="/acadplan" v-if="user.loggedIn"><a>Academic Plan</a></router-link></span>            
+                <span class="header-tab"><router-link to="/gradprogress" v-if="user.loggedIn"><a>Graduation Progress</a></router-link></span>
+                <span class="header-tab"><router-link to="/moduleinfo" v-if="user.loggedIn"><a>Module Information</a></router-link></span>
+                <span class="header-tab"><router-link to="/sepmapping" v-if="user.loggedIn"><a>SEP Mapping</a></router-link></span>
                 <span class="header-tab header-tab-dropdown">
-                    <button class="dropdown-button">
+                    <button class="dropdown-button" v-if="user.loggedIn">
                         <em v-if="user.loggedIn">{{user.data.email}}</em>
                         <em v-if="!user.loggedIn">User  </em>
                         <font-awesome-icon icon="caret-down" />
