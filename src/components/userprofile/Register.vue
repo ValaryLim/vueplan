@@ -93,17 +93,23 @@ export default {
         // create new user
         .createUserWithEmailAndPassword(this.form.email, this.form.password)
         .then(data => {
-          // add user to users database
+          // add user to acadplan database
           // set userID as the document ID
-          database.collection('users').doc(data.user.uid).set({
-            name: this.form.name,
-            email: this.form.email,
-            password: this.form.password,
-            // default fields, can be updated by user later
-            photoUrl: "",
+          database.collection('acadplan').doc(data.user.uid).set({
+            // default fields
             year: "",
+            total_mc: 0,
+            acadplan_exemptions: [],
+            module_semester_mapping: {},
+            module_location: [{mod: "", mc: 0, move: false, index: 0},
+                              {mod: "", mc: 0, move: false, index: 1},
+                              {mod: "", mc: 0, move: false, index: 2},
+                              {mod: "", mc: 0, move: false, index: 3},
+                              {mod: "", mc: 0, move: false, index: 4},
+                              {mod: "", mc: 0, move: false, index: 5},
+                              {mod: "", mc: 0, move: false, index: 6},
+                              {mod: "", mc: 0, move: false, index: 7}]
           })
-          // ADD ACADPLAN DATA HERE LATER
           .then(function() {
               alert("Registered successfully");
           })
