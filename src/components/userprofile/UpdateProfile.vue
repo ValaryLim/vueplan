@@ -15,7 +15,7 @@ export default {
             form: {
                 name: "",
                 email: "",
-                year: 0,
+                year: "",
                 major: "",
                 exemptions: [],
 

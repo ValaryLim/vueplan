@@ -38,7 +38,7 @@ import database from '../firebase.js';
 export default {
     data() {
         return {
-            year: 0,
+            year: "",
             major: "",
             exemptions: "",
         }

@@ -2,7 +2,14 @@
     <div class="headerStyle">
         <nav>
             <div class="header-title">
-                <router-link to="/">
+                <router-link to="/register" v-if="!user.loggedIn">
+                    <a class="header-title-first">vue</a>
+                    <a class="header-title-second">Plan</a>
+                    <img class="vuePlanLogo" 
+                        src = "https://drive.google.com/uc?id=13rb1mMEJuxAVwmd6aqe1EWNGECgTGYH-" 
+                        alt="vuePlanLogo">
+                </router-link>
+                <router-link to="/acadplan" v-if="user.loggedIn">
                     <a class="header-title-first">vue</a>
                     <a class="header-title-second">Plan</a>
                     <img class="vuePlanLogo" 
@@ -30,8 +37,6 @@
                             <a href="/login">Login</a>
                             <a href="/register">Register</a>
                         </div>
-                        <!--<a href="#">Settings</a>
-                        <a href="#">Logout</a>-->
                     </span>
                 </span>
             </div>
