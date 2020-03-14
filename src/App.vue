@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       /* list of majors & corresponding modules */
-      allmodules: allModules,
+      allmodules: allModules, major:'',
       allmajors: { "Business Analytics" : [
                   {modCode: "BT1101", modTitle: "BT1101 Introduction to Business Analytics", modType: "core"},
                   {modCode: "CS1010S", modTitle: "CS1010S Programming Methodology", modType: "core"},
