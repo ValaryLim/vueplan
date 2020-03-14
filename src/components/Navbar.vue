@@ -7,7 +7,7 @@
                     <a class="header-title-second">Plan</a>
                     <img class="vuePlanLogo" 
                         src = "https://drive.google.com/uc?id=13rb1mMEJuxAVwmd6aqe1EWNGECgTGYH-" 
-                        alt="vuePlanLogo"></img>
+                        alt="vuePlanLogo">
                 </router-link>
             </div>
             <div class="header-tabs">
