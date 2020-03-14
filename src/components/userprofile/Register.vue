@@ -69,9 +69,9 @@
   </div>
 </template>
 
-
 <script>
-import firebase from '../firebase.js';
+import firebase from 'firebase';
+import database from '../firebase.js'
 
 export default {
   data() {
@@ -79,24 +79,43 @@ export default {
       form: {
         name: "",
         email: "",
-        password: ""
+        password: "",
       },
       error: null
     };
   },
+
   methods: {
     submit() {
       firebase
-        .auth() // gives access to auth service
+        // give access to auth services
+        .auth()
+        // create new user
         .createUserWithEmailAndPassword(this.form.email, this.form.password)
         .then(data => {
-          data.user
+          // add user to users database
+          // set userID as the document ID
+          database.collection('users').doc(data.user.uid).set({
+            name: this.form.name,
+            email: this.form.email,
+            password: this.form.password,
+            // default fields, can be updated by user later
+            photoUrl: "",
+            year: "",
+          })
+          // ADD ACADPLAN DATA HERE LATER
+          .then(function() {
+              alert("Registered successfully");
+          })
+          .then(data.user
             .updateProfile({
               displayName: this.form.name
             })
             .then(() =>{
+            // bring user to profile page
             this.$router.replace({ name: "Profile" });
-            })
+            }
+          ))
         })
         .catch(err => {
           this.error = err.message;
