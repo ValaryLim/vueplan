@@ -12,7 +12,7 @@
                 <b>Email:</b> {{ user.data.email }}
                 <br>
                 <!-- Year of Study & Module Exemptions retrieved from acadplan collection db -->
-                <b>Year of Study:</b> {{ showYear() }}
+                <b>Semesters Completed:</b> {{ showYear() }}
                 <br>
                 <b>Major:</b> {{ showMajor() }}
                 <br>
@@ -38,7 +38,7 @@ import database from '../firebase.js';
 export default {
     data() {
         return {
-            year: "",
+            year: 0,
             major: "",
             exemptions: "",
         }

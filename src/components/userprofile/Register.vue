@@ -94,7 +94,7 @@ export default {
           // set userID as the document ID
           database.collection('acadplan').doc(data.user.uid).set({
             // default fields
-            year: "",
+            year: 0,
             major: "",
             total_mc: 0,
             acadplan_exemptions: [],

@@ -15,12 +15,11 @@ export default {
             form: {
                 name: "",
                 email: "",
-                year: "",
+                year: 0,
                 major: "",
                 exemptions: [],
 
             },
-            test: [],
             error: null
         };
     },
@@ -41,7 +40,7 @@ export default {
                 })
             }
 
-            if (!this.form.year == "") {
+            if (!this.form.year == 0) {
                 database.collection('acadplan').doc(user.uid).update({
                     "year": this.form.year,
                 })

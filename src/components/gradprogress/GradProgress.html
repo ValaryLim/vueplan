@@ -10,19 +10,11 @@
   <div class="row">
     <h2>Graduation Progress</h2>
   </div>
-  
-  <!--<div id="App">
-    <div class="row multiselect-module">
-      <div class = "multiselect_title">
-        <label>Please choose your major</label>
-      </div>
-      <multiselect v-model="major" :options="majors" :multiple="false" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Course" :preselect-first="true" open-direction="bottom">
-        <template slot="selection" slot-scope="{ values, search, isOpen }">
-        </template>
-      </multiselect>
-    </div>-->
+
   <div class = "row grad-prog-row">
     <label>Your major is: </label> <b> {{ showMajor() }} </b>
+    <br>
+    <label>Semesters completed: </label> <b> {{ showSemesters() }}</b>
   </div>
 
   <div class="row grad-prog-row">
