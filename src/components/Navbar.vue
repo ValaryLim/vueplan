@@ -2,7 +2,13 @@
     <div class="headerStyle">
         <nav>
             <div class="header-title">
-                <router-link to="/"><a class="header-title-first">vue</a><a class="header-title-second">Plan</a></router-link>
+                <router-link to="/">
+                    <a class="header-title-first">vue</a>
+                    <a class="header-title-second">Plan</a>
+                    <img class="vuePlanLogo" 
+                        src = "https://drive.google.com/uc?id=13rb1mMEJuxAVwmd6aqe1EWNGECgTGYH-" 
+                        alt="vuePlanLogo"></img>
+                </router-link>
             </div>
             <div class="header-tabs">
                 <span class="header-tab"><router-link to="/acadplan"><a>Academic Plan</a></router-link></span>            
@@ -12,7 +18,7 @@
                 <span class="header-tab header-tab-dropdown">
                     <button class="dropdown-button">
                         <em v-if="user.loggedIn">{{user.data.email}}</em>
-                        <em v-if="!user.loggedIn">User</em>
+                        <em v-if="!user.loggedIn">User  </em>
                         <font-awesome-icon icon="caret-down" />
                     </button>
                     <span class="dropdown-content">
@@ -69,6 +75,13 @@ export default {
 </script>
 
 <style scoped>
+/** image style */
+.vuePlanLogo {
+    width: 8%;
+    height: 8%;
+    padding-bottom: 50px;
+}
+
 /** main header style */
 .headerStyle {
     overflow: hidden;
