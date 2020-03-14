@@ -116,7 +116,7 @@ export default {
 			res.insertAdjacentHTML('beforeend', '<h2>Ratings and Reviews</h2><hr></hr>');
 			res.insertAdjacentHTML('beforeend','<h3 id = "OverallFeedbackNum">'+overallReviewNum+'</h3>');
 			res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><div id = "StarsInner"></div></div><div></div>');
-			res.insertAdjacentHTML('beforeend','<div id = "ContentFeedback">Learning Contents: ' + avgContent + '</div><div id = "sep"> | </div><div id = "StaffFeedback">Staff and Administration: ' + avgStaffAdmin + "</div><br></br>");
+			res.insertAdjacentHTML('beforeend','<div id = "ContentFeedback">Learning Contents: ' + avgContent + '</div><div id = "sep"></div><div id = "StaffFeedback">Staff and Administration: ' + avgStaffAdmin + "</div><br></br>");
 			res.insertAdjacentHTML('beforeend', '<div id = "overlain"></div>')
 			res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews</h4><hr></hr><table><tbody id = "tabody">');
 			var writtenReviews = {};
