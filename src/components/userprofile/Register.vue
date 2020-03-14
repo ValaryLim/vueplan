@@ -96,7 +96,7 @@ export default {
             // default fields
             year: "",
             total_mc: 0,
-            acadplan_exemptions: "",
+            acadplan_exemptions: [],
             module_semester_mapping: {},
             module_location: [{mod: "", mc: 0, move: false, index: 0},
                               {mod: "", mc: 0, move: false, index: 1},
