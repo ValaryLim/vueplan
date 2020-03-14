@@ -62,6 +62,16 @@
             </div>
 
             <div class = "form-group row">
+                <label for="year" class="col-md-4 col-form-label text-md-right">Major</label>
+                <div class="col-md-6">
+                    <multiselect v-model="form.major" :options="Object.keys(allmajors)" :multiple="false" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Major">
+                        <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
+                        </template>
+                    </multiselect>
+                </div>
+            </div>
+
+            <div class = "form-group row">
                 <label for="year" class="col-md-4 col-form-label text-md-right">Module Exemptions</label>
                 <div class="col-md-6">
                     <multiselect v-model="form.exemptions" :options="Object.keys(allmodules)" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Exemption">

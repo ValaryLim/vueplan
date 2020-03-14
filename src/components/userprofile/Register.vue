@@ -95,6 +95,7 @@ export default {
           database.collection('acadplan').doc(data.user.uid).set({
             // default fields
             year: "",
+            major: "",
             total_mc: 0,
             acadplan_exemptions: [],
             module_semester_mapping: {},

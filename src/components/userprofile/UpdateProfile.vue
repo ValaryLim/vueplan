@@ -16,6 +16,7 @@ export default {
                 name: "",
                 email: "",
                 year: "",
+                major: "",
                 exemptions: [],
 
             },
@@ -24,7 +25,7 @@ export default {
         };
     },
     
-    props: ['allmodules'],
+    props: ['allmodules', 'allmajors'],
 
     components: { 
         Multiselect,
@@ -46,7 +47,13 @@ export default {
                 })
             }
 
-            if (!this.form.exemptions == "") {
+            if (!this.form.major == "") {
+                database.collection('acadplan').doc(user.uid).update({
+                    "major": this.form.major,
+                })
+            }
+
+            if (!this.form.exemptions == []) {
                 database.collection('acadplan').doc(user.uid).update({
                     "acadplan_exemptions": this.form.exemptions,
                 })

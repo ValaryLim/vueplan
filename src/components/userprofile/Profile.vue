@@ -14,6 +14,8 @@
                 <!-- Year of Study & Module Exemptions retrieved from acadplan collection db -->
                 <b>Year of Study:</b> {{ showYear() }}
                 <br>
+                <b>Major:</b> {{ showMajor() }}
+                <br>
                 <b>Module Exemptions:</b> {{ showExemptions() }}
             </label>
         </div>
@@ -37,6 +39,7 @@ export default {
     data() {
         return {
             year: "",
+            major: "",
             exemptions: "",
         }
     },
@@ -60,7 +63,17 @@ export default {
                     this.exemptions = doc.data()['acadplan_exemptions']
                 })
             return this.exemptions
-        }
+        },
+
+        showMajor: function() {
+            var user = firebase.auth().currentUser;
+            let userRef = database.collection('acadplan').doc(user.uid);
+            userRef.get()
+                .then(doc => {
+                    this.major = doc.data()['major']
+                })
+            return this.major
+        },
     },
 
     computed: {
