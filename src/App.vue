@@ -1,10 +1,7 @@
 <!-- COLOUR SCHEME 
-  #F8E9A1
   #F76C6C
-  #A8D0E6
-  #374785
   #24305E 
-  #A6C2CE-->
+  #EBEFF2-->
 
 <template>
   <div id="app">
@@ -13,8 +10,9 @@
       <div class="col-md-12">
         <!-- link allmajors data to components -->
         <router-view :allmodules="allmodules" :allmajors="allmajors" 
-          :acadplan="acadplan" :module_semester_mapping="module_semester_mapping"
-          :num_semester_mapping="num_semester_mapping"></router-view>
+          :acadplan="acadplan" :acadplan_exemptions="acadplan_exemptions" :module_semester_mapping="module_semester_mapping"
+          :num_semester_mapping="num_semester_mapping"
+          :sepMappings="sepMappings"></router-view>
       </div>
     </div>
   </div>
@@ -23,6 +21,7 @@
 <script>
 import Navbar from './components/Navbar.vue';
 import allModules from './assets/allmoduleinfo.json';
+import sepMappings from './assets/allsepmappings_sorted.json';
 
 export default {
   name: 'App',
@@ -33,7 +32,7 @@ export default {
   data() {
     return {
       /* list of majors & corresponding modules */
-      allmodules: allModules,
+      allmodules: allModules, major:'',
       allmajors: { "Business Analytics" : [
                   {modCode: "BT1101", modTitle: "BT1101 Introduction to Business Analytics", modType: "core"},
                   {modCode: "CS1010S", modTitle: "CS1010S Programming Methodology", modType: "core"},
@@ -83,58 +82,323 @@ export default {
                   {modCode: "IS4302", modTitle: "IS4302 Blockchain and Distributed Ledger Technologies", modType: "elective"},
                   {modCode: "IS4010", modTitle: "IS4010 Industry Internship Programme", modType: "core"}
                   ],
+                  
+                  "Computer Science": [
+                  {modCode: 'CS1101S', modTitle: 'Programming Methodology', modType: 'core'},
+                  {modCode: 'CS1231S', modTitle: 'Discrete Structures', modType: 'core'},
+                  {modCode: 'CS2030S', modTitle: 'Programming Methodology II', modType: 'core'},
+                  {modCode: 'CS2040S', modTitle: 'Data Structures and Algorithms', modType: 'core'},
+                  {modCode: 'CS2100', modTitle: 'Computer Organisation', modType: 'core'},
+                  {modCode: 'CS2103T', modTitle: 'Software Engineering', modType: 'core'},
+                  {modCode: 'CS2106', modTitle: 'Introduction to Operating Systems', modType: 'core'},
+                  {modCode: 'CS3230', modTitle: 'Design and Analysis of Algorithms', modType: 'core'},
+                  {modCode: 'IS1103', modTitle: 'IS1103 Ethics in Computing', modType: 'core'},
+                  {modCode: 'CS2101', modTitle: 'Effective Communication for Computing Professionals', modType: 'core'},
+                  {modCode: 'ES2660', modTitle: 'Communicating in the Information Age', modType: 'core'},
+                  {modCode: 'MA1521', modTitle: 'Calculus for Computing', modType: 'core'},
+                  {modCode: 'MA1101R', modTitle: 'Linear Algebra I', modType: 'core'},
+                  {modCode: 'ST2334', modTitle: 'Probability and Statistics', modType: 'core'},
+                  {modCode: 'CP3106', modTitle: 'Independent Project', modType: 'elective'},
+                  {modCode: 'CP4106', modTitle: 'Computing Project', modType: 'elective'},
+                  {modCode: 'CS3203', modTitle: 'Software Engineering Project', modType: 'elective'},
+                  {modCode: 'CS3216', modTitle: 'Software Product Engineering for Digital Markets', modType: 'elective'},
+                  {modCode: 'CS3217', modTitle: 'Software Engineering on Modern Application Platforms', modType: 'elective'},
+                  {modCode: 'CS3280', modTitle: 'Thematic Systems Project I', modType: 'elective'},
+                  {modCode: 'CS3282', modTitle: 'Thematic Systems Project II', modType: 'elective'},
+                  {modCode: 'CS3230', modTitle: 'Design and Analysis of Algorithms (CFM)', modType: 'elective'},
+                  {modCode: 'CS3236', modTitle: 'Introduction to Information Theory', modType: 'elective'},
+                  {modCode: 'CS4231', modTitle: 'Parallel and Distributed Algorithms', modType: 'elective'},
+                  {modCode: 'CS4232', modTitle: 'Theory of Computation', modType: 'elective'},
+                  {modCode: 'CS4234', modTitle: 'Optimisation Algorithms', modType: 'elective'},
+                  {modCode: 'CS3233', modTitle: 'Competitive Programming', modType: 'elective'},
+                  {modCode: 'CS4257', modTitle: 'Algorithmic Foundations of Privacy', modType: 'elective'},
+                  {modCode: 'CS4261', modTitle: 'Algorithmic Mechanism Design', modType: 'elective'},
+                  {modCode: 'CS4268', modTitle: 'Quantum Computing', modType: 'elective'},
+                  {modCode: 'CS4269', modTitle: 'Fundamentals of Logic in Computer Science', modType: 'elective'},
+                  {modCode: 'CS4330', modTitle: 'Combinatorial Methods in Bioinformatics', modType: 'elective'},
+                  {modCode: 'CS5230', modTitle: 'Computational Complexity', modType: 'elective'},
+                  {modCode: 'CS5234', modTitle: 'Algorithms at Scale', modType: 'elective'},
+                  {modCode: 'CS5236', modTitle: 'Advanced Automata Theory', modType: 'elective'},
+                  {modCode: 'CS5237', modTitle: 'Computational Geometry and Applications', modType: 'elective'},
+                  {modCode: 'CS5238', modTitle: 'Advanced Combinatorial Methods in Bioinformatics', modType: 'elective'},
+                  {modCode: 'CS5330', modTitle: 'Randomized Algorithms', modType: 'elective'},
+                  {modCode: 'CS3243', modTitle: 'Introduction to Artificial Intelligence', modType: 'elective'},
+                  {modCode: 'CS3244', modTitle: 'Machine Learning', modType: 'elective'},
+                  {modCode: 'CS4243', modTitle: 'Computer Vision and Pattern Recognition', modType: 'elective'},
+                  {modCode: 'CS4244', modTitle: 'Knowledge Representation and Reasoning', modType: 'elective'},
+                  {modCode: 'CS4246', modTitle: 'AI Planning and Decision Making', modType: 'elective'},
+                  {modCode: 'CS4248', modTitle: 'Natural Language Processing', modType: 'elective'},
+                  {modCode: 'CS4220', modTitle: 'Knowledge Discovery Methods in Bioinformatics', modType: 'elective'},
+                  {modCode: 'CS4261', modTitle: 'Algorithmic Mechanism Design', modType: 'elective'},
+                  {modCode: 'CS4269', modTitle: 'Fundamentals of Logic in Computer Science', modType: 'elective'},
+                  {modCode: 'CS4277', modTitle: '3D Computer Vision', modType: 'elective'},
+                  {modCode: 'CS4278', modTitle: 'Intelligent Robots: Algorithms and Systems', modType: 'elective'},
+                  {modCode: 'CS5215', modTitle: 'Constraint Processing', modType: 'elective'},
+                  {modCode: 'CS5228', modTitle: 'Knowledge Discovery and Data Mining', modType: 'elective'},
+                  {modCode: 'CS5242', modTitle: 'Neural Networks and Deep Learning', modType: 'elective'},
+                  {modCode: 'CS5260', modTitle: 'Neural Networks and Deep Learning II', modType: 'elective'},
+                  {modCode: 'CS5340', modTitle: 'Uncertainty Modelling in AI', modType: 'elective'},
+                  {modCode: 'CS5339', modTitle: 'Theory and Algorithms for Machine Learning', modType: 'elective'},
+                  {modCode: 'CS3241', modTitle: 'Computer Graphics', modType: 'elective'},
+                  {modCode: 'CS3242', modTitle: '3D Modelling and Animation', modType: 'elective'},
+                  {modCode: 'CS3247', modTitle: 'Game Development', modType: 'elective'},
+                  {modCode: 'CS4247', modTitle: 'Graphics Rendering Techniques', modType: 'elective'},
+                  {modCode: 'CS4350', modTitle: 'Game Development Project', modType: 'elective'},
+                  {modCode: 'CS3218', modTitle: 'Multimodal Processing in Mobile Platforms', modType: 'elective'},
+                  {modCode: 'CS3240', modTitle: 'Interaction Design', modType: 'elective'},
+                  {modCode: 'CS3249', modTitle: 'User Interface Development', modType: 'elective'},
+                  {modCode: 'CS4240', modTitle: 'Interaction Design for Virtual and Augmented Reality', modType: 'elective'},
+                  {modCode: 'CS4243', modTitle: 'Computer Vision and Pattern Recognition', modType: 'elective'},
+                  {modCode: 'CS4249', modTitle: 'Phenomena and Theories of HCI', modType: 'elective'},
+                  {modCode: 'CS4351', modTitle: 'Real-time Graphics', modType: 'elective'},
+                  {modCode: 'CS5237', modTitle: 'Computational Geometry and Applications', modType: 'elective'},
+                  {modCode: 'CS5240', modTitle: 'Theoretical Foundation of Multimedia', modType: 'elective'},
+                  {modCode: 'CS5343', modTitle: 'Advanced Computer Animation', modType: 'elective'},
+                  {modCode: 'CS5346', modTitle: 'Information Visualisation', modType: 'elective'},
+                  {modCode: 'CS2107', modTitle: 'Introduction to Information Security', modType: 'elective'},
+                  {modCode: 'CS3235', modTitle: 'Computer Security', modType: 'elective'},
+                  {modCode: 'CS4236', modTitle: 'Cryptography Theory and Practice', modType: 'elective'},
+                  {modCode: 'CS4238', modTitle: 'Computer Security Practice', modType: 'elective'},
+                  {modCode: 'CS4239', modTitle: 'Software Security', modType: 'elective'},
+                  {modCode: 'CS3221', modTitle: 'Operating Systems Design and Pragmatics', modType: 'elective'},
+                  {modCode: 'CS4257', modTitle: 'Algorithmic Foundations of Privacy', modType: 'elective'},
+                  {modCode: 'CS4276', modTitle: 'IoT Security', modType: 'elective'},
+                  {modCode: 'CS5231', modTitle: 'Systems Security', modType: 'elective'},
+                  {modCode: 'CS5250', modTitle: 'Advanced Operating Systems', modType: 'elective'},
+                  {modCode: 'CS5321', modTitle: 'Network Security', modType: 'elective'},
+                  {modCode: 'CS5322', modTitle: 'Database Security', modType: 'elective'},
+                  {modCode: 'CS5331', modTitle: 'Web Security', modType: 'elective'},
+                  {modCode: 'CS5332', modTitle: 'Biometric Authentication', modType: 'elective'},
+                  {modCode: 'IFS4101', modTitle: 'Legal Aspects of Information Security', modType: 'elective'},
+                  {modCode: 'IFS4102', modTitle: 'Digital Forensics', modType: 'elective'},
+                  {modCode: 'IFS4103', modTitle: 'Penetration Testing Practice', modType: 'elective'},
+                  {modCode: 'CS2102', modTitle: 'Database Systems', modType: 'elective'},
+                  {modCode: 'CS3223', modTitle: 'Database Systems Implementation', modType: 'elective'},
+                  {modCode: 'CS4221', modTitle: 'Database Applications Design and Tuning', modType: 'elective'},
+                  {modCode: 'CS4224', modTitle: 'Distributed Databases', modType: 'elective'},
+                  {modCode: 'CS4225', modTitle: 'Big Data Systems for Data Science', modType: 'elective'},
+                  {modCode: 'CS4220', modTitle: 'Knowledge Discovery Methods in Bioinformatics', modType: 'elective'},
+                  {modCode: 'CS5226', modTitle: 'Database Tuning', modType: 'elective'},
+                  {modCode: 'CS5228', modTitle: 'Knowledge Discovery and Data Mining', modType: 'elective'},
+                  {modCode: 'CS5322', modTitle: 'Database Security', modType: 'elective'},
+                  {modCode: 'CS2108', modTitle: 'Introduction to Media Computing', modType: 'elective'},
+                  {modCode: 'CS3245', modTitle: 'Information Retrieval', modType: 'elective'},
+                  {modCode: 'CS4242', modTitle: 'Social Media Computing', modType: 'elective'},
+                  {modCode: 'CS4248', modTitle: 'Natural Language Processing', modType: 'elective'},
+                  {modCode: 'CS4347', modTitle: 'Sound and Music Computing', modType: 'elective'},
+                  {modCode: 'CS5246', modTitle: 'Text Mining', modType: 'elective'},
+                  {modCode: 'CS5241', modTitle: 'Speech Processing', modType: 'elective'},
+                  {modCode: 'CS2105', modTitle: 'Introduction to Computer Networks (CFM)', modType: 'elective'},
+                  {modCode: 'CS3103', modTitle: 'Computer Networks Practice', modType: 'elective'},
+                  {modCode: 'CS4222', modTitle: 'Wireless Networking', modType: 'elective'},
+                  {modCode: 'CS4226', modTitle: 'Internet Architecture', modType: 'elective'},
+                  {modCode: 'CS4231', modTitle: 'Parallel and Distributed Algorithms', modType: 'elective'},
+                  {modCode: 'CS3237', modTitle: 'Introduction to Internet of Things', modType: 'elective'},
+                  {modCode: 'CS4344', modTitle: 'Networked and Mobile Gaming', modType: 'elective'},
+                  {modCode: 'CS5223', modTitle: 'Distributed Systems', modType: 'elective'},
+                  {modCode: 'CS5224', modTitle: 'Cloud Computing', modType: 'elective'},
+                  {modCode: 'CS5229', modTitle: 'Advanced Computer Networks', modType: 'elective'},
+                  {modCode: 'CS5248', modTitle: 'Systems Support for Continuous Media', modType: 'elective'},
+                  {modCode: 'CS5321', modTitle: 'Network Security', modType: 'elective'},
+                  {modCode: 'CS3210', modTitle: 'Parallel Computing', modType: 'elective'},
+                  {modCode: 'CS3211', modTitle: 'Parallel and Concurrent Programming', modType: 'elective'},
+                  {modCode: 'CS4231', modTitle: 'Parallel and Distributed Algorithms', modType: 'elective'},
+                  {modCode: 'CS4223', modTitle: 'Multi-core Architecture', modType: 'elective'},
+                  {modCode: 'CS5222', modTitle: 'Advanced Computer Architectures', modType: 'elective'},
+                  {modCode: 'CS5223', modTitle: 'Distributed Systems', modType: 'elective'},
+                  {modCode: 'CS5224', modTitle: 'Cloud Computing', modType: 'elective'},
+                  {modCode: 'CS5239', modTitle: 'Computer System Performance Analysis', modType: 'elective'},
+                  {modCode: 'CS5250', modTitle: 'Advanced Operating Systems', modType: 'elective'},
+                  {modCode: 'CS2104', modTitle: 'Programming Language Concepts', modType: 'elective'},
+                  {modCode: 'CS3211', modTitle: 'Parallel and Concurrent Programming', modType: 'elective'},
+                  {modCode: 'CS4212', modTitle: 'Compiler Design', modType: 'elective'},
+                  {modCode: 'CS4215', modTitle: 'Programming Language Implementation', modType: 'elective'},
+                  {modCode: 'CS3234', modTitle: 'Logic for Proofs and Programs', modType: 'elective'},
+                  {modCode: 'CS4216', modTitle: 'Constraint Logic Programming', modType: 'elective'},
+                  {modCode: 'CS5232', modTitle: 'Formal Specification & Design Techniques', modType: 'elective'},
+                  {modCode: 'CS5214', modTitle: 'Design of Optimising Compilers', modType: 'elective'},
+                  {modCode: 'CS5215', modTitle: 'Constraint Processing', modType: 'elective'},
+                  {modCode: 'CS5218', modTitle: 'Principles and Practice of Program Analysis', modType: 'elective'},
+                  {modCode: 'CS2103', modTitle: 'IT Software Engineering (CFM)', modType: 'elective'},
+                  {modCode: 'CS3219', modTitle: 'Software Engineering Principles and Patterns', modType: 'elective'},
+                  {modCode: 'CS4211', modTitle: 'Formal Methods for Software Engineering', modType: 'elective'},
+                  {modCode: 'CS4218', modTitle: 'Software Testing', modType: 'elective'},
+                  {modCode: 'CS4239', modTitle: 'Software Security', modType: 'elective'},
+                  {modCode: 'CS3216', modTitle: 'Software Development on Evolving Platforms', modType: 'elective'},
+                  {modCode: 'CS3217', modTitle: 'Software Engineering on Modern Application Platforms', modType: 'elective'},
+                  {modCode: 'CS3226', modTitle: 'Web Programming and Applications', modType: 'elective'},
+                  {modCode: 'CS3234', modTitle: 'Logic for Proofs and Programs', modType: 'elective'},
+                  {modCode: 'CS5219', modTitle: 'Automatic Software Validation', modType: 'elective'},
+                  {modCode: 'CS5232', modTitle: 'Formal Specification & Design Techniques', modType: 'elective'},
+                  {modCode: 'CS5272', modTitle: 'Embedded Software Design', modType: 'elective'},
+                  {modCode: 'CS2220', modTitle: 'Introduction to Computational Biology', modType: 'elective'},
+                  {modCode: 'CS5233', modTitle: 'Simulation and Modeling Techniques', modType: 'elective'}
+                  ],
+
+                  "Information Systems": [
+                  {modCode: 'CS1010J', modTitle: 'Programming Methodology', modType: 'core'},
+                  {modCode: 'CS1231', modTitle: 'Discrete Structures', modType: 'core'},
+                  {modCode: 'IS1103', modTitle: 'Ethics in Computing', modType: 'core'},
+                  {modCode: 'CS2030', modTitle: 'Programming Methodology II', modType: 'core'},
+                  {modCode: 'CS2040', modTitle: 'Data Structures and Algorithms', modType: 'core'},
+                  {modCode: 'CS2102', modTitle: 'Database Systems', modType: 'core'},
+                  {modCode: 'CS2105', modTitle: 'Introduction to Computer Networks', modType: 'core'},
+                  {modCode: 'IS2101', modTitle: 'Business and Technical Communication', modType: 'core'},
+                  {modCode: 'IS2102', modTitle: 'Enterprise Systems Architecture and Design', modType: 'core'},
+                  {modCode: 'IS2103', modTitle: 'Enterprise Systems Server-side Design and Development', modType: 'core'},
+                  {modCode: 'IS3103', modTitle: 'Information Systems Leadership and Communication', modType: 'core'},
+                  {modCode: 'IS3106', modTitle: 'Enterprise Systems Interface Design and Development', modType: 'core'},
+                  {modCode: 'IS4100', modTitle: 'IT Project Management', modType: 'core'},
+                  {modCode: 'IS4103', modTitle: 'Information Systems Capstone Project', modType: 'core'},
+                  {modCode: 'MA1301', modTitle: 'Introductory Mathematics', modType: 'core'},
+                  {modCode: 'MA1312', modTitle: 'Calculus with Applications', modType: 'core'},
+                  {modCode: 'MA1521', modTitle: 'Calculus for Computing', modType: 'core'},
+                  {modCode: 'ST2334', modTitle: 'Probability and Statistics', modType: 'core'},
+                  {modCode: 'IS3150', modTitle: 'Digital Media Marketing', modType: 'elective'},
+                  {modCode: 'IS3240', modTitle: 'Digital Platform Strategy and Architecture', modType: 'elective'},
+                  {modCode: 'IS3261', modTitle: 'Mobile Apps Development for Enterprise', modType: 'elective'},
+                  {modCode: 'IS4151', modTitle: 'Pervasive Technology Solutions and Development', modType: 'elective'},
+                  {modCode: 'IS4228', modTitle: 'Information Technologies in Financial Services', modType: 'elective'},
+                  {modCode: 'IS4302', modTitle: 'Blockchain and Distributed Ledger Technologies', modType: 'elective'},
+                  {modCode: 'IS4303', modTitle: 'IT-Mediated Financial Solutions and Platforms', modType: 'elective'},
+                  {modCode: 'CS3240', modTitle: 'Interaction Design', modType: 'elective'},
+                  {modCode: 'IS3221', modTitle: 'ERP Systems with Analytics Solutions', modType: 'elective'},
+                  {modCode: 'IS4204', modTitle: 'IT Governance', modType: 'elective'},
+                  {modCode: 'IS4234', modTitle: 'Compliance and Regulation Technology', modType: 'elective'},
+                  {modCode: 'IS4243', modTitle: 'Information Systems Consulting', modType: 'elective'},
+                  {modCode: 'IS4250', modTitle: 'IT-enabled Healthcare Solutioning', modType: 'elective'},
+                  {modCode: 'IS4301', modTitle: 'Agile IT with DevOps', modType: 'elective'},
+                  {modCode: 'IS3251', modTitle: 'Principles of Technology Entrepreneurship', modType: 'elective'},
+                  {modCode: 'IS4242', modTitle: 'Intelligent Systems and Techniques', modType: 'elective'},
+                  {modCode: 'IS4241', modTitle: 'Social Media Network Analysis', modType: 'elective'},
+                  {modCode: 'IS4261', modTitle: 'Designing IT-Enabled Business Innovations', modType: 'elective'},
+                  {modCode: 'IS5002', modTitle: 'Digital Transformation', modType: 'elective'},
+                  {modCode: 'IS5128', modTitle: 'Digital Innovation', modType: 'elective'},
+                  {modCode: 'CS2107', modTitle: 'Introduction to Information Security', modType: 'elective'},
+                  {modCode: 'IFS4101', modTitle: 'Legal Aspects of Information Security', modType: 'elective'},
+                  {modCode: 'IS4231', modTitle: 'Information Security Management', modType: 'elective'},
+                  {modCode: 'IS4233', modTitle: 'Legal Aspects of Information Technology', modType: 'elective'},
+                  {modCode: 'IS3240', modTitle: 'Digital Platform Strategy and Architecture', modType: 'elective'},
+                  {modCode: 'IS3251', modTitle: 'Principles of Technology Entrepreneurship', modType: 'elective'},
+                  {modCode: 'IS4261', modTitle: 'Designing IT-Enabled Business Innovations', modType: 'elective'},
+                  {modCode: 'IS3150', modTitle: 'Digital Media Marketing', modType: 'elective'},
+                  {modCode: 'IS3261', modTitle: 'Mobile Apps Development for Enterprise', modType: 'elective'},
+                  {modCode: 'IS4204', modTitle: 'IT Governance', modType: 'elective'},
+                  {modCode: 'IS4233', modTitle: 'Legal Aspects of Information Technology', modType: 'elective'},
+                  {modCode: 'IS4242', modTitle: 'Intelligent Systems and Techniques', modType: 'elective'},
+                  {modCode: 'IS4243', modTitle: 'Information Systems Consulting', modType: 'elective'},
+                  {modCode: 'IS5002', modTitle: 'Digital Transformation', modType: 'elective'},
+                  {modCode: 'IS5128', modTitle: 'Digital Innovation', modType: 'elective'},
+                  {modCode: 'IS3150', modTitle: 'Digital Media Marketing', modType: 'elective'},
+                  {modCode: 'IS4151', modTitle: 'Pervasive Technology Solutions and Development', modType: 'elective'},
+                  {modCode: 'IS4261', modTitle: 'Designing IT-Enabled Business Innovations', modType: 'elective'},
+                  {modCode: 'IS3240', modTitle: 'Digital Platform Strategy and Architecture', modType: 'elective'},
+                  {modCode: 'IS3261', modTitle: 'Mobile Apps Development for Enterprise', modType: 'elective'},
+                  {modCode: 'IS4228', modTitle: 'Information Technologies in Financial Services', modType: 'elective'},
+                  {modCode: 'IS4231', modTitle: 'Information Security Management', modType: 'elective'},
+                  {modCode: 'IS4242', modTitle: 'Intelligent Systems and Techniques', modType: 'elective'},
+                  {modCode: 'IS4243', modTitle: 'Information Systems Consulting', modType: 'elective'},
+                  {modCode: 'IS4228', modTitle: 'Information Technologies in Financial Services', modType: 'elective'},
+                  {modCode: 'IS4302', modTitle: 'Blockchain and Distributed Ledger Technologies', modType: 'elective'},
+                  {modCode: 'IS4303', modTitle: 'IT-Mediated Financial Solutions and Platforms', modType: 'elective'},
+                  {modCode: 'IS3221', modTitle: 'ERP Systems with Analytics Snterprise Resource Planning Systems', modType: 'elective'},
+                  {modCode: 'IS4231', modTitle: 'Information Security Management', modType: 'elective'},
+                  {modCode: 'IS4233', modTitle: 'Legal Aspects of Information Technology', modType: 'elective'},
+                  {modCode: 'IS4234', modTitle: 'Compliance and Regulation Technology', modType: 'elective'},
+                  {modCode: 'IS4242', modTitle: 'Intelligent Systems and Techniques', modType: 'elective'},
+                  {modCode: 'IS4301', modTitle: 'Agile IT with DevOps', modType: 'elective'},
+                  {modCode: 'IS5002', modTitle: 'Digital Transformation', modType: 'elective'},
+                  {modCode: 'IS4010', modTitle: 'Industry Internship Programme', modType: 'core'},
+                  {modCode: 'CP4101', modTitle: 'B.Comp. Dissertation', modType: 'core'}
+                  ],
+
+                  "Information Security": [
+                  {modCode: 'CS1010', modTitle: 'Programming Methodology', modType: 'core'},
+                  {modCode: 'CS1231S', modTitle: 'Discrete Structures', modType: 'core'},
+                  {modCode: 'CS2040C', modTitle: 'Data Structures and Algorithms', modType: 'core'},
+                  {modCode: 'CS2100', modTitle: 'Computer Organisation', modType: 'core'},
+                  {modCode: 'CS2102', modTitle: 'Database Systems', modType: 'core'},
+                  {modCode: 'CS2113T', modTitle: 'Software Engineering & Object-Oriented Programming', modType: 'core'},
+                  {modCode: 'CS2105', modTitle: 'Introduction to Computer Networks', modType: 'core'},
+                  {modCode: 'CS2106', modTitle: 'Introduction to Operating Systems', modType: 'core'},
+                  {modCode: 'IS3103', modTitle: 'Information Systems Leadership and Communication', modType: 'core'},
+                  {modCode: 'CS2107', modTitle: 'Introduction to Information Security', modType: 'core'},
+                  {modCode: 'CS3235', modTitle: 'Computer Security', modType: 'core'},
+                  {modCode: 'IFS4205', modTitle: 'Information Security Capstone Project', modType: 'core'},
+                  {modCode: 'IS4231', modTitle: 'Information Security Management', modType: 'core'},
+                  {modCode: 'CS3236', modTitle: 'Introduction to Information Theory', modType: 'core'},
+                  {modCode: 'CS4236', modTitle: 'Cryptography Theory and Practice', modType: 'elective'},
+                  {modCode: 'MA4261', modTitle: 'Coding and Cryptography', modType: 'elective'},
+                  {modCode: 'CS4238', modTitle: 'Computer Security Practice', modType: 'elective'},
+                  {modCode: 'CS4239', modTitle: 'Software Security', modType: 'elective'},
+                  {modCode: 'CS4257', modTitle: 'Algorithmic Foundations of Privacy', modType: 'elective'},
+                  {modCode: 'CS4276', modTitle: 'IoT Security', modType: 'elective'},
+                  {modCode: 'CS5231', modTitle: 'Systems Security', modType: 'elective'},
+                  {modCode: 'CS5321', modTitle: 'Network Security', modType: 'elective'},
+                  {modCode: 'CS5322', modTitle: 'Database Security', modType: 'elective'},
+                  {modCode: 'CS5331', modTitle: 'Web Security', modType: 'elective'},
+                  {modCode: 'CS5332', modTitle: 'Biometric Authentication', modType: 'elective'},
+                  {modCode: 'IFS4101', modTitle: 'Legal Aspects of Information Security', modType: 'elective'},
+                  {modCode: 'IFS4102', modTitle: 'Digital Forensics', modType: 'elective'},
+                  {modCode: 'IFS4103', modTitle: 'Penetration Testing Practice', modType: 'elective'},
+                  {modCode: 'IS4204', modTitle: 'IT Governance', modType: 'elective'},
+                  {modCode: 'IS4233', modTitle: 'Legal Aspects of Information Technology', modType: 'elective'},
+                  {modCode: 'IS4234', modTitle: 'Compliance and Regulation Technology', modType: 'elective'},
+                  {modCode: 'IS4302', modTitle: 'Blockchain and Distributed Ledger Technologies', modType: 'elective'},
+                  {modCode: 'IS1103', modTitle: 'Ethics in Computing', modType: 'core'},
+                  {modCode: 'CS2101', modTitle: 'Effective Communication for Computing Professionals', modType: 'core'},
+                  {modCode: 'MA1101R', modTitle: 'Linear Algebra I', modType: 'core'},
+                  {modCode: 'MA1521', modTitle: 'Calculus for Computing', modType: 'core'},
+                  {modCode: 'ST2334', modTitle: 'Probability and Statistics', modType: 'core'}
+                  ],
+
                   "Economics": [
                   {modCode: "EC1301", modTitle: "Principles of Economics", modType: "core"},
                   {modCode: "EC2101", modTitle: "Microeconomic Analysis I", modType: "core"},
                   {modCode: "EC3101", modTitle: "Microeconomic Analysis II", modType: "core"},
                   {modCode: "EC3312", modTitle: "Game Theory and Applications for Economics", modType: "elective"}]
       },
-      acadplan: {
-        y1s1: [
-          { mod: "", mc: 0, move: false, index: 0 },
+      acadplan: [[
+          { mod: "", mc: 16, move: false, index: 0 },
           { mod: "BT1101", mc: 4, move: true, index: 1 },
           { mod: "CS1010S", mc: 4, move: true, index: 2 },
           { mod: "MA1521", mc: 4, move: true, index: 3 },
           { mod: "IS1103", mc: 4, move: true, index: 4 }
-        ], 
-        y1s2: [
-          { mod: "", mc: 0, move: false, index: 5 },
+        ], [
+          { mod: "", mc: 16, move: false, index: 5 },
           { mod: "BT2101", mc: 4, move: true, index: 6 },
           { mod: "CS2030", mc: 4, move: true, index: 7 },
           { mod: "MA1101R", mc: 4, move: true, index: 8 },
           { mod: "EC1301", mc: 4, move: true, index: 9 }
-        ],
-        y2s1: [
-          { mod: "", mc: 0, move: false, index: 10 }, 
+        ], [
+          { mod: "", mc: 12, move: false, index: 10 }, 
           { mod: "BT2102", mc: 4, move: true, index: 11 }, 
           { mod: "CS2040", mc: 4, move: true, index: 12 },
           { mod: "ST2334", mc: 4, move: true, index: 13 }
-        ], 
-        y2s2: [
-          { mod: "", mc: 0, move: false, index: 14 }, 
+        ], [
+          { mod: "", mc: 8, move: false, index: 14 }, 
           { mod: "BT3102", mc: 4, move: true, index: 15 }, 
           { mod: "BT3103", mc: 4, move: true, index: 16 },
-        ],
-        y3s1: [
-          { mod: "", mc: 0,move: false, index: 17 },
+        ],[
+          { mod: "", mc: 4,move: false, index: 17 },
           { mod: "MKT1705X", mc: 4, move: true, index: 18 }
-        ],
-        y3s2: [
+        ], [
           { mod: "", mc: 0, move: false, index: 19 },
-        ],
-        y4s1: [{ mod: "", mc: 0, move: false, index: 20 },],
-        y4s2: [{ mod: "", mc: 0, move: false, index: 21 },],
-      },
+        ],[{ mod: "", mc: 0, move: false, index: 20 },],
+        [{ mod: "", mc: 0, move: false, index: 21 },],
+      ],
+      acadplan_exemptions: ["ES1000"],
       module_semester_mapping: {
-        "BT1101": 1, "CS1010S": 1, "IS1103": 1, 
-        "MA1521": 1, "BT2101": 2, "CS2030": 2,
-        "EC1301": 2, "MA1101R": 2, "BT2102": 3,
-        "CS2040": 3, "ST2334": 3, "BT3102": 4,
-        "BT3103": 4, "MKT1705X": 5,
+        "BT1101": 0, "CS1010S": 0, "IS1103": 0, 
+        "MA1521": 0, "BT2101": 1, "CS2030": 1,
+        "EC1301": 1, "MA1101R": 1, "BT2102": 2,
+        "CS2040": 2, "ST2334": 2, "BT3102": 3,
+        "BT3103": 3, "MKT1705X": 4,
       },
-      num_semester_mapping: {
-        1: "y1s1", 2: "y1s2", 3: "y2s1", 4: "y2s2", 5: "y3s1", 6: "y3s2", 7: "y4s1", 8: "y4s2"
-      }
+      num_semester_mapping: [
+        "Y1S1",  "Y1S2", "Y2S1", "Y2S2",  "Y3S1",  "Y3S2", "Y4S1",  "Y4S2"
+      ],
+      sepMappings: sepMappings
     }
   }
 }
@@ -146,6 +410,17 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+}
+
+body {
+  height: 100%;
+  top: 0;
+  margin-top: 0;
+  padding: 0;
+  background-color: #EBEFF2;
+}
+
+.row {
+  margin: 30px;
 }
 </style>
