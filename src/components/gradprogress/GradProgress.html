@@ -11,18 +11,19 @@
     <h2>Graduation Progress</h2>
   </div>
   
-  <div id="App">
+  <!--<div id="App">
     <div class="row multiselect-module">
-      <!-- Filter by Course -->
       <div class = "multiselect_title">
         <label>Please choose your major</label>
       </div>
-      <multiselect v-model="major" :options="majors" :multiple="flase" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Course" :preselect-first="true" open-direction="bottom">
+      <multiselect v-model="major" :options="majors" :multiple="false" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Course" :preselect-first="true" open-direction="bottom">
         <template slot="selection" slot-scope="{ values, search, isOpen }">
-          <!-- <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span> -->
         </template>
       </multiselect>
-    </div>
+    </div>-->
+  <div class = "row grad-prog-row">
+    <label>Your major is: </label> <b> {{ showMajor() }} </b>
+  </div>
 
   <div class="row grad-prog-row">
     <h4>University Level Requirements</h4>
