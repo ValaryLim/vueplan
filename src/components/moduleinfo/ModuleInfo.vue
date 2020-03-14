@@ -123,6 +123,19 @@ export default {
 				}
 				document.getElementById("res").insertAdjacentHTML('beforeend', mod.preclusion.substring(startIndex, mod.preclusion.length) +"</h4>");
 
+		document.getElementById("res").insertAdjacentHTML('beforeend', mod.prereq.substring(startIndex, mod.prereq.length) +"</h4>");
+      
+      
+      
+		//PRECLUSIONS
+		document.getElementById('res').insertAdjacentHTML('beforeend',"<h4>Preclusions: ")
+		var arr_a = [];      
+		for(let i=0; i <mods.length; i++){
+			index = mod.preclusion.toUpperCase().indexOf(this.allmodules[mods[i]].code);
+			if(index != -1){
+				if(this.allmodules[mods[i]].code != mod.code){
+					arr_a.push([index,this.allmodules[mods[i]]])
+				}
 			}
 			
 
