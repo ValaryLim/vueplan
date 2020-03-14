@@ -5,8 +5,6 @@
         <div id = "details">
             <label v-if="user.loggedIn" class="is-size-3 has-background-dark welcome">
                 <br>
-                {{ user.photoURL }}
-                <br>
                 <b>Username:</b> {{ user.data.displayName }}
                 <br>
                 <b>Email:</b> {{ user.data.email }}

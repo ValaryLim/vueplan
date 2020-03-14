@@ -71,7 +71,7 @@
 
 <script>
 import firebase from 'firebase';
-import database from '../firebase.js'
+import database from '../firebase.js';
 
 export default {
   data() {
@@ -109,7 +109,7 @@ export default {
           })
           .then(data.user
             .updateProfile({
-              displayName: this.form.name
+              displayName: this.form.name,
             })
             .then(() =>{
             // bring user to profile page

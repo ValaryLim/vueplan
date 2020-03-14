@@ -1,31 +1,30 @@
 <template>
     <div id = "profile">
         <h2> Update Profile </h2>
-        Note: Still fixing some bugs on this page, it's not working now.
 
         <form action="#" @submit.prevent="save">
             <div class="form-group row">
                 <label for="name" class="col-md-4 col-form-label text-md-right">Name</label>
-                <div class="col-md-6">{{ user.data.displayName }}</div>
-                <!--<div class="col-md-6">
+                <!-- <div class="col-md-6">{{ user.data.displayName }}</div> -->
+                <div class="col-md-6">
                     <input
                         id="name"
                         type="name"
                         class="form-control"
                         name="name"
-                        placeholder= "hi"
+                        placeholder= "Enter your new displayName"
                         value
                         autofocus
                         v-model="form.name"
                     />
-                </div> -->
+                </div>
             </div>
 
             <div class="form-group row">
                 <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
                 <div class = "col-md-6">{{ user.data.email }}</div>
 
-                <!--<div class="col-md-6">
+                <!-- <div class="col-md-6">
                     <input
                         id="email"
                         type="email"
@@ -92,10 +91,8 @@ export default {
     data() {
         return {
             form: {
-                //uid: firebase.auth().currentUser.getToken(),
-                //name: "",
-                //email: "",
-                //photoUrl: "",
+                name: "",
+                email: "",
                 year: "",
                 exemptions: "",
 
@@ -106,7 +103,7 @@ export default {
     
     methods: {
         save() {
-            firebase
+            /**firebase
             .analytics()
             .setUserProperties({
                 year: this.form.year,
@@ -117,11 +114,16 @@ export default {
             }).catch(function(error) {
                 this.error = error;
                 // An error happened.
-            });
+            });*/
+            var user = firebase.auth().currentUser;
 
-            //database
-            //.collections('users')
-            //.add(this.user);
+            user.updateProfile({
+                displayName: this.form.name,
+            }).then(function() {
+                alert("Update successful")
+            }).then(
+                this.$router.replace({ name: 'Profile' })
+            );
         }
     },
 

@@ -70,7 +70,6 @@ export default {
       firebase
         .auth()
         .signInWithEmailAndPassword(this.form.email, this.form.password)
-        // UPDATE THIS WITH USER DATA
         .then(() =>{
           this.$router.replace({ name: "Profile" });
         })
