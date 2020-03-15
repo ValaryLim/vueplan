@@ -11,7 +11,7 @@ import database from '../firebase.js';
 export default {
   name: "App",
   display: "Graduation Requirement",
-  props: ["allmajors", "acadplan", "allmodules"],
+  props: ["allmajors", "allmodules"],
 
   data() {
     return {
@@ -23,6 +23,8 @@ export default {
         "Information Security"
       ],
       major: "",
+      acadplan_exemptions: [],
+      acadplan: {},
     };
   },
 
@@ -32,28 +34,22 @@ export default {
       user: "user"
     }),
   },
-
+  
+  created() {
+    this.fetch_gradprogress();
+  },
+  
   methods: {
-    showSemesters: function() {
+    fetch_gradprogress: function() {
       var user = firebase.auth().currentUser;
       let userRef = database.collection('acadplan').doc(user.uid);
-      userRef.get()
-          .then(doc => {
-              this.sem_completed = doc.data()['year']
-          })
-      return this.sem_completed
+      userRef.get().then(doc => {
+          this.acadplan_exemptions = doc.data()['acadplan_exemptions'];
+          this.major = doc.data()['major'];
+          this.sem_completed = doc.data()['year'];
+          this.acadplan = doc.data()['module_location'];
+      });
     },
-
-    showMajor: function() {
-      var user = firebase.auth().currentUser;
-      let userRef = database.collection('acadplan').doc(user.uid);
-      userRef.get()
-          .then(doc => {
-              this.major = doc.data()['major']
-          })
-      return this.major
-    },
-
     get_mod_added: function() {
       var mod_added = [];
       for (var key1 in this.acadplan) {
