@@ -135,5 +135,6 @@
 }
 #OverallFeedbackNum {
   font-size: 42px;
-  margin-left: 15px;
+  text-align: center;
+  width: 90px;
 }
