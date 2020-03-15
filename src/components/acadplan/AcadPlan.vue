@@ -18,13 +18,17 @@ import { mapGetters } from 'vuex';
 import firebase from 'firebase';
 import database from '../firebase.js'
 
+/* carousel */
+import carousel from 'vue-owl-carousel';
+
 export default {
     name: "App",
     display: "Academic Planner",
     order: 14,
     components: {
         draggable,
-        FontAwesomeIcon
+        FontAwesomeIcon,
+        carousel
     },
     data() {
         return {
@@ -43,7 +47,14 @@ export default {
             add_mc: 1,
             subtract_mc: -1,
 
-            /* user specific data */
+            // add semesters
+            selected_semesters: [],
+            options: ['Y1 Winter', 'Y1 Summer', 'Y2 Winter', 'Y2 Summer', 'Y3 Winter', 'Y3 Summer', 'Y4 Winter', 'Y4 Summer', 'Y5S1', 'Y5 Winter', 'Y5S2', 'Y5 Summer'],
+            ordered_semesters: ['Y1S1', 'Y1 Winter','Y1S2', 'Y1 Summer', 'Y2S1', 'Y2 Winter', 'Y2S2', 
+            'Y2 Summer', 'Y3S1', 'Y3 Winter', 'Y3S2', 'Y3 Summer', 'Y4S1', 'Y4 Winter', 'Y4S2', 
+            'Y4 Summer', 'Y5S1', 'Y5 Winter', 'Y5S2', 'Y5 Summer'],
+
+            // user specific data
             major: "",
             acadplan: {},
             module_semester_mapping: {},
@@ -58,7 +69,6 @@ export default {
     props: ['allmodules'],
     computed: {
         sorted_sems: function() {
-            console.log("called")
             var result_arr = []
             for (var i in this.acadplan) {
                 this.sort_modules(this.acadplan[i], i)
@@ -82,7 +92,7 @@ export default {
                 this.acadplan_exemptions = doc.data()['acadplan_exemptions'];
                 this.major = doc.data()['major'];
                 this.acadplan = doc.data()['module_location'];
-                // console.log(doc.data()['module_location']);
+                //console.log(doc.data()['module_location']);
                 this.module_semester_mapping = doc.data()['module_semester_mapping'];
                 this.total_mc = doc.data()['total_mc'];
                 this.num_semester_mapping = doc.data()['num_semester_mapping'];
@@ -100,6 +110,7 @@ export default {
             });
         },
         add_module_sem: function() {
+            console.log("add module called");
             /** 
              * adds module to the earliest possible semester the student can take it 
              */
@@ -154,6 +165,7 @@ export default {
             }
         },
         update_module_credits: function(add_subtract, sem, mc) {
+            console.log("update module credits called");
             for (var module_index in this.acadplan[sem]) {
                 // get module
                 var module = this.acadplan[sem][module_index];
@@ -166,6 +178,7 @@ export default {
             }
         },
         check_valid_module: function(module_name) {
+            console.log("check valid module called");
             /** 
              * Check if module exists and can be inserted
              * If module can be inserted, returns the module code. 
@@ -189,6 +202,7 @@ export default {
             return this.invalid_module; // module does not exist
         },
         delete_module: function(sem, module) {
+            console.log("delete module called");
             var module_name = module.mod;
 
             if (this.check_unlocked(module_name)) {
@@ -206,6 +220,7 @@ export default {
             }
         }, 
         sort_modules: function(data, sem_num) {
+            console.log("sort modules called");
             data.sort(this.compare_module);
 
             // var current_sem = this.num_semester_mapping[sem_num];
@@ -257,6 +272,8 @@ export default {
             // var current_sem_name = this.num_semester_mapping[sem_num];
             // var previous_sem_name = this.num_semester_mapping[previous_sem];
 
+            console.log("sort modules prereq check called");
+
             // find the earliest date module can be shifted to
             var earliest_sem = this.check_prerequisites_sem(this.allmodules[check_module.mod].parseprereq);
                         
@@ -287,6 +304,8 @@ export default {
              */
             // var current_sem_name = this.num_semester_mapping[sem_num];
             // var previous_sem_name = this.num_semester_mapping[previous_sem];
+
+            console.log("sort modules locked check called");
 
             var latest_sem = this.check_locked_sem(check_module.mod);
 
@@ -327,6 +346,7 @@ export default {
              */
             console.log(prereq_tree, 1, "prerequisite tree");
             // if there are no prerequisites, module can be inserted immediately after the first semester
+            console.log("check prerequisites sem called");
             if (Object.keys(prereq_tree).length === 0) {
                 return 0; // can insert into first semester
             }
@@ -357,6 +377,7 @@ export default {
             /** 
              * Returns first semester that module can be inserted, -1 otherwise.
              */
+            console.log("check prerequisites sem string called");
             // tracker of earliest semester where module can be inserted
             console.log("CHECK PREREQUISITE SEM STRING", "PREREQ TREE:", prereq_tree)
             var insert_sem = 0;
@@ -492,6 +513,8 @@ export default {
              * true: module can be deleted, false: module cannot be deleted
             */
 
+           console.log("check unlocked called");
+
             // get array of all modules that are locked by this module
             var all_locked = this.get_locked(module_name);
 
@@ -519,6 +542,8 @@ export default {
             /**
              * returns an array of all modules locked
              */
+
+            console.log("get locked called");
             var preclu_tree = this.allmodules[module_name].parsepreclu;
             var preclu_arr = this.get_all_preclu(preclu_tree, []);
             var locked_arr = this.allmodules[module_name].locked.slice();
@@ -562,6 +587,8 @@ export default {
             /**
              * recursively finds all preclusions of one module (ignores "and", "or") and returns an array of preclusions
              */
+
+            console.log("get all preclu called");
             // if there are no preclusions
             if (Object.keys(preclu_tree).length === 0) {
                 return preclu_arr;
@@ -604,6 +631,72 @@ export default {
             }
 
             return preclu_arr;  
+        },
+        update_semesters: function() {
+            this.add_semesters();
+            this.delete_semesters();
+        },
+        add_semesters: function() {
+            // find difference in selected_semesters and num_semesters_mappings
+            var missing_semesters = [];
+            for (var sem_index in this.selected_semesters) {
+                if (!this.num_semester_mapping.includes(this.selected_semesters[sem_index])) {
+                    missing_semesters.push(this.selected_semesters[sem_index]);
+                }
+            }
+
+            // adds missing semesters to acadplan
+            for (var missing_index in missing_semesters) {
+                var missing_sem = missing_semesters[missing_index];
+
+                // find the location where missing_sem should be added
+                var decrement = 1;
+                var push_after_sem = this.ordered_semesters[this.ordered_semesters.indexOf(missing_sem) - decrement];
+
+                while (push_after_sem !== null) {   
+                    if (this.num_semester_mapping.includes(push_after_sem)) {
+                        // get index of push after sem in num semester mapping
+                        var push_after_index = this.num_semester_mapping.indexOf(push_after_sem) + 1;
+                        
+                        // update num_semester_mapping
+                        this.num_semester_mapping.splice(push_after_index, 0, missing_sem);
+
+                        // start from back to front, update acadplan
+                        for (var update_index = this.num_semester_mapping.length - 1; update_index > push_after_index; update_index--) {
+                            this.acadplan[update_index] = this.acadplan[update_index - 1];
+                        }
+
+                        this.acadplan[push_after_index] = [{ mod: "", mc: 0, move: false, index: this.index }]
+                        this.index++; 
+
+                        this.save_acadplan();
+                        break;
+                    }
+
+                    decrement++;
+                    push_after_sem = this.ordered_semesters[this.ordered_semesters.indexOf(missing_sem) - decrement];
+                }
+            }
+        },
+        delete_semesters: function() {
+            // find difference in selected_semesters and num_semester_mappings
+            var deleted_semesters = [];
+            for (var sem_index in this.num_semester_mapping) {
+                if (this.options.includes(this.num_semester_mapping[sem_index]) && 
+                !this.selected_semesters.includes(this.num_semester_mapping[sem_index])) {
+                    deleted_semesters.push(this.num_semester_mapping[sem_index]);
+                }
+            }
+
+            // remove these semesters
+            for (var delete_sem in deleted_semesters) {
+                // get index to delete from 
+                var delete_index = this.num_semester_mapping.indexOf(deleted_semesters[delete_sem]);
+                this.acadplan.splice(delete_index, 1);
+                this.num_semester_mapping(delete_index, 1);
+            }
+
+            this.save_acadplan();
         },
         printError: function(header, message) {
             this.modal_header = header;
