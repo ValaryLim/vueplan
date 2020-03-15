@@ -2,26 +2,76 @@
     <div class="headerStyle">
         <nav>
             <div class="header-title">
-                <router-link to="/"><a class="header-title-first">vue</a><a class="header-title-second">Plan</a></router-link>
+                <router-link to="/register" v-if="!user.loggedIn">
+                    <a class="header-title-first">vue</a>
+                    <a class="header-title-second">Plan</a>
+                </router-link>
+                <router-link to="/acadplan" v-if="user.loggedIn">
+                    <a class="header-title-first">vue</a>
+                    <a class="header-title-second">Plan</a>
+                </router-link>
             </div>
             <div class="header-tabs">
-                <span class="header-tab"><router-link to="/acadplan"><a>Academic Plan</a></router-link></span>            
-                <span class="header-tab"><router-link to="/gradprogress"><a>Graduation Progress</a></router-link></span>
-                <span class="header-tab"><router-link to="/moduleinfo"><a>Module Information</a></router-link></span>
-                <span class="header-tab"><router-link to="/sepmapping"><a>SEP Mapping</a></router-link></span>
-                <span class="header-tab header-tab-dropdown">
-                    <button class="dropdown-button">Account
+                <span class="header-tab"><router-link to="/acadplan" v-if="user.loggedIn"><a>Academic Plan</a></router-link></span>            
+                <span class="header-tab"><router-link to="/gradprogress" v-if="user.loggedIn"><a>Graduation Progress</a></router-link></span>
+                <span class="header-tab"><router-link to="/moduleinfo" v-if="user.loggedIn"><a>Module Information</a></router-link></span>
+                <span class="header-tab"><router-link to="/sepmapping" v-if="user.loggedIn"><a>SEP Mapping</a></router-link></span>
+                <span class="header-tab header-tab-dropdown" v-if="user.loggedIn">
+                    <button class="dropdown-button" v-if="user.loggedIn">
+                        <em v-if="user.loggedIn">{{user.data.email}}</em>
+                        <em v-if="!user.loggedIn">User  </em>
                         <font-awesome-icon icon="caret-down" />
                     </button>
                     <span class="dropdown-content">
-                        <a href="#">Settings</a>
-                        <a href="#">Logout</a>
+                        <div class="logged-in" v-if="user.loggedIn">
+                            <a href="/userprofile">Account</a>
+                            <a @click.prevent="signOut">Logout</a>
+                        </div>
+                        <!--<div class="logged-out" v-if="!user.loggedIn">
+                            <a href="/login">Login</a>
+                            <a href="/register">Register</a>
+                        </div>-->
                     </span>
                 </span>
             </div>
         </nav>
     </div>
 </template>
+
+<script>
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+library.add(faCaretDown);
+
+import { mapGetters } from "vuex";
+import firebase from "firebase";
+
+export default {
+    components: {
+        FontAwesomeIcon
+    },
+
+    computed: {
+        ...mapGetters({
+            // map `this.user` to `this.$store.getters.user`
+            user: "user"
+        })
+    },
+    methods: {
+        signOut() {
+            firebase
+            .auth()
+            .signOut()
+            .then(() => {
+                this.$router.replace({
+                    name: "Home"
+                });
+            });
+        }
+    }
+};
+</script>
 
 <style scoped>
 /** main header style */
@@ -112,16 +162,3 @@ a:hover, .header-tab-dropdown:hover .dropdown-button {
   display: block;
 }
 </style>
-
-<script>
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-library.add(faCaretDown);
-
-export default {
-    components: {
-        FontAwesomeIcon
-    },
-}
-</script>

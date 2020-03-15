@@ -10,7 +10,13 @@
   <div class="row">
     <h2>Graduation Progress</h2>
   </div>
-  
+
+  <div class = "row grad-prog-row">
+    <label>Your major is: </label> <b> {{ major }}</b>
+    <br>
+    <label>Semesters completed: </label> <b> {{ sem_completed }}</b>
+  </div>
+
   <div class="row grad-prog-row">
     <h4>University Level Requirements</h4>
   
@@ -57,13 +63,6 @@
               <td class="add-complete"> {{record.added}}</td>
               <td class="add-complete"> {{record.completed}}</td>
           </tr>
-
-          <!-- Programme electives hard coded. May need to change in the future-->
-          <td>6 Programme Electives</td>
-          <td> </td>
-          <td class="add-complete">x</td>
-          <td class="add-complete">x</td>
-
         </tbody>
       </table>
     </div>
