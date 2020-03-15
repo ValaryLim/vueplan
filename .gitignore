@@ -20,4 +20,8 @@ yarn-error.log*
 *.sln
 *.sw?
 
+<<<<<<< HEAD
 # src/components/firebase.js
+=======
+src/components/firebase.js
+>>>>>>> master
