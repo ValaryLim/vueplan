@@ -14,7 +14,6 @@ export default {
 	components: {
 		FontAwesomeIcon,
 		Treeviz,
-
 	},
 	data: function() {
 		return {
@@ -46,16 +45,15 @@ export default {
 
 			res.innerHTML = "<h1>" + mod.code + " " + mod.title + "</h1>";
 			res.insertAdjacentHTML('beforeend', '<div id = indicators>' + mod.department + " | " +  mod.mc + " MCs</div><hr></hr>");
-			res.insertAdjacentHTML('beforeend', "<p>" + mod.desc + "</p>")
-			
-			
+			res.insertAdjacentHTML('beforeend', "<p>" + mod.desc + "</p>");
+
 			//PREREQUISITES      
-			var arr = [];      
-			var arrInd = [] 
+			var arr = [];   
+			var arrInd = []   
 			if (mod.prereq != ""){
 				res.insertAdjacentHTML('beforeend', '<br>');
 				document.getElementById('res').insertAdjacentHTML('beforeend',"<h4>Prerequisites</h4><hr></hr>")
-				
+
 				for(let i=0; i <this.mods.length; i++){
 					var index = mod.prereq.toUpperCase().indexOf(this.mods[i].code);
 					if(index != -1){
@@ -74,13 +72,13 @@ export default {
 						}
 					}
 				}
-		
+			
 				var startIndex = 0;
 				arr.sort(function(a,b) {return a[0]-b[0]});
 				if (arr.length == 0 && mod.prereq.length == 0) {
 					res.insertAdjacentHTML('beforeend', "None");
-				}  
-			
+				}
+
 
 				//joining the substrings to form the necessary output
 				for(let i = 0; i<arr.length; i++){ 
@@ -89,18 +87,18 @@ export default {
 					res.insertAdjacentHTML('beforeend',"<span id = '"+ eventname + "'>"+ arr[i][1].code+ "</span>");        
 					startIndex = arr[i][0] + arr[i][1].code.length;
 				}
-
 				document.getElementById("res").insertAdjacentHTML('beforeend', mod.prereq.substring(startIndex, mod.prereq.length) +"</h4>");
 			}
-		
-      
-			//PRECLUSIONS
+			
+			
+
+			//PRECLUSIONS	
 			var arr_a = [];
 			if (mod.preclusion != ""){
 				res.insertAdjacentHTML('beforeend', '<br><br>');
-				
+
 				document.getElementById('res').insertAdjacentHTML('beforeend',"<h4>Preclusions</h4><hr></hr>")
-				
+
 				for(let i=0; i <this.mods.length; i++){
 					index = mod.preclusion.toUpperCase().indexOf(this.mods[i].code);
 					if(index != -1){
@@ -114,6 +112,7 @@ export default {
 				if (arr_a.length == 0 && mod.preclusion.length == 0) {
 					res.insertAdjacentHTML('beforeend', "None");
 				}
+
 				//joining the substrings to form the necessary output
 				for(let i = 0; i<arr_a.length; i++){ 
 					res.insertAdjacentHTML('beforeend',mod.preclusion.substring(startIndex, arr_a[i][0]));        
@@ -121,40 +120,23 @@ export default {
 					res.insertAdjacentHTML('beforeend',"<span id = '"+ eventname + "'>"+arr_a[i][1].code+ "</span>");
 					startIndex = arr_a[i][0] + arr_a[i][1].code.length;
 				}
-				document.getElementById("res").insertAdjacentHTML('beforeend', mod.preclusion.substring(startIndex, mod.preclusion.length) +"</h4>");
-
-		document.getElementById("res").insertAdjacentHTML('beforeend', mod.prereq.substring(startIndex, mod.prereq.length) +"</h4>");
-      
-      
-      
-		//PRECLUSIONS
-		document.getElementById('res').insertAdjacentHTML('beforeend',"<h4>Preclusions: ")
-		var arr_a = [];      
-		for(let i=0; i <mods.length; i++){
-			index = mod.preclusion.toUpperCase().indexOf(this.allmodules[mods[i]].code);
-			if(index != -1){
-				if(this.allmodules[mods[i]].code != mod.code){
-					arr_a.push([index,this.allmodules[mods[i]]])
-				}
 			}
-			
 
-				var arr_all = arr.concat(arr_a).reverse();
-				//onclick of the module code, brings you to the module page      
-				var matches = document.querySelectorAll("span");
-				var x = this;
-				for (let j = arr_all.length-1; j >= 0; j--) {
-					let button = matches[matches.length-j-1];
-					button.addEventListener('click', function() {
-							x.modInfo(arr_all[j][1]);
-						}
-					)
-				}
-			
+			var arr_all = arr.concat(arr_a).reverse();
+			//onclick of the module code, brings you to the module page      
+			var matches = document.querySelectorAll("span");
+			var x = this;
+			for (let j = arr_all.length-1; j >= 0; j--) {
+				let button = matches[matches.length-j-1];
+				button.addEventListener('click', function() {
+						x.modInfo(arr_all[j][1]);
+					}
+				)
+			}
 			//End Prerequisite/preclusion
 
 			res.insertAdjacentHTML('beforeend', '<br><br>');
-			
+
 			//Workload
 			res.insertAdjacentHTML('beforeend', '</p>')
 			var workload = modules[mod.code]['workload'].split("-");
@@ -191,6 +173,7 @@ export default {
 			
 			
 			//TREE
+
 			var lst1 = Object.keys(this.allmodules).filter(module => {
 				return this.allmodules[module].prereq.toUpperCase().includes(mod.code)
 			});
@@ -254,23 +237,17 @@ export default {
 
 
 			res.insertAdjacentHTML('beforeend', '<br>');
-			
-			
-			//REVIEWS
-			console.log("reviews")
+
+			//Reviews section
+			console.log('Reviews');
 			var overallReviewNum = Object.values(moduleReviews[mod.code]).map(function(x) {return x['overall']}).reduce(function(a,b) {return a+b}) / Object.values(moduleReviews[mod.code]).length;
 			var avgStaffAdmin = Object.values(moduleReviews[mod.code]).map(function(x) {return x['staffadmin']}).reduce(function(a,b) {return a+b}) / Object.values(moduleReviews[mod.code]).length;
 			var avgContent = Object.values(moduleReviews[mod.code]).map(function(x) {return x['content']}).reduce(function(a,b) {return a+b}) / Object.values(moduleReviews[mod.code]).length;
 
-
 			overallReviewNum = Math.round(overallReviewNum*10)/10;
 			avgStaffAdmin = Math.round(avgStaffAdmin*10)/10;
 			avgContent = Math.round(avgContent*10)/10;
-			res.insertAdjacentHTML('beforeend', '<h2>Workload - '+ totalHours + ' ' + totalString +'</h2>');
-			res.insertAdjacentHTML('beforeend','<h3>'+workload+'</h3>');
-			res.insertAdjacentHTML('beforeend','<div>Workload viusalisation here</div><br></br>');
-			res.insertAdjacentHTML('beforeend','<h2>Prerequisite Tree</h2><hr></hr>');
-			res.insertAdjacentHTML('beforeend', '<div>Insert Prereq tree here</div><br></br>');
+
 			res.insertAdjacentHTML('beforeend', '<h2>Ratings and Reviews</h2><hr></hr>');
 			res.insertAdjacentHTML('beforeend','<h3 id = "OverallFeedbackNum">'+overallReviewNum+'</h3>');
 			res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><div id = "StarsInner"></div></div><div></div>');
