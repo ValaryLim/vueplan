@@ -286,13 +286,11 @@ export default {
 			reviewDict['review'] = review.value;
 			reviewDict['year'] = year;
 			var userid = "Guest";
-			console.log(Object.keys(moduleReview).includes(userid));
 			if (Object.keys(moduleReview).includes(userid)) {
 				userid = userid+counter.toString();
 				counter++;
 			}
 			moduleReview[userid] = reviewDict;
-			console.log(moduleReview);
 			database.collection('reviews').doc(module_code).update({
 				"module_review": moduleReview,
 			});
