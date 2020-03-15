@@ -4,37 +4,52 @@
 
 
 <script>
-import Multiselect from "vue-multiselect";
+import { mapGetters } from "vuex";
+import firebase from 'firebase';
+import database from '../firebase.js';
+
 export default {
   name: "App",
   display: "Graduation Requirement",
-  props: ["allmajors", "acadplan", "allmodules", "major"],
-  components: {
-    Multiselect
-  },
+  props: ["allmajors", "allmodules"],
 
   data() {
     return {
-      sem_completed: 3,
+      sem_completed: 0,
       majors: [
         "Business Analytics",
         "Computer Science",
         "Information Systems",
         "Information Security"
-      ]
+      ],
+      major: "",
+      acadplan_exemptions: [],
+      acadplan: {},
     };
   },
 
-  mounted() {
-    if (localStorage.major) this.major = localStorage.major;
+  computed: {
+    // map `this.user` to `this.$store.getters.user`
+    ...mapGetters({
+      user: "user"
+    }),
   },
-  watch: {
-    major(newMajor) {
-      localStorage.major = newMajor;
-    }
+  
+  created() {
+    this.fetch_gradprogress();
   },
-
+  
   methods: {
+    fetch_gradprogress: function() {
+      var user = firebase.auth().currentUser;
+      let userRef = database.collection('acadplan').doc(user.uid);
+      userRef.get().then(doc => {
+          this.acadplan_exemptions = doc.data()['acadplan_exemptions'];
+          this.major = doc.data()['major'];
+          this.sem_completed = doc.data()['year'];
+          this.acadplan = doc.data()['module_location'];
+      });
+    },
     get_mod_added: function() {
       var mod_added = [];
       for (var key1 in this.acadplan) {

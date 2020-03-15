@@ -20,6 +20,7 @@
     "firebase": "^7.11.0",
     "gulp-git": "^2.10.0",
     "react-scripts": "^3.4.0",
+    "treeviz": "^2.2.1",
     "vue": "^2.6.11",
     "vue-multi-select": "^4.5.0",
     "vue-multiselect": "^2.1.6",
