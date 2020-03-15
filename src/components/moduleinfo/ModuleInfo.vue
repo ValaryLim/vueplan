@@ -120,6 +120,8 @@ export default {
 					res.insertAdjacentHTML('beforeend',"<span id = '"+ eventname + "'>"+arr_a[i][1].code+ "</span>");
 					startIndex = arr_a[i][0] + arr_a[i][1].code.length;
 				}
+				document.getElementById("res").insertAdjacentHTML('beforeend', mod.preclusion.substring(startIndex, mod.preclusion.length) +"</h4>");
+
 			}
 
 			var arr_all = arr.concat(arr_a).reverse();
