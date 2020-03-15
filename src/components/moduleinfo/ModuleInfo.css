@@ -37,7 +37,7 @@
   align-items: left;
   text-align: left;
   display: block;
-  width: 60%;
+  width: 70%;
 }
 
 #sep {
@@ -95,12 +95,6 @@
 .modal-body {
   text-align: left;
 }
-
-#writtenReview {
-  width: 700px;
-  height: 300px;
-}
-
 .modal-default-button {
   float: right;
 }

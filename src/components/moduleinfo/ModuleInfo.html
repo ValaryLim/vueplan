@@ -21,20 +21,23 @@
               </div>
 
               <div class="modal-body">
-                <div id = 'timeTaken'>Year and Sem taken:
-                  <input type = 'number'></input>
+                <div id = 'timeTaken'>Year and Sem taken: 
+                  <select id="year">
+                    <option v-for="year in yearlist">{{year.slice(0,2)+'/'+year.slice(3,5)+' Semester '+year[6]}}</option>
+                  </select>
                 </div>
-                <div id = 'learning'>Learning Content: </div>
-                <div id = 'admin'>Staff and Administration: </div>
+                <div id = 'rating'>Overall: <input id = 'overall' type = 'number' step='0.1' min='1' max='5' value='3'></input></div>
+                <div id = 'learning'>Learning Content: <input id = 'content' type = 'number' step='0.1' min='1' max='5' value='3'></input></div>
+                <div id = 'admin'>Staff and Administration: <input id = 'staff' type = 'number' step='0.1' min='1' max='5' value='3'></input></div>
                 <slot name="body">
-                  <input id ='writtenReview' type = 'text' placeholder = 'Write your review here!'></input>
+                  <textarea id ='writtenReview' rows=10 cols=105 placeholder = 'Write your review here!'></textarea>
                 </slot>
               </div>
 
               <div class="modal-footer">
                 <slot name="footer">
                   Click 'OK' to submit your review!
-                  <button class="modal-default-button" @click="$emit('close')">
+                  <button id = 'submitReview' @click="submitReview()">
                     OK
                   </button>
                 </slot>

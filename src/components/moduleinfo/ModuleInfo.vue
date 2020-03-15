@@ -3,11 +3,14 @@
 
 <script>
 import modules from "../../assets/allmoduleinfo.json";
-import moduleReviews from '../../assets/moduleReviews.json';
-import users_table from '../../assets/users.json'
+//import moduleReviews from '../../assets/moduleReviews.json';
+//import firebase from 'firebase';
+import database from'../firebase.js';
+//import users_table from '../../assets/users.json'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import * as Treeviz from 'treeviz';
-
+var moduleReview;
+var counter = 1;
 export default {
 	name: "App",
 	display: "Module Information",
@@ -23,28 +26,53 @@ export default {
 			}
 		},
 
-	props: ['allmodules'],	
+	props: ['allmodules'],
+	
 
 	computed: {
-	filteredList() {
-		if(this.search != ''){
-			document.getElementById("res").innerHTML ="";
-		}
-		return Object.keys(this.allmodules).filter(mod => {
-			return this.allmodules[mod].fullname.toUpperCase().includes(this.search.toUpperCase())
+		filteredList() {
+			if(this.search != ''){
+				document.getElementById("res").innerHTML ="";
+			}
+			return Object.keys(this.allmodules).filter(mod => {
+				return this.allmodules[mod].fullname.toUpperCase().includes(this.search.toUpperCase())
             })
+		},
+		yearlist() {
+			var firstYear = 1994;
+			var years = [];
+			var date = new Date();
+			var currYear = date.getFullYear();
+			while (firstYear < currYear){
+				var firstTwo = firstYear%100;
+				var lstTwo = (firstYear+1)%100;
+				firstTwo = firstTwo.toString();
+				lstTwo = lstTwo.toString();
+				if (firstTwo.length < 2) {
+					firstTwo = '0' + firstTwo;
+				}
+				if (lstTwo.length < 2) {
+					lstTwo = '0' + lstTwo;
+				}
+				var acadsem1 = firstTwo+'/'+lstTwo+'s1';
+				var acadsem2 = firstTwo+'/'+lstTwo+'s2';
+				years.push(acadsem1);
+				years.push(acadsem2);
+				firstYear++;
+			}
+			years.reverse();
+			return years;
 		}
 	},
 	
 	methods:{
-		modInfo:function(mod){
+		modInfo: function(mod){
 			this.search ='';
 			this.show = false;
 			var res = document.getElementById("res");
-			const overlay = document.querySelector('#overlay');
 			window.scrollTo(0,0);
 
-			res.innerHTML = "<h1>" + mod.code + " " + mod.title + "</h1>";
+			res.innerHTML = "<h1 id='mod_title'>" + mod.code + " " + mod.title + "</h1>";
 			res.insertAdjacentHTML('beforeend', '<div id = indicators>' + mod.department + " | " +  mod.mc + " MCs</div><hr></hr>");
 			res.insertAdjacentHTML('beforeend', "<p>" + mod.desc + "</p>");
 
@@ -242,52 +270,140 @@ export default {
 			res.insertAdjacentHTML('beforeend', '<br>');
 
 			//Reviews section
-			console.log('Reviews');
-			var overallReviewNum = Object.values(moduleReviews[mod.code]).map(function(x) {return x['overall']}).reduce(function(a,b) {return a+b}) / Object.values(moduleReviews[mod.code]).length;
-			var avgStaffAdmin = Object.values(moduleReviews[mod.code]).map(function(x) {return x['staffadmin']}).reduce(function(a,b) {return a+b}) / Object.values(moduleReviews[mod.code]).length;
-			var avgContent = Object.values(moduleReviews[mod.code]).map(function(x) {return x['content']}).reduce(function(a,b) {return a+b}) / Object.values(moduleReviews[mod.code]).length;
-
-			overallReviewNum = Math.round(overallReviewNum*10)/10;
-			avgStaffAdmin = Math.round(avgStaffAdmin*10)/10;
-			avgContent = Math.round(avgContent*10)/10;
-
-			res.insertAdjacentHTML('beforeend', '<h2>Ratings and Reviews</h2><hr></hr>');
-			res.insertAdjacentHTML('beforeend','<h3 id = "OverallFeedbackNum">'+overallReviewNum+'</h3>');
-			res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><div id = "StarsInner"></div></div><div></div>');
-			res.insertAdjacentHTML('beforeend','<div id = "ContentFeedback">Learning Contents: ' + avgContent + '</div><div id = "sep"></div><div id = "StaffFeedback">Staff and Administration: ' + avgStaffAdmin + "</div><br></br>");
-			res.insertAdjacentHTML('beforeend', '<div id = "overlain"></div>');
-			res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = userReview>Review this module now!</button></h4>');
-			const reviewMod = document.querySelector('#userReview');
-			reviewMod.addEventListener('click',function(){
-				overlay.style.display = 'block';
-				});
-			const closeReview = document.querySelector('#closeReview');
-			closeReview.addEventListener('click',function(){
-				overlay.style.display = 'none';
-				});
-			res.insertAdjacentHTML('beforeend','<hr></hr><table><tbody id = "tabody">');
-			var writtenReviews = {};
-			for (let [id, written] of Object.entries(moduleReviews[mod.code])) {
-				if (written['written'].length > 0) {
-					writtenReviews[id] = written;
+			//console.log('Reviews');
+			this.fetchReviews();
+		},
+		submitReview: function() {
+			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
+			var content = document.getElementById('content').value;
+			var admin = document.getElementById('staff').value;
+			var review = document.getElementById('writtenReview');
+			var overall = document.getElementById('overall').value;
+			var year = document.getElementById('year').value;
+			year = year.slice(0,2)+year.slice(3,5)+'s'+year.slice(-1)[0];
+			var reviewDict = {};
+			reviewDict['content'] = parseFloat(content);
+			reviewDict['admin'] = parseFloat(admin);
+			reviewDict['overall'] = parseFloat(overall);
+			reviewDict['review'] = review.value;
+			reviewDict['year'] = year;
+			var userid = "Guest";
+			console.log(Object.keys(moduleReview).includes(userid));
+			if (Object.keys(moduleReview).includes(userid)) {
+				userid = userid+counter.toString();
+				counter++;
+			}
+			moduleReview[userid] = reviewDict;
+			console.log(moduleReview);
+			database.collection('reviews').doc(module_code).update({
+				"module_review": moduleReview,
+			});
+			document.querySelector('#overlay').style.display = 'none';
+			this.updateReviews();
+		},
+		updateReviews: function() {
+			const module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
+			let userRef = database.collection('reviews').doc(module_code);
+            userRef.get().then( doc => {
+				var module_review = doc.data()['module_review'];
+				moduleReview = module_review;
+				var overallReviewNum = Object.values(module_review).map(function(x) {return x['overall']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+				var avgStaffAdmin = Object.values(module_review).map(function(x) {return x['admin']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+				var avgContent = Object.values(module_review).map(function(x) {return x['content']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+				overallReviewNum = Math.round(overallReviewNum*10)/10;
+				avgStaffAdmin = Math.round(avgStaffAdmin*10)/10;
+				avgContent = Math.round(avgContent*10)/10;
+				document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum.toString();
+				document.getElementById("ContentFeedback").innerHTML = 'Learning Contents: ' + avgContent.toString();
+				document.getElementById("StaffFeedback").innerHTML = 'Staff and Administration: ' + avgStaffAdmin.toString();
+				/*if (userid in Object.keys(module_review) && userid != "Guest") {
+					res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview" disabled=true>Review this module now!</button></h4>');	
+				} else {}
+				*/
+				document.querySelector('#userReview').disabled = true;
+				var writtenReviews = {};
+				for (let [id, written] of Object.entries(module_review)) {
+					if (written['review'].length > 0) {
+						writtenReviews[id] = written;
+					}
 				}
-			}
-			for (let [id, review] of Object.entries(writtenReviews)) {
 				var r = document.getElementById("tabody");
-				var y = review["year"];
-				var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Semester " + y.slice(5,6);
-				r.insertAdjacentHTML('beforeend','<tr>');
-				r.insertAdjacentHTML('beforeend','<td>'+ users_table[id]+'<br></br>Year & Semester taken: <br></br>'+ year +'</td>' + '<td>'+review['written']+'</td></tr>');
-			}
-			res.insertAdjacentHTML('beforeend','</tbody></table');
-			const starPercentage = (overallReviewNum / 5) * 100;
-            const starPercentageRounded = `${(Math.round(starPercentage))}%`;
-            document.querySelector("#StarsInner").style.width = starPercentageRounded;
-
-			//res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><div id = "StarsInner"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div></div><div></div>');
-			//res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><font-awesome-icon icon="times" /><font-awesome-icon icon="times" /><font-awesome-icon icon="times" /><font-awesome-icon icon="times" /><div id = "StarsInner"></div></div><div></div>');
-			//res.insertAdjacentHTML('beforeend',);
-
+				r.innerHTML = "";
+				for (let [id, review] of Object.entries(writtenReviews)) {
+					var y = review["year"];
+					var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Sem " + y.slice(5,6);
+					r.insertAdjacentHTML('beforeend','<tr>');
+					if (id.includes("Guest")){
+						id = "Guest";
+					}
+					r.insertAdjacentHTML('beforeend','<td>'+ id+'<br></br>'+ year +'</td>' + '<td>'+review['review']+'</td></tr>');
+				}
+				const starPercentage = (overallReviewNum / 5) * 100;
+				const starPercentageRounded = `${(Math.round(starPercentage))}%`;
+				document.querySelector("#StarsInner").style.width = starPercentageRounded;
+			});
+		},
+		fetchReviews: function() {
+			const module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
+			let userRef = database.collection('reviews').doc(module_code);
+			var res = document.getElementById("res");
+			const overlay = document.querySelector('#overlay');
+            userRef.get().then( doc => {
+				if (doc.exists) {
+					var module_review = doc.data()['module_review'];
+					moduleReview = module_review;
+					var overallReviewNum = Object.values(module_review).map(function(x) {return x['overall']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+					var avgStaffAdmin = Object.values(module_review).map(function(x) {return x['admin']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+					var avgContent = Object.values(module_review).map(function(x) {return x['content']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+					overallReviewNum = Math.round(overallReviewNum*10)/10;
+					avgStaffAdmin = Math.round(avgStaffAdmin*10)/10;
+					avgContent = Math.round(avgContent*10)/10;
+					res.insertAdjacentHTML('beforeend', '<h2>Ratings and Reviews</h2><hr></hr>');
+					res.insertAdjacentHTML('beforeend','<h3 id = "OverallFeedbackNum">'+overallReviewNum+'</h3>');
+					res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><div id = "StarsInner"></div></div><div></div>');
+					res.insertAdjacentHTML('beforeend','<div id = "ContentFeedback">Learning Contents: ' + avgContent + '</div><div id = "sep"></div><div id = "StaffFeedback">Staff and Administration: ' + avgStaffAdmin + "</div><br></br>");
+					res.insertAdjacentHTML('beforeend', '<div id = "overlain"></div>');
+					/*if (userid in Object.keys(module_review) && userid != "Guest") {
+						res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview" disabled=true>Review this module now!</button></h4>');	
+					} else {}
+					*/
+					res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview">Review this module now!</button></h4>');
+					res.insertAdjacentHTML('beforeend','<hr></hr><table><tbody id = "tabody">');
+					var writtenReviews = {};
+					for (let [id, written] of Object.entries(module_review)) {
+						if (written['review'].length > 0) {
+							writtenReviews[id] = written;
+						}
+					}
+					for (let [id, review] of Object.entries(writtenReviews)) {
+						var r = document.getElementById("tabody");
+						var y = review["year"];
+						var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Semester " + y.slice(5,6);
+						r.insertAdjacentHTML('beforeend','<tr>');
+						if (id.includes("Guest")){
+							id = "Guest";
+						}
+						r.insertAdjacentHTML('beforeend','<td>'+ id+'<br></br>'+ year +'</td>' + '<td>'+review['review']+'</td></tr>');
+					}
+					res.insertAdjacentHTML('beforeend','</tbody></table');
+					const starPercentage = (overallReviewNum / 5) * 100;
+					const starPercentageRounded = `${(Math.round(starPercentage))}%`;
+					document.querySelector("#StarsInner").style.width = starPercentageRounded;
+				} else {
+					console.log("error");
+					res.insertAdjacentHTML('beforeend', '<h2>Ratings and Reviews</h2><hr></hr>');
+					res.insertAdjacentHTML('beforeend', '<h3>No reviews yet! Be the first to review this module!</h3>');
+					res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = userReview>Review this module now!</button></h4>');
+				}
+				const reviewMod = document.querySelector('#userReview');
+				reviewMod.addEventListener('click',function(){
+					overlay.style.display = 'block';
+					});
+				const closeReview = document.querySelector('#closeReview');
+				closeReview.addEventListener('click',function(){
+					overlay.style.display = 'none';
+					});
+			});
 		}
 	}
 }
