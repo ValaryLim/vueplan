@@ -27,7 +27,7 @@
     </div>
 </template>
 
-<style src = "./Profile.css"></style>
+<style src = "./Profile.css" scoped></style>
 
 <script>
 import { mapGetters } from "vuex";

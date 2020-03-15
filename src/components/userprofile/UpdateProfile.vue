@@ -17,7 +17,7 @@ export default {
                 email: "",
                 year: "",
                 major: "",
-                exemptions: [],
+                exemptions: "",
 
             },
             error: null
@@ -52,7 +52,7 @@ export default {
                 })
             }
 
-            if (!this.form.exemptions == []) {
+            if (!this.form.exemptions == "") {
                 database.collection('acadplan').doc(user.uid).update({
                     "acadplan_exemptions": this.form.exemptions,
                 })
@@ -71,3 +71,9 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+h2 {
+    text-align: center;
+}
+</style>

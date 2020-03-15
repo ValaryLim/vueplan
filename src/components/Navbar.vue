@@ -5,16 +5,10 @@
                 <router-link to="/register" v-if="!user.loggedIn">
                     <a class="header-title-first">vue</a>
                     <a class="header-title-second">Plan</a>
-                    <img class="vuePlanLogo" 
-                        src = "https://drive.google.com/uc?id=13rb1mMEJuxAVwmd6aqe1EWNGECgTGYH-" 
-                        alt="vuePlanLogo">
                 </router-link>
                 <router-link to="/acadplan" v-if="user.loggedIn">
                     <a class="header-title-first">vue</a>
                     <a class="header-title-second">Plan</a>
-                    <img class="vuePlanLogo" 
-                        src = "https://drive.google.com/uc?id=13rb1mMEJuxAVwmd6aqe1EWNGECgTGYH-" 
-                        alt="vuePlanLogo">
                 </router-link>
             </div>
             <div class="header-tabs">
@@ -22,7 +16,7 @@
                 <span class="header-tab"><router-link to="/gradprogress" v-if="user.loggedIn"><a>Graduation Progress</a></router-link></span>
                 <span class="header-tab"><router-link to="/moduleinfo" v-if="user.loggedIn"><a>Module Information</a></router-link></span>
                 <span class="header-tab"><router-link to="/sepmapping" v-if="user.loggedIn"><a>SEP Mapping</a></router-link></span>
-                <span class="header-tab header-tab-dropdown">
+                <span class="header-tab header-tab-dropdown" v-if="user.loggedIn">
                     <button class="dropdown-button" v-if="user.loggedIn">
                         <em v-if="user.loggedIn">{{user.data.email}}</em>
                         <em v-if="!user.loggedIn">User  </em>
@@ -33,10 +27,10 @@
                             <a href="/userprofile">Account</a>
                             <a @click.prevent="signOut">Logout</a>
                         </div>
-                        <div class="logged-out" v-if="!user.loggedIn">
+                        <!--<div class="logged-out" v-if="!user.loggedIn">
                             <a href="/login">Login</a>
                             <a href="/register">Register</a>
-                        </div>
+                        </div>-->
                     </span>
                 </span>
             </div>
@@ -80,13 +74,6 @@ export default {
 </script>
 
 <style scoped>
-/** image style */
-.vuePlanLogo {
-    width: 8%;
-    height: 8%;
-    padding-bottom: 50px;
-}
-
 /** main header style */
 .headerStyle {
     overflow: hidden;
