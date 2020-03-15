@@ -20,4 +20,4 @@ yarn-error.log*
 *.sln
 *.sw?
 
-/src/components/firebase.js
+firebase.js
