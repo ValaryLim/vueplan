@@ -35,9 +35,6 @@ export default {
             unmet_prereq: -1,
             exempted_module: 2,
 
-            // user semester data
-            sem_completed: 3,
-
             // error message data
             modal_header: "Default header",
             modal_body: "Default body",
