@@ -8,7 +8,7 @@ import UserProfile from './components/userprofile/Profile.vue';
 import UpdateProfile from './components/userprofile/UpdateProfile.vue';
 
 export const routes = [
-    { path: '/', name: 'Home', component: AcadPlan },
+    { path: '/', name: 'Home', component: Register },
     { path: '/acadplan', component: AcadPlan },
     { path: '/gradprogress', component: GradProgress },
     { path: '/moduleinfo', component: ModuleInfo },
