@@ -34,14 +34,10 @@ export default {
 	},
 	
 	methods:{
-		addOverlay:function(){
-			var over = document.getElementById('overlain')
-			over.insertAdjacentHTML('beforebegin', '<button id="show-modal" @click="showModal = true">Show Modal</button><modal v-if="showModal" @close="showModal = false"><h3 slot="header">custom header</h3></modal>')
-		},
-
 		modInfo:function(mod){
 			this.search ='';
 			var res = document.getElementById("res");
+			const overlay = document.querySelector('#overlay');
 			res.innerHTML = "<h1>" + mod.code + " " + mod.title + "</h1>";
 			res.insertAdjacentHTML('beforeend', '<div id = indicators>' + mod.department + " | " + "4 MCs</div><hr></hr>");
 			res.insertAdjacentHTML('beforeend', "<p>" + mod.desc + "</p>" + "<h2>Prerequisites</h2><hr></hr><p>");
@@ -117,8 +113,17 @@ export default {
 			res.insertAdjacentHTML('beforeend','<h3 id = "OverallFeedbackNum">'+overallReviewNum+'</h3>');
 			res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><div id = "StarsInner"></div></div><div></div>');
 			res.insertAdjacentHTML('beforeend','<div id = "ContentFeedback">Learning Contents: ' + avgContent + '</div><div id = "sep"></div><div id = "StaffFeedback">Staff and Administration: ' + avgStaffAdmin + "</div><br></br>");
-			res.insertAdjacentHTML('beforeend', '<div id = "overlain"></div>')
-			res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews</h4><hr></hr><table><tbody id = "tabody">');
+			res.insertAdjacentHTML('beforeend', '<div id = "overlain"></div>');
+			res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = userReview>Review this module now!</button></h4>');
+			const reviewMod = document.querySelector('#userReview');
+			reviewMod.addEventListener('click',function(){
+				overlay.style.display = 'block';
+				});
+			const closeReview = document.querySelector('#closeReview');
+			closeReview.addEventListener('click',function(){
+				overlay.style.display = 'none';
+				});
+			res.insertAdjacentHTML('beforeend','<hr></hr><table><tbody id = "tabody">');
 			var writtenReviews = {};
 			for (let [id, written] of Object.entries(moduleReviews[mod.code])) {
 				if (written['written'].length > 0) {
