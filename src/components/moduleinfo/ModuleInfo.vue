@@ -3,10 +3,8 @@
 
 <script>
 import modules from "../../assets/allmoduleinfo.json";
-//import moduleReviews from '../../assets/moduleReviews.json';
 //import firebase from 'firebase';
 import database from'../firebase.js';
-//import users_table from '../../assets/users.json'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import * as Treeviz from 'treeviz';
 var moduleReview;
