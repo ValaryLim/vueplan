@@ -6,9 +6,10 @@
           <div class="card-body">
             <div v-if="error" class="alert alert-danger">{{error}}</div>
             <form action="#" @submit.prevent="submit">
+
+              <!-- Enter email -->
               <div class="form-group row">
                 <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
-
                 <div class="col-md-6">
                   <input
                     id="email"
@@ -23,9 +24,9 @@
                 </div>
               </div>
 
+              <!-- Enter password -->
               <div class="form-group row">
                 <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
-
                 <div class="col-md-6">
                   <input
                     id="password"
@@ -38,9 +39,17 @@
                 </div>
               </div>
 
+              <!-- Login button -->
               <div class="form-group row mb-0">
                   <button type="submit" class="btn btn-primary">Login</button>
               </div>
+              <br>
+
+              <!-- Redirect to register page -->
+              <div>
+                <router-link to="/register"><a>Don't have an account? Register here.</a></router-link>
+              </div>
+
             </form>
           </div>
         </div>
@@ -57,9 +66,9 @@ export default {
     return {
       form: {
         email: "",
-        password: ""
+        password: "",
       },
-      error: null
+      error: null,
     };
   },
   methods: {
@@ -71,6 +80,7 @@ export default {
           this.$router.replace({ name: "Profile" });
         })
         .catch(err => {
+          // will alert users that typed in an invalid email
           this.error = err.message;
         });
     }
