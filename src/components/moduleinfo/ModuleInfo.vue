@@ -299,11 +299,7 @@ export default {
 			},{merge:true});
 			document.querySelector('#overlay').style.display = 'none';
 			console.log(Object.keys(moduleReview).length);
-			if (moduleReview.length == 1) {
-				this.update1Reviews();
-			} else {
-				this.updateReviews();
-			}
+			this.updateReviews();
 		},
 		updateReviews: function() {
 			const module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
