@@ -102,16 +102,19 @@ export default {
             year: 0,
             major: "",
             total_mc: 0,
-            acadplan_exemptions: [],
+            acadplan_exemptions: ["ES1000"],
             module_semester_mapping: {},
-            module_location: [{mod: "", mc: 0, move: false, index: 0},
-                              {mod: "", mc: 0, move: false, index: 1},
-                              {mod: "", mc: 0, move: false, index: 2},
-                              {mod: "", mc: 0, move: false, index: 3},
-                              {mod: "", mc: 0, move: false, index: 4},
-                              {mod: "", mc: 0, move: false, index: 5},
-                              {mod: "", mc: 0, move: false, index: 6},
-                              {mod: "", mc: 0, move: false, index: 7}]
+            module_location: {0: [{mod: "", mc: 0, move: false, index: 0}],
+                              1: [{mod: "", mc: 0, move: false, index: 1}],
+                              2: [{mod: "", mc: 0, move: false, index: 2}],
+                              3: [{mod: "", mc: 0, move: false, index: 3}],
+                              4: [{mod: "", mc: 0, move: false, index: 4}],
+                              5: [{mod: "", mc: 0, move: false, index: 5}],
+                              6: [{mod: "", mc: 0, move: false, index: 6}],
+                              7: [{mod: "", mc: 0, move: false, index: 7}]},
+            
+            num_semester_mapping: ["Y1S1",  "Y1S2", "Y2S1", "Y2S2",  "Y3S1",  "Y3S2", "Y4S1",  "Y4S2"],
+            index: 8,
           })
           .then(function() {
               alert("Registered successfully");
