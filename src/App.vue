@@ -9,9 +9,7 @@
     <div class="row">
       <div class="col-md-12">
         <!-- link allmajors data to components -->
-        <router-view :allmodules="allmodules" :allmajors="allmajors" 
-          :acadplan="acadplan" :acadplan_exemptions="acadplan_exemptions" :module_semester_mapping="module_semester_mapping"
-          :num_semester_mapping="num_semester_mapping"
+        <router-view :allmodules="allmodules" :allmajors="allmajors"
           :sepMappings="sepMappings"></router-view>
       </div>
     </div>
@@ -31,8 +29,13 @@ export default {
 
   data() {
     return {
+      /* all valid modules */
+      allmodules: allModules, 
       /* list of majors & corresponding modules */
+<<<<<<< HEAD
       allmodules: allModules, major:'',
+=======
+>>>>>>> master
       allmajors: { "Business Analytics" : [
                   {modCode: "BT1101", modTitle: "BT1101 Introduction to Business Analytics", modType: "core"},
                   {modCode: "CS1010S", modTitle: "CS1010S Programming Methodology", modType: "core"},
@@ -358,56 +361,9 @@ export default {
                   {modCode: "EC3101", modTitle: "Microeconomic Analysis II", modType: "core"},
                   {modCode: "EC3312", modTitle: "Game Theory and Applications for Economics", modType: "elective"}]
       },
-      acadplan: {
-        y1s1: [
-          { mod: "", mc: 16, move: false, index: 0 },
-          { mod: "BT1101", mc: 4, move: true, index: 1 },
-          { mod: "CS1010S", mc: 4, move: true, index: 2 },
-          { mod: "MA1521", mc: 4, move: true, index: 3 },
-          { mod: "IS1103", mc: 4, move: true, index: 4 }
-        ], 
-        y1s2: [
-          { mod: "", mc: 16, move: false, index: 5 },
-          { mod: "BT2101", mc: 4, move: true, index: 6 },
-          { mod: "CS2030", mc: 4, move: true, index: 7 },
-          { mod: "MA1101R", mc: 4, move: true, index: 8 },
-          { mod: "EC1301", mc: 4, move: true, index: 9 }
-        ],
-        y2s1: [
-          { mod: "", mc: 12, move: false, index: 10 }, 
-          { mod: "BT2102", mc: 4, move: true, index: 11 }, 
-          { mod: "CS2040", mc: 4, move: true, index: 12 },
-          { mod: "ST2334", mc: 4, move: true, index: 13 }
-        ], 
-        y2s2: [
-          { mod: "", mc: 8, move: false, index: 14 }, 
-          { mod: "BT3102", mc: 4, move: true, index: 15 }, 
-          { mod: "BT3103", mc: 4, move: true, index: 16 },
-        ],
-        y3s1: [
-          { mod: "", mc: 4,move: false, index: 17 },
-          { mod: "MKT1705X", mc: 4, move: true, index: 18 }
-        ],
-        y3s2: [
-          { mod: "", mc: 0, move: false, index: 19 },
-        ],
-        y4s1: [{ mod: "", mc: 0, move: false, index: 20 },],
-        y4s2: [{ mod: "", mc: 0, move: false, index: 21 },],
-      },
-      acadplan_exemptions: ["ES1000"],
-      module_semester_mapping: {
-        "BT1101": 1, "CS1010S": 1, "IS1103": 1, 
-        "MA1521": 1, "BT2101": 2, "CS2030": 2,
-        "EC1301": 2, "MA1101R": 2, "BT2102": 3,
-        "CS2040": 3, "ST2334": 3, "BT3102": 4,
-        "BT3103": 4, "MKT1705X": 5,
-      },
-      num_semester_mapping: {
-        1: "y1s1", 2: "y1s2", 3: "y2s1", 4: "y2s2", 5: "y3s1", 6: "y3s2", 7: "y4s1", 8: "y4s2"
-      },
-      sepMappings: sepMappings
+      sepMappings: sepMappings,
     }
-  }
+  },
 }
 </script>
 
