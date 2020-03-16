@@ -111,6 +111,18 @@
   z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
   cursor: pointer; /* Add a pointer on hover */
 }
+#rating {
+  padding-top: 5px;
+}
+#learning {
+  padding-top: 5px;
+}
+#admin {
+  padding-top: 5px;
+}
+#writtenReview {
+  margin-top: 15px;
+}
 
 #StarsInner {
   position: absolute;

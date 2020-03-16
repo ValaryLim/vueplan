@@ -3,10 +3,11 @@
 
 <script>
 import modules from "../../assets/allmoduleinfo.json";
-//import firebase from 'firebase';
+import firebase from 'firebase';
 import database from'../firebase.js';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import * as Treeviz from 'treeviz';
+import { mapGetters } from "vuex";
 var moduleReview = {};
 var counter = 1;
 export default {
@@ -60,7 +61,11 @@ export default {
 			}
 			years.reverse();
 			return years;
-		}
+		},
+		// map `this.user` to `this.$store.getters.user`
+        ...mapGetters({
+            user: "user"
+        }),
 	},
 	
 	methods:{
@@ -272,6 +277,11 @@ export default {
 			this.fetchReviews();
 		},
 		submitReview: function() {
+			var userid = "Guest";
+			var user = this.fetchUser();
+			if (user != null) {
+				userid = user.displayName;
+			}
 			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
 			var content = document.getElementById('content').value;
 			var admin = document.getElementById('staff').value;
@@ -285,7 +295,7 @@ export default {
 			reviewDict['overall'] = parseFloat(overall);
 			reviewDict['review'] = review.value;
 			reviewDict['year'] = year;
-			var userid = "Guest";
+			
 			if (moduleReview == undefined) {
 				moduleReview = {};
 			}
@@ -299,6 +309,7 @@ export default {
 			},{merge:true});
 			document.querySelector('#overlay').style.display = 'none';
 			console.log(Object.keys(moduleReview).length);
+			moduleReview = {};
 			this.updateReviews();
 		},
 		updateReviews: function() {
@@ -342,6 +353,10 @@ export default {
 				const starPercentageRounded = `${(Math.round(starPercentage))}%`;
 				document.querySelector("#StarsInner").style.width = starPercentageRounded;
 			});
+		},
+		fetchUser: function() {
+			var user = firebase.auth().currentUser;
+			return user;
 		},
 		fetchReviews: function() {
 			const module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
