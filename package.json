@@ -17,7 +17,7 @@
     "auth0-lock": "^11.22.4",
     "bootstrap-vue": "^2.5.0",
     "core-js": "^3.6.4",
-    "firebase": "^7.10.0",
+    "firebase": "^7.11.0",
     "gulp-git": "^2.10.0",
     "react-scripts": "^3.4.0",
     "treeviz": "^2.2.1",
