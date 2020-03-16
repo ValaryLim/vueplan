@@ -5,7 +5,15 @@
         <div class="card">
           <div class="card-body">
             <div v-if="error" class="alert alert-danger">{{error}}</div>
-            <form action="#" @submit.prevent="submit">
+            <!-- Welcome message if user is logged in -->
+            <div v-if="user.loggedIn">
+              Welcome, {{ user.data.displayName }}!
+              <br>
+              Click on any tab above to start planning.
+            </div>
+
+            <!-- Login page if user not logged in -->
+            <form action="#" @submit.prevent="submit" v-if="!user.loggedIn">
 
               <!-- Enter email -->
               <div class="form-group row">
@@ -59,6 +67,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import firebase from 'firebase';
 
 export default {
@@ -84,6 +93,12 @@ export default {
           this.error = err.message;
         });
     }
-  }
+  },
+  computed: {
+    ...mapGetters({
+        // map `this.user` to `this.$store.getters.user`
+        user: "user"
+    })
+  },
 };
 </script>
