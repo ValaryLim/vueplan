@@ -6,22 +6,30 @@
   <title>MIDSEM PROJECT FINAL</title>
    </head>
   <body>
-    <div id = 'app'>
-          <input id ='searchIn' type="text" v-model="search" v-on:keyup = 'show = true' placeholder="Search Module Code or Title..."/>
-      <div id = 'res'></div>
+    <!-- Prompt user to log in -->
+    <div class="row" v-if="!user.loggedIn">
+      <router-link to="/login"><a>Please login first.</a></router-link>
+    </div>
+    
+    <!-- Show page when user is logged in -->
+    <div v-if="user.loggedIn">
+      <div id = 'app'>
+            <input id ='searchIn' type="text" v-model="search" v-on:keyup = 'show = true' placeholder="Search Module Code or Title..."/>
+        <div id = 'res'></div>
 
-      <div v-if = "show == true"> 
-        <ul id = 'modules'>
-          <li v-for="mod in filteredList" v-on:click = 'modInfo(allmodules[mod])'>
-            <p id = "title" v-on:click = 'modInfo(allmodules[mod])'>{{allmodules[mod].code}} {{allmodules[mod].title}} </p> 
-            <p id = 'info'>{{allmodules[mod].department}} | {{allmodules[mod].mc}} MCs </p>
-            <p v-show = 'allmodules[mod].desc.length > 350' id = 'des'>{{allmodules[mod].desc.substring(0,350)}}...</p>
-            <p v-show = 'allmodules[mod].desc.length <= 350' id = 'des'>{{allmodules[mod].desc}}</p>
-            <p v-show = "allmodules[mod].prereq != ''"id = 'prer'>Prerequisites: {{allmodules[mod].prereq}}</p>
-            <p v-show = "allmodules[mod].preclusion != ''" id = 'prec'>Preclusions: {{allmodules[mod].preclusion}}</p>
-          </li>
-        </ul>
-
-    </div> </div>
+        <div v-if = "show == true"> 
+          <ul id = 'modules'>
+            <li v-for="mod in filteredList" v-on:click = 'modInfo(allmodules[mod])'>
+              <p id = "title" v-on:click = 'modInfo(allmodules[mod])'>{{allmodules[mod].code}} {{allmodules[mod].title}} </p> 
+              <p id = 'info'>{{allmodules[mod].department}} | {{allmodules[mod].mc}} MCs </p>
+              <p v-show = 'allmodules[mod].desc.length > 350' id = 'des'>{{allmodules[mod].desc.substring(0,350)}}...</p>
+              <p v-show = 'allmodules[mod].desc.length <= 350' id = 'des'>{{allmodules[mod].desc}}</p>
+              <p v-show = "allmodules[mod].prereq != ''"id = 'prer'>Prerequisites: {{allmodules[mod].prereq}}</p>
+              <p v-show = "allmodules[mod].preclusion != ''" id = 'prec'>Preclusions: {{allmodules[mod].preclusion}}</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
    </body>
 </html>

@@ -7,6 +7,7 @@ import moduleReviews from '../../assets/moduleReviews.json';
 import users_table from '../../assets/users.json'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import * as Treeviz from 'treeviz';
+import { mapGetters } from 'vuex';
 
 export default {
 	name: "App",
@@ -26,13 +27,18 @@ export default {
 	props: ['allmodules'],	
 
 	computed: {
-	filteredList() {
-		if(this.search != ''){
-			document.getElementById("res").innerHTML ="";
-		}
-		return Object.keys(this.allmodules).filter(mod => {
-			return this.allmodules[mod].fullname.toUpperCase().includes(this.search.toUpperCase())
-            })
+		...mapGetters({
+		// map `this.user` to `this.$store.getters.user`
+			user: "user"
+		}),
+
+		filteredList() {
+			if(this.search != ''){
+				document.getElementById("res").innerHTML ="";
+			}
+			return Object.keys(this.allmodules).filter(mod => {
+				return this.allmodules[mod].fullname.toUpperCase().includes(this.search.toUpperCase())
+				})
 		}
 	},
 	
