@@ -6,7 +6,6 @@
   <title>MIDSEM PROJECT FINAL</title>
    </head>
   <body>
-<<<<<<< HEAD
     <!-- Prompt user to log in -->
     <div class="row" v-if="!user.loggedIn">
       <router-link to="/login"><a>Please login first.</a></router-link>
@@ -32,7 +31,6 @@
         </div>
       </div>
     </div>
-=======
     <div id = 'app'>
       <div id="overlay">
         <div class="modal-mask">
@@ -73,17 +71,7 @@
           </div>
         </div>
       </div>
-          <input id ='searchIn' type="text" v-model="search" v-on:keyup = 'show = true' placeholder="Search Module Code or Title..."/>
       <div id = 'res'></div>
-
-      <div v-if = "search != ''">
-        <ul id = 'modules'>
-          <li v-for="mod in filteredList" v-on:click = 'modInfo(allmodules[mod])'>
-            {{allmodules[mod].code}} {{allmodules[mod].title}} 
-        </li>
-        </ul>
-
-    </div> </div>
->>>>>>> reviews
+      </div>
    </body>
 </html>
