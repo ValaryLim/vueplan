@@ -32,10 +32,6 @@ export default {
       /* all valid modules */
       allmodules: allModules, 
       /* list of majors & corresponding modules */
-<<<<<<< HEAD
-      allmodules: allModules, major:'',
-=======
->>>>>>> master
       allmajors: { "Business Analytics" : [
                   {modCode: "BT1101", modTitle: "BT1101 Introduction to Business Analytics", modType: "core"},
                   {modCode: "CS1010S", modTitle: "CS1010S Programming Methodology", modType: "core"},
