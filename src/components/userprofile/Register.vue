@@ -6,9 +6,10 @@
           <div class="card-body">
             <div v-if="error" class="alert alert-danger">{{error}}</div>
             <form action="#" @submit.prevent="submit">
+
+              <!-- Enter name -->
               <div class="form-group row">
                 <label for="name" class="col-md-4 col-form-label text-md-right">Name</label>
-
                 <div class="col-md-6">
                   <input
                     id="name"
@@ -23,9 +24,9 @@
                 </div>
               </div>
 
+              <!-- Enter email -->
               <div class="form-group row">
                 <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
-
                 <div class="col-md-6">
                   <input
                     id="email"
@@ -40,9 +41,9 @@
                 </div>
               </div>
 
+              <!-- Enter password -->
               <div class="form-group row">
                 <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
-
                 <div class="col-md-6">
                   <input
                     id="password"
@@ -55,14 +56,17 @@
                 </div>
               </div>
 
+              <!-- Register button -->
               <div class="form-group row mb-0">
                   <button type="submit" class="btn btn-primary">Register</button>
               </div>
-
               <br>
+
+              <!-- Redirect to login page -->
               <div>
-                <router-link to="/login"><a>Already have an account? Login here</a></router-link>
+                <router-link to="/login"><a>Already have an account? Login here.</a></router-link>
               </div>
+
             </form>
           </div>
         </div>
@@ -130,6 +134,7 @@ export default {
           ))
         })
         .catch(err => {
+          // will disallow users from registering with the same email
           this.error = err.message;
         });
     }
