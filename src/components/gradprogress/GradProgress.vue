@@ -175,12 +175,13 @@ export default {
         var module = mod_added[key];
         if (module.code == modcode) {
           if (module.sem < this.sem_completed) {
-            return { added: true, completed: true };
+            return { added: true, completed: true, self: true };
           } else {
-            return { added: true, completed: false };
+            return { added: true, completed: false, self: true };
           }
         }
       }
+
       return { added: false, completed: false };
     },
 
@@ -193,29 +194,74 @@ export default {
         var status = this.check_status(core.modCode);
         if (status.added) {
           if (status.completed) {
-            pr_progress.push({
+            if (core.modCode == 'MA1521') {
+              pr_progress.push({
+              requirement: core.modTitle + " or MA1102R Calculus",
+              code: core.modCode,
+              selected: this.get_mod_title(core.modCode),
+              added: "✓",
+              completed: "✓"
+              });
+            } else {
+              pr_progress.push({
               requirement: core.modTitle,
               code: core.modCode,
               selected: this.get_mod_title(core.modCode),
               added: "✓",
               completed: "✓"
-            });
-          } else {
-            pr_progress.push({
+              });
+            }          
+            } else {
+              if (core.modCode == 'MA1521') {
+              pr_progress.push({
+              requirement: core.modTitle + " or MA1102R Calculus",
+              code: core.modCode,
+              selected: this.get_mod_title(core.modCode),
+              added: "✓",
+              completed: "x"
+              });
+              } else {
+                pr_progress.push({
               requirement: core.modTitle,
               code: core.modCode,
               selected: this.get_mod_title(core.modCode),
               added: "✓",
               completed: "x"
-            });
-          }
+              });
+              }
+            }
         } else {
-          pr_progress.push({
+          if (core.modCode == "MA1521") {
+            console.log("tried to find 1102R");
+            var statusA = this.check_status('MA1102R');
+              if (statusA.added) {
+                if (statusA.completed) {
+              pr_progress.push({
+              requirement: core.modTitle + " or MA1102R Calculus",
+              code: 'MA1102R',
+              selected: this.get_mod_title('MA1102R'),
+              added: "✓",
+              completed: "✓"
+              });
+           
+            } else {
+              pr_progress.push({
+              requirement: core.modTitle + " or MA1102R Calculus",
+              code: 'MA1102R',
+              selected: this.get_mod_title('MA1102R'),
+              added: "✓",
+              completed: "x"
+              });
+            }
+            }
+          } else {
+            pr_progress.push({
             requirement: core.modTitle,
             selected: " ",
             added: "x",
             completed: "x"
           });
+          }
         }
       }
       // Add programme electives
