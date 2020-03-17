@@ -5,6 +5,8 @@
 <script>
 import { mapGetters } from 'vuex';
 import Multiselect from 'vue-multiselect';
+import firebase from 'firebase';
+import database from '../firebase.js';
 
 export default {
     name: "App",
@@ -18,10 +20,39 @@ export default {
 
     data() {
         return {
+            allPus: [],
             pus: [],
             courses: [],
-            allCourses: ['Business Analytics', 'Computer Science', 'Information Systems', 'Information Security', 'Economics'],
         }
+    },
+
+    methods: {
+        /* set the default filter for course as student's major */
+        getMajor: function() {
+            var user = firebase.auth().currentUser;
+            let userRef = database.collection('acadplan').doc(user.uid);
+            userRef.get()
+                .then(doc => {
+                    this.courses = [doc.data()['major']]
+                })
+            return this.courses
+        },
+
+        /* retrieve all unique Pus */
+        getPus: function() {
+            var output = []
+            var usedKeys = {}
+            for (var i = 0; i < this.sepMappings.length; i++) {
+                var pu = this.sepMappings[i]['pu'];
+                if (!usedKeys[pu]) {
+                    usedKeys[pu] = true;
+                    output.push(pu);
+                }
+            }
+            //this.pus = output;
+            this.allPus = [{ selectAll: 'SELECT ALL', all: output }];
+            //this.allPus = output;
+        },
     },
 
     computed: {
@@ -43,21 +74,12 @@ export default {
                 return output.includes(code);
             }
         },
+    },
 
-        /* unique function that returns unique pus */
-        unique () {
-            return function (arr, key) {
-                var output = []
-                var usedKeys = {}
-                for (var i = 0; i < arr.length; i++) {
-                    if (!usedKeys[arr[i][key]]) {
-                        usedKeys[arr[i][key]] = true
-                        output.push(arr[i][key])
-                    }
-                }
-                return output
-            }
-        },
-    }
+    // lifecycle hook
+    created() {
+        this.getMajor();
+        this.getPus();
+    },
 }
 </script>

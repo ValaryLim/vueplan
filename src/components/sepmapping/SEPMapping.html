@@ -22,19 +22,41 @@
         <div class = "multiselect_title">
           <label>Filter by Partner Universities</label>
         </div>
-        <multiselect v-model="pus" :options="unique(sepMappings, 'pu')" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Partner University" :preselect-first="true">
+        <multiselect 
+          v-model="pus" 
+          :options="allPus" 
+          :multiple="true" 
+          group-values="all"
+          group-label="selectAll"
+          :group-select="true"
+          :close-on-select="false" 
+          :clear-on-select="false" 
+          :preserve-search="true" 
+          placeholder="Select Partner University" 
+          :preselect-first="false"
+          open-direction="bottom">
           <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
+            <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} PUs selected</span>
           </template>
         </multiselect>
       </div>
+
       <div class="row multiselect-module">
         <!-- Filter by Course -->
         <div class = "multiselect_title">
           <label>Filter by Courses</label>
         </div>
-        <multiselect v-model="courses" :options="allCourses" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Course" :preselect-first="true" open-direction="bottom">
+        <multiselect 
+          v-model="courses" 
+          :options="Object.keys(allmajors)" 
+          :multiple="true" 
+          :close-on-select="false" 
+          :clear-on-select="false" 
+          :preserve-search="true" 
+          placeholder="Select Course" 
+          :preselect-first="false" 
+          open-direction="bottom">
           <template slot="selection" slot-scope="{ values, search, isOpen }">
-            <!-- <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span> -->
           </template>
         </multiselect>
       </div>
@@ -55,7 +77,7 @@
           </thead>
 
           <!-- table body -->
-          <tbody :sepMappings="sepMappings" pus="pus" courses="courses">
+          <tbody v-if="pus" :sepMappings="sepMappings" pus="pus" courses="courses">
             <tr v-for="mapping in sepMappings" v-show="relevant(allmajors, mapping.nusModuleCode) && pus.includes(mapping.pu)">
               <td>{{mapping.pu}}</td>
               <td>{{mapping.nusModuleCode}}</td>
