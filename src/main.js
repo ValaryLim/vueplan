@@ -7,8 +7,10 @@ import App from './App.vue';
 import VueRouter from 'vue-router';
 import { routes } from './routes.js';
 
-import firebase from 'firebase';
 import store from './store.js';
+
+// wait for first firebase auth change before setting up vue
+import firebase from 'firebase';
 
 Vue.use(VueRouter);
 
@@ -19,28 +21,18 @@ const router = new VueRouter({
 
 Vue.config.productionTip = false
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBm9ZkRvTPHK5CQ-uZMSQt1RsekW9efOcs",
-  authDomain: "vueplan.firebaseapp.com",
-  databaseURL: "https://vueplan.firebaseio.com",
-  projectId: "vueplan",
-  storageBucket: "vueplan.appspot.com",
-  messagingSenderId: "475166877841",
-  appId: "1:475166877841:web:8556ab02c27653d0573730",
-  measurementId: "G-F3KW9HJ91K"
-};
+let app;
+firebase.auth().onAuthStateChanged(async () => {
+  if (!app) {
+    //wait to get user
+    var user = await firebase.auth().currentUser;
+    console.log(user);
 
-firebase.initializeApp(firebaseConfig);
-
-firebase.auth().onAuthStateChanged(user => {
-  store.dispatch("fetchUser", user);
+    //start app
+    app = new Vue({
+      router,
+      store,
+      render: h => h(App)
+    }).$mount("#app");
+  }
 });
-
-var database = firebase.firestore();
-export default database;
-
-new Vue({
-  router,
-  store,
-  render: h => h(App),
-}).$mount('#app')

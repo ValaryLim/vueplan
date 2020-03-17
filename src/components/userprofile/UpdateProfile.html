@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>vueplan SEP Page</title>
+  </head>
+  
+  <body>
+    <div id = "profile">
+        <h2> Update Profile </h2>
+
+        <form action="#" @submit.prevent="save">
+            <div class="form-group row">
+                <label for="name" class="col-md-4 col-form-label text-md-right">Name</label>
+                <div class="col-md-6">
+                    <input
+                        id="name"
+                        type="name"
+                        class="form-control"
+                        name="name"
+                        placeholder= "Enter your username"
+                        value
+                        autofocus
+                        v-model="form.name"
+                    />
+                </div>
+            </div>
+
+            <!-- Note: Disallow users to change email -->
+            <div class="form-group row">
+                <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
+                <div class = "col-md-6 text-md-left"> {{ user.data.email }} </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="year" class="col-md-4 col-form-label text-md-right">Year of Matriculation</label>
+
+                <div class="col-md-6">
+                    <multiselect v-model="form.year" :options="[2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]" :multiple="false" :close-on-select="true" :clear-on-select="false" :preserve-search="true" placeholder="Select Year e.g. 18 if you matriculated in AY18/19">
+                        <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
+                        </template>
+                    </multiselect>
+                </div>
+            </div>
+
+            <div class = "form-group row">
+                <label for="year" class="col-md-4 col-form-label text-md-right">Major</label>
+                <div class="col-md-6">
+                    <multiselect v-model="form.major" :options="Object.keys(allmajors)" :multiple="false" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Major">
+                        <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
+                        </template>
+                    </multiselect>
+                </div>
+            </div>
+
+            <div class = "form-group row">
+                <label for="year" class="col-md-4 col-form-label text-md-right">Module Exemptions</label>
+                <div class="col-md-6">
+                    <multiselect v-model="form.exemptions" :options="Object.keys(allmodules)" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Exemption">
+                        <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
+                        </template>
+                    </multiselect>
+                </div>
+            </div>
+
+            <div class="form-group row mb-0">
+                    <button type="save" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+  </body>
+</html>

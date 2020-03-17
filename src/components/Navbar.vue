@@ -2,30 +2,37 @@
     <div class="headerStyle">
         <nav>
             <div class="header-title">
-                <router-link to="/"><a class="header-title-first">vue</a><a class="header-title-second">Plan</a></router-link>
+                <!-- Links user to Login Page if not logged in -->
+                <router-link to="/" v-if="!user.loggedIn">
+                    <a class="header-title-first">vue</a>
+                    <a class="header-title-second">Plan</a>
+                </router-link>
+                <!-- Links user to Welcome Page if logged in -->
+                <router-link to="/" v-if="user.loggedIn">
+                    <a class="header-title-first">vue</a>
+                    <a class="header-title-second">Plan</a>
+                </router-link>
             </div>
-            <div class="header-tabs">
+            <!-- No tabs shown if user not logged in -->
+            <div class="header-tabs" v-if="!user.loggedIn">
+                <span class="header-tab"></span>
+            </div>
+            <!-- Show tabs when user is logged in -->
+            <div class="header-tabs" v-if="user.loggedIn">
                 <span class="header-tab"><router-link to="/acadplan"><a>Academic Plan</a></router-link></span>            
                 <span class="header-tab"><router-link to="/gradprogress"><a>Graduation Progress</a></router-link></span>
                 <span class="header-tab"><router-link to="/moduleinfo"><a>Module Information</a></router-link></span>
                 <span class="header-tab"><router-link to="/sepmapping"><a>SEP Mapping</a></router-link></span>
                 <span class="header-tab header-tab-dropdown">
                     <button class="dropdown-button">
-                        <em v-if="user.loggedIn">{{user.data.email}}</em>
-                        <em v-if="!user.loggedIn">User</em>
+                        <em>{{user.data.email}}</em>
                         <font-awesome-icon icon="caret-down" />
                     </button>
                     <span class="dropdown-content">
-                        <div class="logged-in" v-if="user.loggedIn">
+                        <div class="logged-in">
                             <a href="/userprofile">Account</a>
                             <a @click.prevent="signOut">Logout</a>
                         </div>
-                        <div class="logged-out" v-if="!user.loggedIn">
-                            <a href="/login">Login</a>
-                            <a href="/register">Register</a>
-                        </div>
-                        <!--<a href="#">Settings</a>
-                        <a href="#">Logout</a>-->
                     </span>
                 </span>
             </div>

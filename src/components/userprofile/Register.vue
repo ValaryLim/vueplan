@@ -3,13 +3,13 @@
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card">
-          <div class="card-header">Register</div>
           <div class="card-body">
             <div v-if="error" class="alert alert-danger">{{error}}</div>
             <form action="#" @submit.prevent="submit">
+
+              <!-- Enter name -->
               <div class="form-group row">
                 <label for="name" class="col-md-4 col-form-label text-md-right">Name</label>
-
                 <div class="col-md-6">
                   <input
                     id="name"
@@ -24,9 +24,9 @@
                 </div>
               </div>
 
+              <!-- Enter email -->
               <div class="form-group row">
                 <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
-
                 <div class="col-md-6">
                   <input
                     id="email"
@@ -41,9 +41,9 @@
                 </div>
               </div>
 
+              <!-- Enter password -->
               <div class="form-group row">
                 <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
-
                 <div class="col-md-6">
                   <input
                     id="password"
@@ -56,11 +56,17 @@
                 </div>
               </div>
 
+              <!-- Register button -->
               <div class="form-group row mb-0">
-                <div class="col-md-8 offset-md-4">
                   <button type="submit" class="btn btn-primary">Register</button>
-                </div>
               </div>
+              <br>
+
+              <!-- Redirect to login page -->
+              <div>
+                <router-link to="/login"><a>Already have an account? Login here.</a></router-link>
+              </div>
+
             </form>
           </div>
         </div>
@@ -69,22 +75,9 @@
   </div>
 </template>
 
-
 <script>
 import firebase from 'firebase';
-//import database from '../main.js'
-
-/* const firebaseConfig = {
-  apiKey: "AIzaSyBm9ZkRvTPHK5CQ-uZMSQt1RsekW9efOcs",
-  authDomain: "vueplan.firebaseapp.com",
-  databaseURL: "https://vueplan.firebaseio.com",
-  projectId: "vueplan",
-  storageBucket: "vueplan.appspot.com",
-  messagingSenderId: "475166877841",
-  appId: "1:475166877841:web:8556ab02c27653d0573730",
-  measurementId: "G-F3KW9HJ91K"
-};
-firebase.initializeApp(firebaseConfig); */
+import database from '../firebase.js';
 
 export default {
   data() {
@@ -92,26 +85,56 @@ export default {
       form: {
         name: "",
         email: "",
-        password: ""
+        password: "",
       },
       error: null
     };
   },
+
   methods: {
     submit() {
       firebase
-        .auth() // gives access to auth service
+        // give access to auth services
+        .auth()
+        // create new user
         .createUserWithEmailAndPassword(this.form.email, this.form.password)
         .then(data => {
-          data.user
+          // add user to acadplan database
+          // set userID as the document ID
+          database.collection('acadplan').doc(data.user.uid).set({
+            // default fields
+            year: 0,
+            major: "",
+            total_mc: 0,
+            acadplan_exemptions: ["ES1000"],
+            module_semester_mapping: {},
+            module_location: {0: [{mod: "", mc: 0, move: false, index: 0}],
+                              1: [{mod: "", mc: 0, move: false, index: 1}],
+                              2: [{mod: "", mc: 0, move: false, index: 2}],
+                              3: [{mod: "", mc: 0, move: false, index: 3}],
+                              4: [{mod: "", mc: 0, move: false, index: 4}],
+                              5: [{mod: "", mc: 0, move: false, index: 5}],
+                              6: [{mod: "", mc: 0, move: false, index: 6}],
+                              7: [{mod: "", mc: 0, move: false, index: 7}]},
+            
+            num_semester_mapping: ["Y1S1",  "Y1S2", "Y2S1", "Y2S2",  "Y3S1",  "Y3S2", "Y4S1",  "Y4S2"],
+            index: 8,
+          })
+          .then(function() {
+              alert("Registered successfully");
+          })
+          .then(data.user
             .updateProfile({
-              displayName: this.form.name
+              displayName: this.form.name,
             })
             .then(() =>{
+            // bring user to profile page
             this.$router.replace({ name: "Profile" });
-            })
+            }
+          ))
         })
         .catch(err => {
+          // will disallow users from registering with the same email
           this.error = err.message;
         });
     }

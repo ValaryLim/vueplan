@@ -3,13 +3,21 @@
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card">
-          <div class="card-header">Login</div>
           <div class="card-body">
             <div v-if="error" class="alert alert-danger">{{error}}</div>
-            <form action="#" @submit.prevent="submit">
+            <!-- Welcome message if user is logged in -->
+            <div v-if="user.loggedIn">
+              Welcome, {{ user.data.displayName }}!
+              <br>
+              Click on any tab above to start planning.
+            </div>
+
+            <!-- Login page if user not logged in -->
+            <form action="#" @submit.prevent="submit" v-if="!user.loggedIn">
+
+              <!-- Enter email -->
               <div class="form-group row">
                 <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
-
                 <div class="col-md-6">
                   <input
                     id="email"
@@ -24,9 +32,9 @@
                 </div>
               </div>
 
+              <!-- Enter password -->
               <div class="form-group row">
                 <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
-
                 <div class="col-md-6">
                   <input
                     id="password"
@@ -39,11 +47,17 @@
                 </div>
               </div>
 
+              <!-- Login button -->
               <div class="form-group row mb-0">
-                <div class="col-md-8 offset-md-4">
                   <button type="submit" class="btn btn-primary">Login</button>
-                </div>
               </div>
+              <br>
+
+              <!-- Redirect to register page -->
+              <div>
+                <router-link to="/register"><a>Don't have an account? Register here.</a></router-link>
+              </div>
+
             </form>
           </div>
         </div>
@@ -53,16 +67,17 @@
 </template>
 
 <script>
-import firebase from "firebase";
+import { mapGetters } from 'vuex';
+import firebase from 'firebase';
 
 export default {
   data() {
     return {
       form: {
         email: "",
-        password: ""
+        password: "",
       },
-      error: null
+      error: null,
     };
   },
   methods: {
@@ -70,14 +85,20 @@ export default {
       firebase
         .auth()
         .signInWithEmailAndPassword(this.form.email, this.form.password)
-        // UPDATE THIS WITH USER DATA
         .then(() =>{
           this.$router.replace({ name: "Profile" });
         })
         .catch(err => {
+          // will alert users that typed in an invalid email
           this.error = err.message;
         });
     }
-  }
+  },
+  computed: {
+    ...mapGetters({
+        // map `this.user` to `this.$store.getters.user`
+        user: "user"
+    })
+  },
 };
 </script>
