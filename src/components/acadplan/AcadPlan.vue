@@ -47,8 +47,8 @@ export default {
             major: "",
             acadplan: {},
             module_semester_mapping: {},
-            acadplan_exemptions: ["ES1000"],
-            total_mc: 1000,
+            acadplan_exemptions: [],
+            total_mc: 0,
             num_semester_mapping: [
                 "Y1S1",  "Y1S2", "Y2S1", "Y2S2",  "Y3S1",  "Y3S2", "Y4S1",  "Y4S2"
             ],
