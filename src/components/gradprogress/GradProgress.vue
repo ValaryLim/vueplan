@@ -53,7 +53,7 @@ export default {
       userRef.get().then(doc => {
         this.acadplan_exemptions = doc.data()["acadplan_exemptions"];
         this.major = doc.data()["major"];
-        this.sem_completed = doc.data()["year"];  //change this to the year. Sem completed is assigned in line 73
+        this.year = doc.data()["year"];  //change this to the year. Sem completed is assigned in line 73
         this.acadplan = doc.data()["module_location"];
       });
     },
@@ -71,6 +71,9 @@ export default {
 
     get_ulr_table: function() {
       this.sem_completed = parseInt((this.getDateValue() - this.year - 0.5) / 0.5, 10);
+      if (this.sem_completed < 0) {
+        this.sem_completed = 0;
+      }
       var ulr_progress = [];
       var ulr_types = [
         "Human Cultures",

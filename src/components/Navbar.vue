@@ -2,12 +2,12 @@
     <div class="headerStyle">
         <nav>
             <div class="header-title">
-                <!-- Links user to Register Page if not logged in -->
+                <!-- Links user to Login Page if not logged in -->
                 <router-link to="/" v-if="!user.loggedIn">
                     <a class="header-title-first">vue</a>
                     <a class="header-title-second">Plan</a>
                 </router-link>
-                <!-- Links user to AcadPlan Page if logged in -->
+                <!-- Links user to Welcome Page if logged in -->
                 <router-link to="/" v-if="user.loggedIn">
                     <a class="header-title-first">vue</a>
                     <a class="header-title-second">Plan</a>
