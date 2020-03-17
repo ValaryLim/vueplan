@@ -3,6 +3,7 @@
 <style scoped src="./SEPMapping.css"></style>
 
 <script>
+import { mapGetters } from 'vuex';
 import Multiselect from 'vue-multiselect';
 
 export default {
@@ -24,6 +25,11 @@ export default {
     },
 
     computed: {
+        ...mapGetters({
+            // map `this.user` to `this.$store.getters.user`
+            user: "user"
+        }),
+
         /* relevant function that computes relevant modules based on filters */
         relevant() {
             return function(arr, code) {

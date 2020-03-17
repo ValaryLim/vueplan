@@ -3,10 +3,11 @@
 
 <script>
 import modules from "../../assets/allmoduleinfo.json";
-//import firebase from 'firebase';
+import firebase from 'firebase';
 import database from'../firebase.js';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import * as Treeviz from 'treeviz';
+import { mapGetters } from "vuex";
 var moduleReview = {};
 var counter = 1;
 export default {
@@ -60,7 +61,11 @@ export default {
 			}
 			years.reverse();
 			return years;
-		}
+		},
+		// map `this.user` to `this.$store.getters.user`
+        ...mapGetters({
+            user: "user"
+        }),
 	},
 	
 	methods:{
@@ -272,6 +277,11 @@ export default {
 			this.fetchReviews();
 		},
 		submitReview: function() {
+			var userid = "Guest";
+			var user = this.fetchUser();
+			if (user != null) {
+				userid = user.displayName;
+			}
 			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
 			var content = document.getElementById('content').value;
 			var admin = document.getElementById('staff').value;
@@ -285,7 +295,7 @@ export default {
 			reviewDict['overall'] = parseFloat(overall);
 			reviewDict['review'] = review.value;
 			reviewDict['year'] = year;
-			var userid = "Guest";
+			
 			if (moduleReview == undefined) {
 				moduleReview = {};
 			}
@@ -299,11 +309,8 @@ export default {
 			},{merge:true});
 			document.querySelector('#overlay').style.display = 'none';
 			console.log(Object.keys(moduleReview).length);
-			if (moduleReview.length == 1) {
-				this.update1Reviews();
-			} else {
-				this.updateReviews();
-			}
+			moduleReview = {};
+			this.updateReviews();
 		},
 		updateReviews: function() {
 			const module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
@@ -347,6 +354,10 @@ export default {
 				document.querySelector("#StarsInner").style.width = starPercentageRounded;
 			});
 		},
+		fetchUser: function() {
+			var user = firebase.auth().currentUser;
+			return user;
+		},
 		fetchReviews: function() {
 			const module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
 			let userRef = database.collection('reviews').doc(module_code);
@@ -355,9 +366,10 @@ export default {
 			var overallReviewNum = 0;
 			var avgStaffAdmin = 0;
 			var avgContent = 0;
+			var module_review = {};
             userRef.get().then( doc => {
 				if (doc.exists) {
-					var module_review = doc.data()['module_review'];
+					module_review = doc.data()['module_review'];
 					moduleReview = module_review;
 					overallReviewNum = Object.values(module_review).map(function(x) {return x['overall']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
 					avgStaffAdmin = Object.values(module_review).map(function(x) {return x['admin']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
@@ -377,23 +389,6 @@ export default {
 				*/
 				res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview">Review this module now!</button></h4>');
 				res.insertAdjacentHTML('beforeend','<hr></hr><table><tbody id = "tabody">');
-				var writtenReviews = {};
-				for (let [id, written] of Object.entries(module_review)) {
-					if (written['review'].length > 0) {
-						writtenReviews[id] = written;
-					}
-				}
-				for (let [id, review] of Object.entries(writtenReviews)) {
-					var r = document.getElementById("tabody");
-					var y = review["year"];
-					var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Semester " + y.slice(5,6);
-					r.insertAdjacentHTML('beforeend','<tr>');
-					if (id.includes("Guest")){
-						id = "Guest";
-					}
-					r.insertAdjacentHTML('beforeend','<td>'+ id+'<br></br>'+ year +'</td>' + '<td>'+review['review']+'</td></tr>');
-				}
-				res.insertAdjacentHTML('beforeend','</tbody></table');
 				const starPercentage = (overallReviewNum / 5) * 100;
 				const starPercentageRounded = `${(Math.round(starPercentage))}%`;
 				document.querySelector("#StarsInner").style.width = starPercentageRounded;
@@ -405,6 +400,26 @@ export default {
 				closeReview.addEventListener('click',function(){
 					overlay.style.display = 'none';
 					});
+				var writtenReviews = {};
+				if (moduleReview != {}) {
+					for (let [id, written] of Object.entries(module_review)) {
+						if (written['review'].length > 0) {
+							writtenReviews[id] = written;
+						}
+					}
+					for (let [id, review] of Object.entries(writtenReviews)) {
+						var r = document.getElementById("tabody");
+						var y = review["year"];
+						var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Semester " + y.slice(5,6);
+						r.insertAdjacentHTML('beforeend','<tr>');
+						if (id.includes("Guest")){
+							id = "Guest";
+						}
+						r.insertAdjacentHTML('beforeend','<td>'+ id+'<br></br>'+ year +'</td>' + '<td>'+review['review']+'</td></tr>');
+					}
+				}
+				res.insertAdjacentHTML('beforeend','</tbody></table');
+				
 			});
 		}
 	}

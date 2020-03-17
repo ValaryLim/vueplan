@@ -5,8 +5,8 @@
 
 <script>
 import { mapGetters } from "vuex";
-import firebase from 'firebase';
-import database from '../firebase.js';
+import firebase from "firebase";
+import database from "../firebase.js";
 
 export default {
   name: "App",
@@ -16,6 +16,7 @@ export default {
   data() {
     return {
       sem_completed: 0,
+      year: 2018,
       majors: [
         "Business Analytics",
         "Computer Science",
@@ -24,7 +25,7 @@ export default {
       ],
       major: "",
       acadplan_exemptions: [],
-      acadplan: {},
+      acadplan: {}
     };
   },
 
@@ -32,22 +33,28 @@ export default {
     // map `this.user` to `this.$store.getters.user`
     ...mapGetters({
       user: "user"
-    }),
+    })
   },
-  
+
   created() {
     this.fetch_gradprogress();
   },
-  
+
   methods: {
+    getDateValue: function() {
+      var today = new Date();
+      var dateValue = today.getFullYear() + (today.getMonth()) / 12;
+      return dateValue;
+    },
+
     fetch_gradprogress: function() {
       var user = firebase.auth().currentUser;
-      let userRef = database.collection('acadplan').doc(user.uid);
+      let userRef = database.collection("acadplan").doc(user.uid);
       userRef.get().then(doc => {
-          this.acadplan_exemptions = doc.data()['acadplan_exemptions'];
-          this.major = doc.data()['major'];
-          this.sem_completed = doc.data()['year'];
-          this.acadplan = doc.data()['module_location'];
+        this.acadplan_exemptions = doc.data()["acadplan_exemptions"];
+        this.major = doc.data()["major"];
+        this.sem_completed = doc.data()["year"];  //change this to the year. Sem completed is assigned in line 73
+        this.acadplan = doc.data()["module_location"];
       });
     },
     get_mod_added: function() {
@@ -63,6 +70,7 @@ export default {
     },
 
     get_ulr_table: function() {
+      this.sem_completed = parseInt((this.getDateValue() - this.year - 0.5) / 0.5, 10);
       var ulr_progress = [];
       var ulr_types = [
         "Human Cultures",
@@ -117,8 +125,7 @@ export default {
         for (var key2 in sem) {
           var taken = sem[key2];
           if (taken.mod.substring(0, 3) == type_dic[type]) {
-            var sem_taken = this.get_sem_number(key1);
-            if (sem_taken < this.sem_completed) {
+            if (key1 < this.sem_completed) {
               return { mod: taken.mod, added: true, completed: true };
             } else {
               return { mod: taken.mod, added: true, completed: false };
@@ -126,14 +133,7 @@ export default {
           }
         }
       }
-      return { mod: taken.mod, added: false, completed: false };
-    },
-
-    get_sem_number: function(semString) {
-      return (
-        (Number(semString.substring(1, 2)) - 1) * 2 +
-        (Number(semString.substring(3, 4)) - 1)
-      );
+      return { mod: '', added: false, completed: false };
     },
 
     get_mod_title: function(code) {
@@ -167,15 +167,11 @@ export default {
 
     check_status: function(modcode) {
       var mod_added = this.get_mod_added(this.acadplan);
-      console.log(mod_added);
+
       for (var key in mod_added) {
         var module = mod_added[key];
         if (module.code == modcode) {
-          if (modcode == 'IS4010'){
-            console.log("*******");
-          }
-          var sem_taken = this.get_sem_number(module.sem);
-          if (sem_taken < this.sem_completed) {
+          if (module.sem < this.sem_completed) {
             return { added: true, completed: true };
           } else {
             return { added: true, completed: false };
@@ -192,9 +188,6 @@ export default {
         // Error occurs if we want to return false
         var core = pr_mods[key];
         var status = this.check_status(core.modCode);
-        if(core.modCode == 'IS4010') {
-          console.log({"IS4010":status});
-        }
         if (status.added) {
           if (status.completed) {
             pr_progress.push({
@@ -546,8 +539,7 @@ export default {
         for (var key2 in sem) {
           var taken = sem[key2];
           if (!appeared.includes(taken.mod)) {
-            var sem_taken = this.get_sem_number(key1);
-            if (sem_taken < this.sem_completed) {
+            if (key1 < this.sem_completed) {
               ue_progress.push({
                 requirement: " ",
                 selected: this.get_mod_title(taken.mod),
