@@ -12,7 +12,7 @@
                 <b>Email:</b> {{ user.data.email }}
                 <br>
                 <!-- Year of Study & Module Exemptions retrieved from acadplan collection db -->
-                <b>Semesters Completed:</b> {{ showYear() }}
+                <b>Year of Matriculation:</b> August {{ showYear() }}
                 <br>
                 <b>Major:</b> {{ showMajor() }}
                 <br>
