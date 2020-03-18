@@ -21,3 +21,6 @@ yarn-error.log*
 *.sw?
 
 # src/components/firebase.js
+.gitsecret/keys/random_seed
+!*.secret
+src/components/firebase.js
