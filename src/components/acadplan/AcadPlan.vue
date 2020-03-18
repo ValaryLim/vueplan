@@ -76,7 +76,6 @@ export default {
     },
     created() {
         this.fetch_acadplan();
-        this.fetch_dashboard("MA1521");
     },
     methods: {
         fetch_acadplan: function() {
@@ -151,7 +150,10 @@ export default {
                 this.statistics[reading_ay]["major"][this.major] += 1;
 
                 // update year in this.statistics
-                this.statistics[reading_ay]["year"][reading_year] += 1
+                this.statistics[reading_ay]["year"][reading_year] += 1;
+
+                // update total
+                this.statistics[reading_ay]["total"] += 1;
             } else {
                 this.statistics[reading_ay] = {
                     major: {},
@@ -160,6 +162,7 @@ export default {
                 }
                 this.statistics[reading_ay]["major"][this.major] = 1;
                 this.statistics[reading_ay]["year"][reading_year] += 1;
+                this.statistics[reading_ay]["total"] += 1;
             }
 
             // update statistics
@@ -177,6 +180,7 @@ export default {
             // update major in this.statistics
             this.statistics[reading_ay]["major"][this.major] -= 1;
             this.statistics[reading_ay]["year"][reading_year] -= 1;
+            this.statistics[reading_ay]["total"] -= 1;
 
             // update statistics
             database.collection('dashboard').doc(module_code).update({
