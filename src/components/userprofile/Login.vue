@@ -7,7 +7,7 @@
             <div v-if="error" class="alert alert-danger">{{error}}</div>
             <!-- Welcome message if user is logged in -->
             <div v-if="user.loggedIn">
-              Welcome, {{ user.data.displayName }}!
+              Welcome, {{ name }}!
               <br>
               Click on any tab above to start planning.
             </div>
@@ -51,10 +51,9 @@
               <div class="form-group row mb-0">
                   <button type="submit" class="btn btn-primary">Login</button>
               </div>
-              <br>
 
               <!-- Redirect to register page -->
-              <div>
+              <div class="form-group row justify-content-center">
                 <router-link to="/register"><a>Don't have an account? Register here.</a></router-link>
               </div>
 
@@ -73,6 +72,7 @@ import firebase from 'firebase';
 export default {
   data() {
     return {
+      name: "",
       form: {
         email: "",
         password: "",
@@ -80,18 +80,30 @@ export default {
       error: null,
     };
   },
+  created() {
+    this.showName()
+  },
   methods: {
+    showName() {
+      var user = firebase.auth().currentUser;
+      this.name = user.displayName;
+    },
     submit() {
       firebase
         .auth()
         .signInWithEmailAndPassword(this.form.email, this.form.password)
         .then(() =>{
-          this.$router.replace({ name: "Profile" });
+          this.$router.replace({ name: "Home" });
+          alert("Logged in successfully.")
         })
         .catch(err => {
           // will alert users that typed in an invalid email
           this.error = err.message;
         });
+      // clear input
+      this.form.email = "";
+      this.form.password = "";
+      this.error = null;
     }
   },
   computed: {
