@@ -2,7 +2,7 @@
 
 <html>
   <head>
-    <title>vueplan SEP Page</title>
+    <title>Update Profile Page</title>
   </head>
   
   <body>
@@ -10,6 +10,7 @@
         <h2> Update Profile </h2>
 
         <form action="#" @submit.prevent="save">
+            <!-- Update name -->
             <div class="form-group row">
                 <label for="name" class="col-md-4 col-form-label text-md-right">Name</label>
                 <div class="col-md-6">
@@ -32,37 +33,64 @@
                 <div class = "col-md-6 text-md-left"> {{ user.data.email }} </div>
             </div>
 
+            <!-- Update year of matriculation -->
             <div class="form-group row">
                 <label for="year" class="col-md-4 col-form-label text-md-right">Year of Matriculation</label>
 
                 <div class="col-md-6">
-                    <multiselect v-model="form.year" :options="[2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]" :multiple="false" :close-on-select="true" :clear-on-select="false" :preserve-search="true" placeholder="Select Year e.g. 18 if you matriculated in AY18/19">
+                    <multiselect 
+                        v-model="form.year" 
+                        :options="[2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]" 
+                        :multiple="false" 
+                        :close-on-select="true" 
+                        :clear-on-select="false" 
+                        :preserve-search="true" 
+                        :allow-empty="false"
+                        placeholder="Select Year">
                         <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
                         </template>
                     </multiselect>
                 </div>
             </div>
 
+            <!-- Update major -->
             <div class = "form-group row">
-                <label for="year" class="col-md-4 col-form-label text-md-right">Major</label>
+                <label for="major" class="col-md-4 col-form-label text-md-right">Major</label>
                 <div class="col-md-6">
-                    <multiselect v-model="form.major" :options="Object.keys(allmajors)" :multiple="false" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Major">
+                    <multiselect 
+                        v-model="form.major" 
+                        :options="Object.keys(allmajors)" 
+                        :multiple="false" 
+                        :close-on-select="true" 
+                        :clear-on-select="false" 
+                        :preserve-search="true" 
+                        :allow-empty="false"
+                        placeholder="Select Major">
                         <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
                         </template>
                     </multiselect>
                 </div>
             </div>
-
+            
+            <!-- Update exemptions -->
             <div class = "form-group row">
-                <label for="year" class="col-md-4 col-form-label text-md-right">Module Exemptions</label>
+                <label for="exemptions" class="col-md-4 col-form-label text-md-right">Module Exemptions</label>
                 <div class="col-md-6">
-                    <multiselect v-model="form.exemptions" :options="Object.keys(allmodules)" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select Exemption">
+                    <multiselect 
+                        v-model="form.exemptions" 
+                        :options="Object.keys(allmodules)" 
+                        :multiple="true" 
+                        :close-on-select="false" 
+                        :clear-on-select="false" 
+                        :preserve-search="true" 
+                        placeholder="Select Exemption">
                         <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
                         </template>
                     </multiselect>
                 </div>
             </div>
 
+            <!-- Save button -->
             <div class="form-group row mb-0">
                     <button type="save" class="btn btn-primary">Save</button>
             </div>

@@ -50,8 +50,8 @@ export default {
                 }
             }
             //this.pus = output;
-            this.allPus = [{ selectAll: 'SELECT ALL', all: output }];
-            //this.allPus = output;
+            //this.allPus = [{ selectAll: 'SELECT ALL', all: output }];
+            this.allPus = output;
         },
     },
 

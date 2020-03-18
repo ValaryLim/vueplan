@@ -26,15 +26,17 @@
           v-model="pus" 
           :options="allPus" 
           :multiple="true" 
-          group-values="all"
-          group-label="selectAll"
-          :group-select="true"
           :close-on-select="false" 
           :clear-on-select="false" 
           :preserve-search="true" 
           placeholder="Select Partner University" 
           :preselect-first="false"
           open-direction="bottom">
+          <!-- 
+          group-values="all"
+          group-label="selectAll"
+          :group-select="true"
+          -->
           <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
             <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} PUs selected</span>
           </template>

@@ -51,10 +51,9 @@
               <div class="form-group row mb-0">
                   <button type="submit" class="btn btn-primary">Login</button>
               </div>
-              <br>
 
               <!-- Redirect to register page -->
-              <div>
+              <div class="form-group row justify-content-center">
                 <router-link to="/register"><a>Don't have an account? Register here.</a></router-link>
               </div>
 
@@ -86,7 +85,7 @@ export default {
         .auth()
         .signInWithEmailAndPassword(this.form.email, this.form.password)
         .then(() =>{
-          this.$router.replace({ name: "Profile" });
+          this.$router.replace({ name: "Home" });
         })
         .catch(err => {
           // will alert users that typed in an invalid email

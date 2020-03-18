@@ -1,5 +1,4 @@
 <template src = "./UpdateProfile.html"> </template>
-<style scoped src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <script>
 import Multiselect from 'vue-multiselect';
@@ -13,8 +12,8 @@ export default {
     data() {
         return {
             form: {
-                name: "",
-                email: "",
+                name: this.user.displayName,
+                email: this.user.data.email,
                 year: "",
                 major: "",
                 exemptions: "",
