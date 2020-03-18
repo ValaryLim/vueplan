@@ -1,5 +1,5 @@
 <template>
-    <div id = "profile">
+    <div class="justify-content-center" id="profile">
         <h2> Profile </h2>
 
         <!-- Show basic user details -->
@@ -12,11 +12,11 @@
                 <b>Email:</b> {{ user.data.email }}
                 <br>
                 <!-- Year of Study & Module Exemptions retrieved from acadplan collection db -->
-                <b>Year of Matriculation:</b> August {{ showYear() }}
+                <b>Year of Matriculation:</b> August {{ year }}
                 <br>
-                <b>Major:</b> {{ showMajor() }}
+                <b>Major:</b> {{ major }}
                 <br>
-                <b>Module Exemptions:</b> {{ showExemptions() }}
+                <b>Module Exemptions:</b> {{ exemptions }}
             </label>
         </div>
 
@@ -26,8 +26,6 @@
         </div>
     </div>
 </template>
-
-<style src = "./Profile.css" scoped></style>
 
 <script>
 import { mapGetters } from "vuex";
@@ -45,35 +43,20 @@ export default {
     },
 
     methods: {
-        showYear: function() {
+        fetch_details: function() {
             var user = firebase.auth().currentUser;
             let userRef = database.collection('acadplan').doc(user.uid);
             userRef.get()
                 .then(doc => {
-                    this.year = doc.data()['year']
+                    this.year = doc.data()['year'];
+                    this.exemptions = doc.data()['acadplan_exemptions'];
+                    this.major = doc.data()['major'];
                 })
-            return this.year
         },
+    },
 
-        showExemptions: function() {
-            var user = firebase.auth().currentUser;
-            let userRef = database.collection('acadplan').doc(user.uid);
-            userRef.get()
-                .then(doc => {
-                    this.exemptions = doc.data()['acadplan_exemptions']
-                })
-            return this.exemptions
-        },
-
-        showMajor: function() {
-            var user = firebase.auth().currentUser;
-            let userRef = database.collection('acadplan').doc(user.uid);
-            userRef.get()
-                .then(doc => {
-                    this.major = doc.data()['major']
-                })
-            return this.major
-        },
+    created() {
+        this.fetch_details()
     },
 
     computed: {

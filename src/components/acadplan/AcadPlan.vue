@@ -50,8 +50,8 @@ export default {
             major: "",
             acadplan: {},
             module_semester_mapping: {},
-            acadplan_exemptions: ["ES1000"],
-            total_mc: 1000,
+            acadplan_exemptions: [],
+            total_mc: 0,
             num_semester_mapping: [
                 "Y1S1",  "Y1S2", "Y2S1", "Y2S2",  "Y3S1",  "Y3S2", "Y4S1",  "Y4S2"
             ],
@@ -196,7 +196,7 @@ export default {
              */
             // remove whitespace and convert module name to lowercase
             var module_name = this.add_module_code.trim().toLowerCase();
-
+            
             // clear module slot after use
             this.add_module_code = ""; 
 
@@ -214,8 +214,11 @@ export default {
                     );
                 } else if (module === this.inserted_module) {
                     this.printError("Module in Academic Plan", module_name.toUpperCase() + " is already in your academic plan. Please do not add duplicate modules.");
+                } else if (this.check_preclu(module.parsepreclu)) {
+                    this.printError("Precluded Module in Academic Plan", "A preclusion of " + module_name.toUpperCase() + " is already in your academic plan.");
                 } else {
                     // check if all prerequisites have been met
+                    // console.log(module);
                     var mod_prerequisites_check = this.check_prerequisites_sem(module.parseprereq);
                     if (mod_prerequisites_check !== this.unmet_prereq) {
                         this.fetch_dashboard(module.code).then(doc => {
@@ -443,7 +446,6 @@ export default {
             }
             // tracker of earliest semester where module can be inserted
             var insert_sem = 0;
-
             // if there is more than one prerequisite
             for (var key in prereq_tree) {
                 // get prerequisite subtree
@@ -462,6 +464,7 @@ export default {
             /** 
              * Returns first semester that module can be inserted, -1 otherwise.
              */
+            // console.log("check_prereqs_sem_string")
             // tracker of earliest semester where module can be inserted
             var insert_sem = 0;
             // check if module exists
@@ -469,6 +472,9 @@ export default {
                 // check if prerequisite is taken
                 if (prereq_tree in this.module_semester_mapping) {
                     insert_sem = parseInt(this.module_semester_mapping[prereq_tree]) + 1;
+                    return insert_sem;
+                } else if (this.acadplan_exemptions.includes(prereq_tree)) {
+                    // exempted from module, no need to increment
                     return insert_sem;
                 } else if (this.acadplan_exemptions.includes(prereq_tree)) {
                     // exempted from module, no need to increment
@@ -539,6 +545,11 @@ export default {
                                     earliest_or_sem = 1;
                                     can_take = true;
                                 }
+                                // or if exempted from module
+                                if (this.acadplan_exemptions.includes(preclu2)) {
+                                    earliest_or_sem = 1;
+                                    can_take = true;
+                                }
                             }
                         }
                     }
@@ -574,7 +585,6 @@ export default {
                     // there is a nested dictionary (either "and" or "or")
                     // recursively call check_prerequisites_sem
                     var check_subreq = this.check_prerequisites_sem(req);
-
                     // if prereqs are not met
                     if (check_subreq === this.unmet_prereq) {
                         return this.unmet_prereq;
@@ -704,8 +714,22 @@ export default {
                     }
                 }
             }
-
             return preclu_arr;  
+        },
+        check_preclu: function(preclu_tree) {
+            /** 
+             * Checks if any preclusion has been taken. If it has, returns true. Else, returns false.
+             */
+            var all_preclusions = this.get_all_preclu(preclu_tree, []);
+
+            for (var preclu_index in all_preclusions) {
+                var preclu = all_preclusions[preclu_index];
+                if (this.allmodules[preclu] && preclu in this.module_semester_mapping) {
+                    return true;
+                }
+            }
+
+            return false;
         },
         printError: function(header, message) {
             this.modal_header = header;

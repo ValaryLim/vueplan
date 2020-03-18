@@ -1,81 +1,7 @@
-<template>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-body">
-            <div v-if="error" class="alert alert-danger">{{error}}</div>
-            <form action="#" @submit.prevent="submit">
-
-              <!-- Enter name -->
-              <div class="form-group row">
-                <label for="name" class="col-md-4 col-form-label text-md-right">Name</label>
-                <div class="col-md-6">
-                  <input
-                    id="name"
-                    type="name"
-                    class="form-control"
-                    name="name"
-                    value
-                    required
-                    autofocus
-                    v-model="form.name"
-                  />
-                </div>
-              </div>
-
-              <!-- Enter email -->
-              <div class="form-group row">
-                <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
-                <div class="col-md-6">
-                  <input
-                    id="email"
-                    type="email"
-                    class="form-control"
-                    name="email"
-                    value
-                    required
-                    autofocus
-                    v-model="form.email"
-                  />
-                </div>
-              </div>
-
-              <!-- Enter password -->
-              <div class="form-group row">
-                <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
-                <div class="col-md-6">
-                  <input
-                    id="password"
-                    type="password"
-                    class="form-control"
-                    name="password"
-                    required
-                    v-model="form.password"
-                  />
-                </div>
-              </div>
-
-              <!-- Register button -->
-              <div class="form-group row mb-0">
-                  <button type="submit" class="btn btn-primary">Register</button>
-              </div>
-              <br>
-
-              <!-- Redirect to login page -->
-              <div>
-                <router-link to="/login"><a>Already have an account? Login here.</a></router-link>
-              </div>
-
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
+<template src='./Register.html'> </template>
 
 <script>
+import Multiselect from 'vue-multiselect';
 import firebase from 'firebase';
 import database from '../firebase.js';
 
@@ -86,9 +12,18 @@ export default {
         name: "",
         email: "",
         password: "",
+        year: 2020,
+        major: "Business Analytics",
+        exemptions: ["ES1000"],
       },
       error: null
     };
+  },
+  
+  props: ['allmodules', 'allmajors'],
+
+  components: {
+    Multiselect
   },
 
   methods: {
@@ -103,10 +38,10 @@ export default {
           // set userID as the document ID
           database.collection('acadplan').doc(data.user.uid).set({
             // default fields
-            year: 0,
-            major: "",
+            year: this.form.year,
+            major: this.form.major,
             total_mc: 0,
-            acadplan_exemptions: ["ES1000"],
+            acadplan_exemptions: this.form.exemptions,
             module_semester_mapping: {},
             module_location: {0: [{mod: "", mc: 0, move: false, index: 0}],
                               1: [{mod: "", mc: 0, move: false, index: 1}],
@@ -129,7 +64,7 @@ export default {
             })
             .then(() =>{
             // bring user to profile page
-            this.$router.replace({ name: "Profile" });
+            this.$router.replace({ name: "Home" });
             }
           ))
         })
