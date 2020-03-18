@@ -2,7 +2,7 @@
 
 <html>
   <head>
-    <title>vueplan SEP Page</title>
+    <title>SEP Module Mapping Page</title>
   </head>
   
   <body>
@@ -30,8 +30,7 @@
           :clear-on-select="false" 
           :preserve-search="true" 
           placeholder="Select Partner University" 
-          :preselect-first="false"
-          open-direction="bottom">
+          :preselect-first="false">
           <!-- 
           group-values="all"
           group-label="selectAll"
@@ -46,7 +45,7 @@
       <div class="row multiselect-module">
         <!-- Filter by Course -->
         <div class = "multiselect_title">
-          <label>Filter by Courses</label>
+          <label>Filter by Courses*</label>
         </div>
         <multiselect 
           v-model="courses" 
@@ -57,6 +56,7 @@
           :preserve-search="true" 
           placeholder="Select Course" 
           :preselect-first="false" 
+          :allow-empty="false"
           open-direction="bottom">
           <template slot="selection" slot-scope="{ values, search, isOpen }">
           </template>
@@ -78,9 +78,29 @@
             </tr>
           </thead>
 
-          <!-- table body -->
-          <tbody v-if="pus" :sepMappings="sepMappings" pus="pus" courses="courses">
-            <tr v-for="mapping in sepMappings" v-show="relevant(allmajors, mapping.nusModuleCode) && pus.includes(mapping.pu)">
+          <tbody :sepMappings="sepMappings" pus="pus" courses="courses">
+            <!-- Filter Course Only [Default] -->
+            <tr v-for="mapping in sepMappings" v-show="!pus.length && courses.length && relevant(allmajors, mapping.nusModuleCode)">
+              <td>{{mapping.pu}}</td>
+              <td>{{mapping.nusModuleCode}}</td>
+              <td>{{mapping.nusModuleTitle}}</td>
+              <td>{{mapping.mcs}}</td>
+              <td>{{mapping.puModuleCode}}</td>
+              <td>{{mapping.puModuleTitle}}</td>
+              <td>{{mapping.puMcs}}</td>
+            </tr>
+            <!-- Filter PU Only -->
+            <tr v-for="mapping in sepMappings" v-show="pus.length && !courses.length && pus.includes(mapping.pu)">
+              <td>{{mapping.pu}}</td>
+              <td>{{mapping.nusModuleCode}}</td>
+              <td>{{mapping.nusModuleTitle}}</td>
+              <td>{{mapping.mcs}}</td>
+              <td>{{mapping.puModuleCode}}</td>
+              <td>{{mapping.puModuleTitle}}</td>
+              <td>{{mapping.puMcs}}</td>
+            </tr>
+            <!-- Filter Course and PU -->
+            <tr v-for="mapping in sepMappings" v-show="pus.length && courses.length && relevant(allmajors, mapping.nusModuleCode) && pus.includes(mapping.pu)">
               <td>{{mapping.pu}}</td>
               <td>{{mapping.nusModuleCode}}</td>
               <td>{{mapping.nusModuleTitle}}</td>
