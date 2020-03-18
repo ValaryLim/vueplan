@@ -7,7 +7,7 @@
             <div v-if="error" class="alert alert-danger">{{error}}</div>
             <!-- Welcome message if user is logged in -->
             <div v-if="user.loggedIn">
-              Welcome, {{ user.data.displayName }}!
+              Welcome, {{ name }}!
               <br>
               Click on any tab above to start planning.
             </div>
@@ -72,6 +72,7 @@ import firebase from 'firebase';
 export default {
   data() {
     return {
+      name: "",
       form: {
         email: "",
         password: "",
@@ -79,7 +80,14 @@ export default {
       error: null,
     };
   },
+  created() {
+    this.showName()
+  },
   methods: {
+    showName() {
+      var user = firebase.auth().currentUser;
+      this.name = user.displayName;
+    },
     submit() {
       firebase
         .auth()
