@@ -86,11 +86,16 @@ export default {
         .signInWithEmailAndPassword(this.form.email, this.form.password)
         .then(() =>{
           this.$router.replace({ name: "Home" });
+          alert("Logged in successfully.")
         })
         .catch(err => {
           // will alert users that typed in an invalid email
           this.error = err.message;
         });
+      // clear input
+      this.form.email = "";
+      this.form.password = "";
+      this.error = null;
     }
   },
   computed: {
