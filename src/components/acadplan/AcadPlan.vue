@@ -28,20 +28,23 @@ export default {
     },
     data() {
         return {
-            // add module data
+            /* add module data */
             add_module_code: "",
             invalid_module: 0,
             inserted_module: 1,
             unmet_prereq: -1,
             exempted_module: 2,
 
-            // error message data
+            /* error message data */
             modal_header: "Default header",
             modal_body: "Default body",
 
-            // edit module credits
+            /* edit module credits */
             add_mc: 1,
             subtract_mc: -1,
+
+            /* statistics */
+            statistics: {},
 
             /* user specific data */
             major: "",
@@ -52,13 +55,13 @@ export default {
             num_semester_mapping: [
                 "Y1S1",  "Y1S2", "Y2S1", "Y2S2",  "Y3S1",  "Y3S2", "Y4S1",  "Y4S2"
             ],
+            matriculated_year: 0,
             index: 1000,
         };
     },
     props: ['allmodules'],
     computed: {
         sorted_sems: function() {
-            console.log("called")
             var result_arr = []
             for (var i in this.acadplan) {
                 this.sort_modules(this.acadplan[i], i)
@@ -73,6 +76,7 @@ export default {
     },
     created() {
         this.fetch_acadplan();
+        this.fetch_dashboard("MA1521");
     },
     methods: {
         fetch_acadplan: function() {
@@ -82,11 +86,11 @@ export default {
                 this.acadplan_exemptions = doc.data()['acadplan_exemptions'];
                 this.major = doc.data()['major'];
                 this.acadplan = doc.data()['module_location'];
-                // console.log(doc.data()['module_location']);
                 this.module_semester_mapping = doc.data()['module_semester_mapping'];
                 this.total_mc = doc.data()['total_mc'];
                 this.num_semester_mapping = doc.data()['num_semester_mapping'];
                 this.index = doc.data()['index'];
+                this.matriculated_year = doc.data()['year'];
             });
         },
         save_acadplan: function() {
@@ -99,20 +103,105 @@ export default {
                 "total_mc": this.total_mc,
             });
         },
+        fetch_dashboard: function(module_code) {
+            /** 
+             * Accepts a module code and retrieves its dashboard data
+             */
+            let moduleRef = database.collection('dashboard').doc(module_code);
+
+            // need to check if module_Code in dashboard, else create the doc.
+            return moduleRef.get().then(doc => {
+                if (doc.exists) {
+                    return doc.data()['statistics'];
+                } else {
+                    var default_settings = {
+                        statistics: {}
+                    }
+                    database.collection('dashboard').doc(module_code).set(default_settings);
+                    return default_settings;
+                }
+            })
+        },
+        calculateYear: function(semester_taking) {
+            /**
+             * Calculates what year the student will be in in that academic year
+             */
+            return Math.floor(semester_taking / 2);
+        },
+        calculateAcademicYear: function(semester_taking) {
+            /**
+             * Calculates the academic year 
+             */
+            var academic_year = (this.matriculated_year + Math.floor(semester_taking / 2)) % 2000;
+            var academic_sem = Math.abs(semester_taking % 2 - 1);
+            return String(academic_year) + String(academic_year + 1) + "-S" + String(academic_sem);
+        },
+        update_dashboard_add: function(module_code, semester_taking) {
+            /**
+             * Takes in the updated dashboard data (statistics) and updates the data
+             */
+            // calculate academic year and semester that user is reading the module
+            var reading_ay = this.calculateAcademicYear(semester_taking);
+
+            // calculate year that user will be in
+            var reading_year = this.calculateYear(semester_taking);
+
+            if (reading_ay in this.statistics) {
+                // update major in this.statistics
+                this.statistics[reading_ay]["major"][this.major] += 1;
+
+                // update year in this.statistics
+                this.statistics[reading_ay]["year"][reading_year] += 1
+            } else {
+                this.statistics[reading_ay] = {
+                    major: {},
+                    total: 0,
+                    year: [0, 0, 0, 0]
+                }
+                this.statistics[reading_ay]["major"][this.major] = 1;
+                this.statistics[reading_ay]["year"][reading_year] += 1;
+            }
+
+            // update statistics
+            database.collection('dashboard').doc(module_code).update({
+                "statistics": this.statistics,
+            })
+        },
+        update_dashboard_delete: function(module_code, semester_taking) {
+            // calculate academic year and semester that user was reading the module
+            var reading_ay = this.calculateAcademicYear(semester_taking);
+
+            // calculate the year that user was in when reading the module
+            var reading_year = this.calculateYear(semester_taking);
+
+            // update major in this.statistics
+            this.statistics[reading_ay]["major"][this.major] -= 1;
+            this.statistics[reading_ay]["year"][reading_year] -= 1;
+
+            // update statistics
+            database.collection('dashboard').doc(module_code).update({
+                "statistics": this.statistics,
+            });
+        },
+        update_dashboard_shift: function(module_code, previous_semester, new_semester) {
+            // delete from old semester database
+            this.update_dashboard_delete(module_code, previous_semester);
+
+            // add to new semester database
+            this.update_dashboard_add(module_code, new_semester);
+        },
         add_module_sem: function() {
             /** 
              * adds module to the earliest possible semester the student can take it 
              */
             // remove whitespace and convert module name to lowercase
             var module_name = this.add_module_code.trim().toLowerCase();
-            
-            console.log(module_name, 1);
+
             // clear module slot after use
             this.add_module_code = ""; 
 
             if (module_name !== "") {
                 // check valid module
-                console.log(2);
                 var module = this.check_valid_module(module_name);
 
                 if (module === this.invalid_module) {
@@ -126,30 +215,31 @@ export default {
                 } else if (module === this.inserted_module) {
                     this.printError("Module in Academic Plan", module_name.toUpperCase() + " is already in your academic plan. Please do not add duplicate modules.");
                 } else {
-                    console.log(3);
                     // check if all prerequisites have been met
                     var mod_prerequisites_check = this.check_prerequisites_sem(module.parseprereq);
                     if (mod_prerequisites_check !== this.unmet_prereq) {
-                        console.log(4);
-                        console.log(module.code, "module code");
-                        console.log(mod_prerequisites_check, "prerequisites check");
+                        this.fetch_dashboard(module.code).then(doc => {
+                            this.statistics = doc;
+                        });
+
                         this.acadplan[mod_prerequisites_check].push({ mod: module.code, mc: module.mc, move: true, index: this.index }); 
                         this.module_semester_mapping[module.code] = parseInt(mod_prerequisites_check);
-                        console.log(this.acadplan, "acadplan");
-                        console.log(this.module_semester_mapping, "mod_sem_mapping");
                         this.index++;
+
+                        // updte module credits
                         this.update_module_credits(this.add_mc, mod_prerequisites_check, module.mc);
-                        console.log("update_module_credits");
-                        
                         this.total_mc += module.mc;
                         
+                        // save academic plan and dashboard data
                         this.save_acadplan();
+
+                        // update dashboard
+                        setTimeout(() => this.update_dashboard_add(module.code, mod_prerequisites_check), 1000);
                     } else {
                         this.printError("Incomplete Prerequisites", "This module cannot be added to your academic plan because you have yet to add all of its' prerequisites. Please do so first.");
                     }
                 }
             } else {
-                console.log(5);
                 this.printError("Attempted to Add Blank Module", "Please type the module you wish to add in the textbox before pressing the Add button.");
             }
         },
@@ -180,8 +270,6 @@ export default {
                     } else if (this.acadplan_exemptions.includes(key)) { // check if code is exempted
                         return this.exempted_module;
                     } else {
-                        // console.log(key, this.acadplan_exemptions);
-                        // console.log(key in this.acadplan_exemptions);
                         return this.allmodules[key]; // can be added
                     }
                 }
@@ -189,9 +277,14 @@ export default {
             return this.invalid_module; // module does not exist
         },
         delete_module: function(sem, module) {
-            var module_name = module.mod;
+            var module_code = module.mod;
 
-            if (this.check_unlocked(module_name)) {
+            if (this.check_unlocked(module_code)) {
+                // fetch dashboard data for this module
+                this.fetch_dashboard(module_code).then(doc => {
+                    this.statistics = doc;
+                });
+
                 // update number of modular credits
                 this.update_module_credits(this.subtract_mc, sem, module.mc);
                 this.total_mc -= module.mc;
@@ -200,7 +293,12 @@ export default {
                 this.acadplan[sem] = this.acadplan[sem].filter((event) => {
                     return event.index !== module.index   
                 });
+
+                // update acadplan
                 this.save_acadplan();
+
+                // update dashboard
+                setTimeout(() => this.update_dashboard_delete(module_code, sem), 1000);
             } else {
                 this.printError("Deletion Error", "This module cannot be deleted as some modules in your academic plan depend on the module you are trying to delete.");
             }
@@ -239,12 +337,21 @@ export default {
                     return;
                 }
                 
-                // module can be shifted, update the module
-                this.module_semester_mapping[check_module.mod] =parseInt(sem_num);
+                // module can be shifted
+                // fetch dashboard data for this module
+                this.fetch_dashboard(check_module.mod).then(doc => {
+                    this.statistics = doc;
+                });
+
+                // update the module
+                this.module_semester_mapping[check_module.mod] = parseInt(sem_num);
 
                 // update module credits in old and new semester
                 this.update_module_credits(this.subtract_mc, previous_sem, check_module.mc);
                 this.update_module_credits(this.add_mc, sem_num, check_module.mc);
+
+                // update dashboard
+                setTimeout(() => this.update_dashboard_shift(check_module.mod, previous_sem, sem_num), 1000);
             }
 
             this.save_acadplan();
@@ -325,7 +432,6 @@ export default {
             /** 
              * returns the earliest sem that the module can be taken, -1 otherwise. 
              */
-            console.log(prereq_tree, 1, "prerequisite tree");
             // if there are no prerequisites, module can be inserted immediately after the first semester
             if (Object.keys(prereq_tree).length === 0) {
                 return 0; // can insert into first semester
@@ -344,7 +450,6 @@ export default {
                 var prereq_subtree = prereq_tree[key];
 
                 if (key === "and") {
-                    console.log(prereq_subtree);
                     return this.check_prerequisites_sem_and(prereq_subtree);
                 } else if (key === "or") {
                     return this.check_prerequisites_sem_or(prereq_subtree);
@@ -358,7 +463,6 @@ export default {
              * Returns first semester that module can be inserted, -1 otherwise.
              */
             // tracker of earliest semester where module can be inserted
-            console.log("CHECK PREREQUISITE SEM STRING", "PREREQ TREE:", prereq_tree)
             var insert_sem = 0;
             // check if module exists
             if (this.allmodules[prereq_tree]) {                
@@ -456,13 +560,11 @@ export default {
         check_prerequisites_sem_and: function(prereq_subtree) {
             // tracker of earliest semester where module can be inserted
             var insert_sem = 0;
-            console.log(prereq_subtree, "PREREQ SUBTREE");
             // need all requirements within "and"
             for (var req_index in prereq_subtree) {
                 var req = prereq_subtree[req_index];
                 if (typeof(req) === "string") {
                     var req_insert_sem = this.check_prerequisites_sem_string(req);
-                    console.log(req_insert_sem, 3, "req insert sem");
                     if (req_insert_sem === this.unmet_prereq) {
                         return this.unmet_prereq;
                     } else if (req_insert_sem > insert_sem) {
@@ -472,7 +574,7 @@ export default {
                     // there is a nested dictionary (either "and" or "or")
                     // recursively call check_prerequisites_sem
                     var check_subreq = this.check_prerequisites_sem(req);
-                    console.log(check_subreq, "CHECK SUBREQ");
+
                     // if prereqs are not met
                     if (check_subreq === this.unmet_prereq) {
                         return this.unmet_prereq;

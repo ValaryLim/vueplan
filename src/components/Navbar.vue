@@ -23,6 +23,7 @@
                 <span class="header-tab"><router-link to="/gradprogress"><a>Graduation Progress</a></router-link></span>
                 <span class="header-tab"><router-link to="/moduleinfo"><a>Module Information</a></router-link></span>
                 <span class="header-tab"><router-link to="/sepmapping"><a>SEP Mapping</a></router-link></span>
+                <span class="header-tab"><router-link to="/dashboard"><a>Dashboard</a></router-link></span>
                 <span class="header-tab header-tab-dropdown">
                     <button class="dropdown-button">
                         <em>{{user.data.email}}</em>
