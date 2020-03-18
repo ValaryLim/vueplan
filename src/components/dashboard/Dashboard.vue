@@ -1,10 +1,12 @@
 <template>
     <div class="row">
         <h2>Module Popularity Dashboard</h2>
+        <popularity-chart class="chart" :key="key1" :preprocessed_data="preprocessed_data" :current_ay="current_ay"></popularity-chart>
         <div>
-            <popularity-chart class="chart" :key="key1" :preprocessed_data="preprocessed_data" :current_ay="current_ay"></popularity-chart>
             <major-chart class="chart" :key="key2" :preprocessed_data="preprocessed_data" :current_ay="current_ay" :major="major"></major-chart>
             <major-chart-all class="chart" :key="key3" :preprocessed_data="preprocessed_data" :major="major"></major-chart-all>
+        </div>
+        <div>
             <year-chart class="chart" :key="key4" :preprocessed_data="preprocessed_data" :current_ay="current_ay" :year="year"></year-chart>
             <year-chart-all class="chart" :key="key5" :preprocessed_data="preprocessed_data" :year="year"></year-chart-all>
         </div>
