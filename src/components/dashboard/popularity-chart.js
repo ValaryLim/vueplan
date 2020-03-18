@@ -35,7 +35,8 @@ export default {
             scales:{
                 yAxes:[{
                     ticks:{
-                        min: 0
+                        min: 0,
+                        max: 500,
                     },
                 }],
             },
@@ -60,12 +61,16 @@ export default {
             var labels = [];
             var data = [];
             var backgroundColor = [];
+            var rolling_max = 0;
 
             // go through each semester in preprocessed_data, and add them to variables
             for (var compared_ay in this.preprocessed_data) {
                 labels.push(compared_ay);
                 data.push(this.preprocessed_data[compared_ay]['total']);
                 backgroundColor.push(this.calculateColour(compared_ay));
+                if (this.preprocessed_data[compared_ay]['total'] > rolling_max) {
+                    rolling_max = this.preprocessed_data[compared_ay]['total'];
+                }
             }
 
             this.chart_data = {
@@ -77,6 +82,13 @@ export default {
                     }
                 ]
             }
+
+            this.options['scales']['yAxes'] = [{
+                ticks: {
+                    min: 0,
+                    max: Math.ceil((rolling_max + 20) / 20) * 20
+                }
+            }];
         },
         calculateColour: function(compared_ay) {
             /**

@@ -11,6 +11,7 @@ export default{
         /* colours to generate */
         major_same: "#F76C6C",
         major_different: ["#d8d8d8", "#778899", "#24305E"],
+        
         /* chart data */
         chartdata: {
             labels: ['Business Analytics', 'Computer Science', 'Information Systems'],

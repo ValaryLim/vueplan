@@ -132,7 +132,12 @@ export default {
              * Calculates the academic year 
              */
             var academic_year = (this.matriculated_year + Math.floor(semester_taking / 2)) % 2000;
-            var academic_sem = Math.abs(semester_taking % 2 - 1);
+            var academic_sem;
+            if (semester_taking % 2) {
+                academic_sem = 2;
+            } else {
+                academic_sem = 1;
+            }
             return String(academic_year) + String(academic_year + 1) + "-S" + String(academic_sem);
         },
         update_dashboard_add: function(module_code, semester_taking) {

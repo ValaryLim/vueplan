@@ -6,16 +6,14 @@ export default{
     components: {
         ChartDataLabels
     },
-    props: ['module'],
+    props: ['preprocessed_data', 'current_ay', 'year'],
     data: () => ({
-        chartdata: {
-            labels: ['Year 1', 'Year 2', 'Year 3', 'Year 4'],
-            datasets: [
-                {
-                    data: [1, 102, 34, 2], 
-                    backgroundColor:['#778899', '#F76C6C', '#a9a9a9', '#d8d8d8'],
-                }
-            ]  
+        /* colours to generate */
+        year_same: "#F76C6C",
+        year_different: ["#d8d8d8", "#778899", "#24305E"],
+
+        chart_data: {
+
         },
         
         options: {
@@ -38,8 +36,45 @@ export default{
                 }
             }
         }
-      }),
+    }),
     mounted(){
-        this.renderChart(this.chartdata,this.options)
+        this.renderChart(this.chart_data,this.options)
+    },
+    methods: {
+        processChartData: function() {
+            /**
+            * Process the preprocessed_data obtained from Dashboard to a suitable format to render piechart
+            */
+            // initialise variables for chart_data
+            var labels = [];
+            var data = [];
+            var backgroundColor = [];
+            var index = 0;
+
+            // fill in chart_data based on current_ay
+            for (var y in this.preprocessed_data[this.current_ay]['year']) {
+                labels.push("Year " + String(parseInt(y) + 1));
+                data.push(this.preprocessed_data[this.current_ay]['year'][y]);
+                if (parseInt(y) + 1 === this.year) {
+                    backgroundColor.push(this.year_same);
+                } else {
+                    backgroundColor.push(this.year_different[index]);
+                    index++;
+                }
+            }
+
+            this.chart_data = {
+                labels: labels,
+                datasets: [
+                    {
+                        data: data,
+                        backgroundColor: backgroundColor
+                    }
+                ]
+            }
+        }
+    },
+    created() {
+        this.processChartData();
     }
 }

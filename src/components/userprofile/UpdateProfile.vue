@@ -126,7 +126,12 @@ export default {
              * Calculates the academic year 
              */
             var academic_year = (matriculation_year + Math.floor(semester_taking / 2)) % 2000;
-            var academic_sem = Math.abs(semester_taking % 2 - 1);
+            var academic_sem;
+            if (semester_taking % 2) {
+                academic_sem = 2;
+            } else {
+                academic_sem = 1;
+            }
             return String(academic_year) + String(academic_year + 1) + "-S" + String(academic_sem);
         },
 
@@ -136,17 +141,21 @@ export default {
              */
             // for each module
             for (var mod in this.store.module_semester_mapping) {
-                // fetch module data into statistics
-                this.fetch_dashboard(mod).then(doc => {
-                    this.statistics = doc;
-                });
-
-                // get information required
-                var semester_taking = this.store.module_semester_mapping[mod];
-
-                // update data
-                setTimeout(() => this.update_dashboard_module(mod, semester_taking, previous_year, new_year, previous_major, new_major), 1000);
+                this.performSetTimeout(mod, previous_year, new_year, previous_major, new_major);
             }
+        },
+
+        performSetTimeout: function(mod, previous_year, new_year, previous_major, new_major) {
+            // get information required
+            var semester_taking = this.store.module_semester_mapping[mod];
+
+            // fetch module data into statistics
+            this.fetch_dashboard(mod).then(doc => {
+                this.statistics = doc;
+            });
+
+            // update data
+            setTimeout(() => this.update_dashboard_module(mod, semester_taking, previous_year, new_year, previous_major, new_major), 1000);
         },
 
         update_dashboard_module: function(module, semester_taking, previous_year, new_year, previous_major, new_major) {
@@ -154,14 +163,30 @@ export default {
              * Updates the dashboard details of a specific module
              */
             // calculate the previous and new academic years
+            console.log(this.statistics, module, "update_dashboard_module");
             var previous_ay = this.calculateAcademicYear(previous_year, semester_taking);
             var new_ay = this.calculateAcademicYear(new_year, semester_taking);
 
             // calculate year module is read in
             var year = this.calculateYear(semester_taking);
 
+            // if new_ay not in statistics, add it in
+            if (!(new_ay in this.statistics)) {
+                this.statistics[new_ay] = {
+                    major: {},
+                    total: 0,
+                    year: [0, 0, 0, 0]
+                }
+            }
+
+            if (!(new_major in this.statistics[new_ay]["major"])) {
+                this.statistics[new_ay]["major"][new_major] = 0;
+            }
+
             // update statistics
             // 1. update total in previous_ay and new_ay
+            console.log(previous_ay, "previous_ay");
+            console.log(this.statistics[previous_ay]);
             this.statistics[previous_ay]["total"] -= 1;
             this.statistics[new_ay]["total"] += 1;
 

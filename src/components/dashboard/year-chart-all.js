@@ -6,8 +6,12 @@ export default{
     components: {
         ChartDataLabels
     },
-    props: ['module'],
+    props: ['preprocessed_data', 'year'],
     data: () => ({
+        /* colours to generate */
+        year_same: "#F76C6C",
+        year_different: ["#d8d8d8", "#778899", "#24305E"],
+
         chartdata: {
             labels: ['1819-S1', '1819-S2', '1920-S1', '1920-S2', '2021-S1', '2021-S2'],
             datasets: [
@@ -33,11 +37,11 @@ export default{
                 }
             ]  
         },
-        
+        chart_data: {},
         options: {
             title:{
                 display: true,
-                text: 'Current Module Popularity Across Semesters',
+                text: 'Module Popularity Across Semesters by Year',
                 fontColor:'black',
                 fontSize: 16,
             },
@@ -53,8 +57,9 @@ export default{
             },
             scales:{
                 yAxes:[{
-                    ticks:{
-                        min: 0
+                    ticks: {
+                        min: 0,
+                        max: 500
                     },
                 }],
             },
@@ -66,8 +71,57 @@ export default{
                 }
             }
         }
-      }),
+    }),
     mounted(){
-        this.renderChart(this.chartdata,this.options)
+        this.renderChart(this.chart_data,this.options)
+    },
+    methods: {
+        processChartData: function() {
+            /**
+            * Process the preprocessed_data obtained from Dashboard to a suitable format to render piechart
+            */
+            // initialise variables for chart_data
+            var labels = [];
+            var datasets = [{}, {}, {}, {}];
+            var rolling_max = 0;
+            var index = 0;
+
+            // fill in variables
+            for (var ay in this.preprocessed_data) {
+                labels.push(ay);
+                // for each year in ay
+                for (var y = 0; y < 4; y++) {
+                    if (Object.keys(datasets[y]).length === 0) {
+                        datasets[y]['label'] = 'Year ' + String(y + 1);
+                        if (y + 1 === this.year) {
+                            datasets[y]['backgroundColor'] = this.year_same;
+                        } else {
+                            datasets[y]['backgroundColor'] = this.year_different[index];
+                            index++;
+                        }
+                        datasets[y]['data'] = [];
+                    }
+                    datasets[y]['data'].push(this.preprocessed_data[ay]['year'][y]);
+                    if (this.preprocessed_data[ay]['year'][y] > rolling_max) {
+                        rolling_max = this.preprocessed_data[ay]['year'][y]
+                    }
+                }
+            }
+
+            this.chart_data = {
+                labels: labels,
+                datasets: datasets
+            };
+
+            this.options['scales']['yAxes'] = [{
+                ticks: {
+                    min: 0,
+                    max: Math.ceil((rolling_max + 20) / 20) * 20
+                }
+            }];
+        }
+    },
+    created() {
+        this.processChartData();
     }
 }

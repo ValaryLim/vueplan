@@ -4,9 +4,9 @@
         <div>
             <popularity-chart class="chart" :preprocessed_data="preprocessed_data" :current_ay="current_ay"></popularity-chart>
             <major-chart class="chart" :preprocessed_data="preprocessed_data" :current_ay="current_ay" :major="major"></major-chart>
-            <major-chart-all class="chart" :module="module"></major-chart-all>
-            <year-chart class="chart" :module="module"></year-chart>
-            <year-chart-all class="chart" :module="module"></year-chart-all>
+            <major-chart-all class="chart" :preprocessed_data="preprocessed_data" :major="major"></major-chart-all>
+            <year-chart class="chart" :preprocessed_data="preprocessed_data" :current_ay="current_ay" :year="year"></year-chart>
+            <year-chart-all class="chart" :preprocessed_data="preprocessed_data" :year="year"></year-chart-all>
         </div>
     </div>
 </template>
@@ -30,6 +30,7 @@ export default {
         return {
             /* user data */
             major: "Business Analytics",
+            year: 2,
 
             /* general data */
             module: "MA1521",
@@ -38,15 +39,10 @@ export default {
                 '1819-S1': {
                     total: 204,
                     major: {
-                        'Business Analytics': 102,
-                        'Computer Science': 102,
+                        'Business Analytics': 101,
+                        'Computer Science': 103,
                     },
-                    year: {
-                        'Year 1': 0,
-                        'Year 2': 198,
-                        'Year 3': 5,
-                        'Year 4': 1
-                    }
+                    year: [0, 198, 5, 1]
                 },
                 '1819-S2': {
                     total: 201,
@@ -55,12 +51,7 @@ export default {
                         'Computer Science': 87,
                         'Information Systems': 16
                     },
-                    year: {
-                        'Year 1': 2,
-                        'Year 2': 197,
-                        'Year 3': 3,
-                        'Year 4': 0
-                    }
+                    year: [2, 197, 3, 0]
                 },
                 '1920-S1': {
                     total: 197,
@@ -69,12 +60,7 @@ export default {
                         'Computer Science': 88,
                         'Information Systems': 10
                     },
-                    year: {
-                        'Year 1': 0,
-                        'Year 2': 195,
-                        'Year 3': 3,
-                        'Year 4': 0
-                    }
+                    year: [0, 195, 3, 0]
                 },
                 '1920-S2': {
                     total: 204,
@@ -84,12 +70,7 @@ export default {
                         'Information Systems': 21,
                         'Information Security': 5
                     },
-                    year: {
-                        'Year 1': 0,
-                        'Year 2': 198,
-                        'Year 3': 5,
-                        'Year 4': 1
-                    }
+                    year: [0, 198, 5, 1]
                 },
                 '2021-S1': {
                     total: 180,
@@ -98,12 +79,7 @@ export default {
                         'Computer Science': 82,
                         'Information Systems': 5
                     },
-                    year: {
-                        'Year 1': 1,
-                        'Year 2': 177,
-                        'Year 3': 2,
-                        'Year 4': 0
-                    }
+                    year: [1, 177, 2, 0]
                 },
                 '2021-S2': {
                     total: 151,
@@ -112,12 +88,7 @@ export default {
                         'Computer Science': 77,
                         'Information Systems': 6
                     },
-                    year: {
-                        'Year 1': 0,
-                        'Year 2': 150,
-                        'Year 3': 1,
-                        'Year 4': 0
-                    }
+                    year: [0, 150, 1, 0]
                 },
             },
         }
