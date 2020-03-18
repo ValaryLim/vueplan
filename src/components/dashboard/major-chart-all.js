@@ -38,7 +38,7 @@ export default{
             },
             legend:{
                 display: true,
-                position:'top'
+                position:'top',
             },
             layout:{
                 padding: 5
@@ -128,8 +128,6 @@ export default{
                 labels: labels,
                 datasets: datasets
             };
-
-            console.log(this.chart_data, "all majors chart data");
 
             this.options['scales']['yAxes'] = [{
                 ticks: {
