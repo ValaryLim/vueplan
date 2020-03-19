@@ -8,6 +8,8 @@ import database from'../firebase.js';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import * as Treeviz from 'treeviz';
 import { mapGetters } from "vuex";
+
+
 var moduleReview = {};
 export default {
 	name: "App",
