@@ -8,8 +8,9 @@ import database from'../firebase.js';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import * as Treeviz from 'treeviz';
 import { mapGetters } from "vuex";
+
+
 var moduleReview = {};
-var counter = 1;
 export default {
 	name: "App",
 	display: "Module Information",
@@ -277,7 +278,7 @@ export default {
 			this.fetchReviews();
 		},
 		submitReview: function() {
-			var userid = "Guest";
+			var userid;
 			var user = this.fetchUser();
 			if (user != null) {
 				userid = user.displayName;
@@ -299,10 +300,6 @@ export default {
 			if (moduleReview == undefined) {
 				moduleReview = {};
 			}
-			if (Object.keys(moduleReview).includes(userid)) {
-				userid = userid+counter.toString();
-				counter++;
-			}
 			moduleReview[userid] = reviewDict;
 			database.collection('reviews').doc(module_code).set({
 				"module_review": moduleReview,
@@ -313,7 +310,7 @@ export default {
 			this.updateReviews();
 		},
 		updateReviews: function() {
-			const module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
+			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
 			let userRef = database.collection('reviews').doc(module_code);
             userRef.get().then( doc => {
 				var module_review = doc.data()['module_review'];
@@ -327,10 +324,6 @@ export default {
 				document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum.toString();
 				document.getElementById("ContentFeedback").innerHTML = 'Learning Contents: ' + avgContent.toString();
 				document.getElementById("StaffFeedback").innerHTML = 'Staff and Administration: ' + avgStaffAdmin.toString();
-				/*if (userid in Object.keys(module_review) && userid != "Guest") {
-					res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview" disabled=true>Review this module now!</button></h4>');	
-				} else {}
-				*/
 				document.querySelector('#userReview').disabled = true;
 				var writtenReviews = {};
 				for (let [id, written] of Object.entries(module_review)) {
@@ -359,7 +352,7 @@ export default {
 			return user;
 		},
 		fetchReviews: function() {
-			const module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
+			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
 			let userRef = database.collection('reviews').doc(module_code);
 			var res = document.getElementById("res");
 			const overlay = document.querySelector('#overlay');
@@ -367,6 +360,7 @@ export default {
 			var avgStaffAdmin = 0;
 			var avgContent = 0;
 			var module_review = {};
+			var userid = this.fetchUser().displayName;
             userRef.get().then( doc => {
 				if (doc.exists) {
 					module_review = doc.data()['module_review'];
@@ -383,11 +377,11 @@ export default {
 				res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><div id = "StarsInner"></div></div><div></div>');
 				res.insertAdjacentHTML('beforeend','<div id = "ContentFeedback">Learning Contents: ' + avgContent + '</div><div id = "sep"></div><div id = "StaffFeedback">Staff and Administration: ' + avgStaffAdmin + "</div><br></br>");
 				res.insertAdjacentHTML('beforeend', '<div id = "overlain"></div>');
-				/*if (userid in Object.keys(module_review) && userid != "Guest") {
+				if (userid in Object.keys(module_review)) {
 					res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview" disabled=true>Review this module now!</button></h4>');	
-				} else {}
-				*/
-				res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview">Review this module now!</button></h4>');
+				} else {
+					res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview">Review this module now!</button></h4>');
+				}
 				res.insertAdjacentHTML('beforeend','<hr></hr><table><tbody id = "tabody">');
 				const starPercentage = (overallReviewNum / 5) * 100;
 				const starPercentageRounded = `${(Math.round(starPercentage))}%`;
@@ -410,7 +404,7 @@ export default {
 					for (let [id, review] of Object.entries(writtenReviews)) {
 						var r = document.getElementById("tabody");
 						var y = review["year"];
-						var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Semester " + y.slice(5,6);
+						var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Sem " + y.slice(5,6);
 						r.insertAdjacentHTML('beforeend','<tr>');
 						if (id.includes("Guest")){
 							id = "Guest";
@@ -419,9 +413,13 @@ export default {
 					}
 				}
 				res.insertAdjacentHTML('beforeend','</tbody></table');
-				
 			});
 		}
 	}
 }
+//unique userid
+//disable button
+//reviews load too long
+//close button
+//reviews showing everything
 </script>

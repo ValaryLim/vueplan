@@ -2,12 +2,12 @@
     <div class="headerStyle">
         <nav>
             <div class="header-title">
-                <!-- Links user to Register Page if not logged in -->
+                <!-- Links user to Login Page if not logged in -->
                 <router-link to="/" v-if="!user.loggedIn">
                     <a class="header-title-first">vue</a>
                     <a class="header-title-second">Plan</a>
                 </router-link>
-                <!-- Links user to AcadPlan Page if logged in -->
+                <!-- Links user to Welcome Page if logged in -->
                 <router-link to="/" v-if="user.loggedIn">
                     <a class="header-title-first">vue</a>
                     <a class="header-title-second">Plan</a>
@@ -23,6 +23,7 @@
                 <span class="header-tab"><router-link to="/gradprogress"><a>Graduation Progress</a></router-link></span>
                 <span class="header-tab"><router-link to="/moduleinfo"><a>Module Information</a></router-link></span>
                 <span class="header-tab"><router-link to="/sepmapping"><a>SEP Mapping</a></router-link></span>
+                <span class="header-tab"><router-link to="/dashboard"><a>Dashboard</a></router-link></span>
                 <span class="header-tab header-tab-dropdown">
                     <button class="dropdown-button">
                         <em>{{user.data.email}}</em>
