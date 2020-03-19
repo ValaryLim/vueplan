@@ -19,7 +19,7 @@ export default{
         options: {
             title:{
                 display: true,
-                text: 'Breakdown of Current Module Popularity By Year',
+                text: 'Current Semester Module Popularity By Year',
                 fontColor:'black',
                 fontSize: 16,
             },

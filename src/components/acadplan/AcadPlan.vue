@@ -113,11 +113,10 @@ export default {
                 if (doc.exists) {
                     return doc.data()['statistics'];
                 } else {
-                    var default_settings = {
+                    database.collection('dashboard').doc(module_code).set({
                         statistics: {}
-                    }
-                    database.collection('dashboard').doc(module_code).set(default_settings);
-                    return default_settings;
+                    });
+                    return {};
                 }
             })
         },

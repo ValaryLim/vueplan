@@ -26,7 +26,7 @@ export default{
         options: {
             title:{
                 display: true,
-                text: 'Breakdown of Current Module Popularity By Major',
+                text: 'Current Semester Module Popularity By Major',
                 fontColor:'black',
                 fontSize: 16,
             },

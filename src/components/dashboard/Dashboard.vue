@@ -143,7 +143,7 @@ export default {
             this.key3 += 3;
             this.key4 += 4;
             this.key5 += 5;
-        }
+        },
     },
     created() {
         this.fetch_userdata();
@@ -153,8 +153,8 @@ export default {
 
 <style scoped>
 .chart {
-    width: 50%;
-    padding: 30px;
+    width: 650px;
+    padding: 50px;
     float: left;
 }
 </style>
