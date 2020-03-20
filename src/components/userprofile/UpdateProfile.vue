@@ -149,8 +149,6 @@ export default {
             this.fetch_dashboard(mod).then(doc => {
                 this.statistics = doc;
             }).then(() => { 
-                console.log(this.statistics, "We updatin with this")
-                console.log(mod, semester_taking, previous_major, new_major, "Args")
                 this.update_dashboard_module(mod, semester_taking, previous_major, new_major)
             });
         },
@@ -160,7 +158,6 @@ export default {
              * Updates the dashboard details of a specific module
              */
             // calculate the previous and new academic years
-            console.log(this.statistics, module, "update_dashboard_module");
             var ay = this.calculateAcademicYear(this.store.year, semester_taking);
 
             if (!(new_major in this.statistics[ay]["major"])) {
