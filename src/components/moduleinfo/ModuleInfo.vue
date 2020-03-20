@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import * as Treeviz from 'treeviz';
 import { mapGetters } from "vuex";
 
+import Dashboard from '../dashboard/Dashboard.vue';
 
 var moduleReview = {};
 var counter = 1;
@@ -18,6 +19,7 @@ export default {
 	components: {
 		FontAwesomeIcon,
 		Treeviz,
+		Dashboard
 	},
 	data: function() {
 		return {
@@ -363,7 +365,7 @@ export default {
 		fetchReviews: function() {
 			const module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
 			let userRef = database.collection('reviews').doc(module_code);
-			var res = document.getElementById("res");
+			var res = document.getElementById("res_review");
 			const overlay = document.querySelector('#overlay');
 			var overallReviewNum = 0;
 			var avgStaffAdmin = 0;
