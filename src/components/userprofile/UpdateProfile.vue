@@ -197,4 +197,8 @@ export default {
 h2 {
     text-align: center;
 }
+
+.save-button {
+    width: 65%;
+}
 </style>
