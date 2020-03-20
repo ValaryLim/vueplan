@@ -28,20 +28,23 @@ export default {
     },
     data() {
         return {
-            // add module data
+            /* add module data */
             add_module_code: "",
             invalid_module: 0,
             inserted_module: 1,
             unmet_prereq: -1,
             exempted_module: 2,
 
-            // error message data
+            /* error message data */
             modal_header: "Default header",
             modal_body: "Default body",
 
-            // edit module credits
+            /* edit module credits */
             add_mc: 1,
             subtract_mc: -1,
+
+            /* statistics */
+            statistics: {},
 
             /* user specific data */
             major: "",
@@ -52,13 +55,13 @@ export default {
             num_semester_mapping: [
                 "Y1S1",  "Y1S2", "Y2S1", "Y2S2",  "Y3S1",  "Y3S2", "Y4S1",  "Y4S2"
             ],
+            matriculated_year: 0,
             index: 1000,
         };
     },
     props: ['allmodules'],
     computed: {
         sorted_sems: function() {
-            console.log("called")
             var result_arr = []
             for (var i in this.acadplan) {
                 this.sort_modules(this.acadplan[i], i)
@@ -82,11 +85,11 @@ export default {
                 this.acadplan_exemptions = doc.data()['acadplan_exemptions'];
                 this.major = doc.data()['major'];
                 this.acadplan = doc.data()['module_location'];
-                // console.log(doc.data()['module_location']);
                 this.module_semester_mapping = doc.data()['module_semester_mapping'];
                 this.total_mc = doc.data()['total_mc'];
                 this.num_semester_mapping = doc.data()['num_semester_mapping'];
                 this.index = doc.data()['index'];
+                this.matriculated_year = doc.data()['year'];
             });
         },
         save_acadplan: function() {
@@ -98,6 +101,102 @@ export default {
                 "index": this.index,
                 "total_mc": this.total_mc,
             });
+        },
+        fetch_dashboard: function(module_code) {
+            /** 
+             * Accepts a module code and retrieves its dashboard data
+             */
+            let moduleRef = database.collection('dashboard').doc(module_code);
+
+            // need to check if module_Code in dashboard, else create the doc.
+            return moduleRef.get().then(doc => {
+                if (doc.exists) {
+                    return doc.data()['statistics'];
+                } else {
+                    database.collection('dashboard').doc(module_code).set({
+                        statistics: {}
+                    });
+                    return {};
+                }
+            })
+        },
+        calculateYear: function(semester_taking) {
+            /**
+             * Calculates what year the student will be in in that academic year
+             */
+            return Math.floor(semester_taking / 2);
+        },
+        calculateAcademicYear: function(semester_taking) {
+            /**
+             * Calculates the academic year 
+             */
+            var academic_year = (this.matriculated_year + Math.floor(semester_taking / 2)) % 2000;
+            var academic_sem;
+            if (semester_taking % 2) {
+                academic_sem = 2;
+            } else {
+                academic_sem = 1;
+            }
+            return String(academic_year) + String(academic_year + 1) + "-S" + String(academic_sem);
+        },
+        update_dashboard_add: function(module_code, semester_taking) {
+            /**
+             * Takes in the updated dashboard data (statistics) and updates the data
+             */
+            // calculate academic year and semester that user is reading the module
+            var reading_ay = this.calculateAcademicYear(semester_taking);
+
+            // calculate year that user will be in
+            var reading_year = this.calculateYear(semester_taking);
+
+            if (reading_ay in this.statistics) {
+                // update major in this.statistics
+                this.statistics[reading_ay]["major"][this.major] += 1;
+
+                // update year in this.statistics
+                this.statistics[reading_ay]["year"][reading_year] += 1;
+
+                // update total
+                this.statistics[reading_ay]["total"] += 1;
+            } else {
+                this.statistics[reading_ay] = {
+                    major: {},
+                    total: 0,
+                    year: [0, 0, 0, 0]
+                }
+                this.statistics[reading_ay]["major"][this.major] = 1;
+                this.statistics[reading_ay]["year"][reading_year] += 1;
+                this.statistics[reading_ay]["total"] += 1;
+            }
+
+            // update statistics
+            database.collection('dashboard').doc(module_code).update({
+                "statistics": this.statistics,
+            })
+        },
+        update_dashboard_delete: function(module_code, semester_taking) {
+            // calculate academic year and semester that user was reading the module
+            var reading_ay = this.calculateAcademicYear(semester_taking);
+
+            // calculate the year that user was in when reading the module
+            var reading_year = this.calculateYear(semester_taking);
+
+            // update major in this.statistics
+            this.statistics[reading_ay]["major"][this.major] -= 1;
+            this.statistics[reading_ay]["year"][reading_year] -= 1;
+            this.statistics[reading_ay]["total"] -= 1;
+
+            // update statistics
+            database.collection('dashboard').doc(module_code).update({
+                "statistics": this.statistics,
+            });
+        },
+        update_dashboard_shift: function(module_code, previous_semester, new_semester) {
+            // delete from old semester database
+            this.update_dashboard_delete(module_code, previous_semester);
+
+            // add to new semester database
+            this.update_dashboard_add(module_code, new_semester);
         },
         add_module_sem: function() {
             /** 
@@ -130,14 +229,23 @@ export default {
                     // console.log(module);
                     var mod_prerequisites_check = this.check_prerequisites_sem(module.parseprereq);
                     if (mod_prerequisites_check !== this.unmet_prereq) {
+                        this.fetch_dashboard(module.code).then(doc => {
+                            this.statistics = doc;
+                        });
+
                         this.acadplan[mod_prerequisites_check].push({ mod: module.code, mc: module.mc, move: true, index: this.index }); 
                         this.module_semester_mapping[module.code] = parseInt(mod_prerequisites_check);
                         this.index++;
+
+                        // updte module credits
                         this.update_module_credits(this.add_mc, mod_prerequisites_check, module.mc);
-                        
                         this.total_mc += module.mc;
                         
+                        // save academic plan and dashboard data
                         this.save_acadplan();
+
+                        // update dashboard
+                        setTimeout(() => this.update_dashboard_add(module.code, mod_prerequisites_check), 1000);
                     } else {
                         this.printError("Incomplete Prerequisites", "This module cannot be added to your academic plan because you have yet to add all of its' prerequisites. Please do so first.");
                     }
@@ -173,8 +281,6 @@ export default {
                     } else if (this.acadplan_exemptions.includes(key)) { // check if code is exempted
                         return this.exempted_module;
                     } else {
-                        // console.log(key, this.acadplan_exemptions);
-                        // console.log(key in this.acadplan_exemptions);
                         return this.allmodules[key]; // can be added
                     }
                 }
@@ -182,9 +288,14 @@ export default {
             return this.invalid_module; // module does not exist
         },
         delete_module: function(sem, module) {
-            var module_name = module.mod;
+            var module_code = module.mod;
 
-            if (this.check_unlocked(module_name)) {
+            if (this.check_unlocked(module_code)) {
+                // fetch dashboard data for this module
+                this.fetch_dashboard(module_code).then(doc => {
+                    this.statistics = doc;
+                });
+
                 // update number of modular credits
                 this.update_module_credits(this.subtract_mc, sem, module.mc);
                 this.total_mc -= module.mc;
@@ -193,7 +304,12 @@ export default {
                 this.acadplan[sem] = this.acadplan[sem].filter((event) => {
                     return event.index !== module.index   
                 });
+
+                // update acadplan
                 this.save_acadplan();
+
+                // update dashboard
+                setTimeout(() => this.update_dashboard_delete(module_code, sem), 1000);
             } else {
                 this.printError("Deletion Error", "This module cannot be deleted as some modules in your academic plan depend on the module you are trying to delete.");
             }
@@ -232,12 +348,21 @@ export default {
                     return;
                 }
                 
-                // module can be shifted, update the module
-                this.module_semester_mapping[check_module.mod] =parseInt(sem_num);
+                // module can be shifted
+                // fetch dashboard data for this module
+                this.fetch_dashboard(check_module.mod).then(doc => {
+                    this.statistics = doc;
+                });
+
+                // update the module
+                this.module_semester_mapping[check_module.mod] = parseInt(sem_num);
 
                 // update module credits in old and new semester
                 this.update_module_credits(this.subtract_mc, previous_sem, check_module.mc);
                 this.update_module_credits(this.add_mc, sem_num, check_module.mc);
+
+                // update dashboard
+                setTimeout(() => this.update_dashboard_shift(check_module.mod, previous_sem, sem_num), 1000);
             }
 
             this.save_acadplan();

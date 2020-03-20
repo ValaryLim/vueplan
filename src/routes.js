@@ -6,6 +6,7 @@ import Login from './components/userprofile/Login.vue';
 import Register from './components/userprofile/Register.vue';
 import UserProfile from './components/userprofile/Profile.vue';
 import UpdateProfile from './components/userprofile/UpdateProfile.vue';
+import Dashboard from './components/dashboard/Dashboard.vue';
 
 export const routes = [
     { path: '/', name: 'Home', component: Login },
@@ -17,4 +18,5 @@ export const routes = [
     { path: '/register', component: Register },
     { path: '/userprofile', name: 'Profile', component: UserProfile },
     { path: '/updateprofile', component: UpdateProfile },
+    { path: '/dashboard', component: Dashboard }
 ];
