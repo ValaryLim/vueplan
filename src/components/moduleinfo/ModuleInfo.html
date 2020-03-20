@@ -11,65 +11,67 @@
     </div>
     
     <!-- Show page when user is logged in -->
-    <div v-if="user.loggedIn">
-      <div id = 'app'>
-            <input id ='searchIn' type="text" v-model="search" v-on:keyup = 'show = true' placeholder="Search Module Code or Title..."/>
-        <div id = 'res'></div>
+    <div class="row" v-if="user.loggedIn">
+      <!-- MODULE INFORMATION SECTION -->
+      <input id ='searchIn' type="text" v-model="search" v-on:keyup = 'show = true' placeholder="Search Module Code or Title..."/>
 
-        <div v-if = "show == true"> 
-          <ul id = 'modules'>
-            <li v-for="mod in filteredList" v-on:click = 'modInfo(allmodules[mod])'>
-              <p id = "title" v-on:click = 'modInfo(allmodules[mod])'>{{allmodules[mod].code}} {{allmodules[mod].title}} </p> 
-              <p id = 'info'>{{allmodules[mod].department}} | {{allmodules[mod].mc}} MCs </p>
-              <p v-show = 'allmodules[mod].desc.length > 350' id = 'des'>{{allmodules[mod].desc.substring(0,350)}}...</p>
-              <p v-show = 'allmodules[mod].desc.length <= 350' id = 'des'>{{allmodules[mod].desc}}</p>
-              <p v-show = "allmodules[mod].prereq != ''"id = 'prer'>Prerequisites: {{allmodules[mod].prereq}}</p>
-              <p v-show = "allmodules[mod].preclusion != ''" id = 'prec'>Preclusions: {{allmodules[mod].preclusion}}</p>
-            </li>
-          </ul>
-        </div>
+      <!-- Display all modules at first tab -->
+      <div v-if = "show == true"> 
+        <ul id = 'modules'>
+          <li v-for="mod in filteredList" v-on:click = 'modInfo(allmodules[mod])'>
+            <p id = "title" v-on:click = 'modInfo(allmodules[mod])'>{{allmodules[mod].code}} {{allmodules[mod].title}} </p> 
+            <p id = 'info'>{{allmodules[mod].department}} | {{allmodules[mod].mc}} MCs </p>
+            <p v-show = 'allmodules[mod].desc.length > 350' id = 'des'>{{allmodules[mod].desc.substring(0,350)}}...</p>
+            <p v-show = 'allmodules[mod].desc.length <= 350' id = 'des'>{{allmodules[mod].desc}}</p>
+            <p v-show = "allmodules[mod].prereq != ''"id = 'prer'>Prerequisites: {{allmodules[mod].prereq}}</p>
+            <p v-show = "allmodules[mod].preclusion != ''" id = 'prec'>Preclusions: {{allmodules[mod].preclusion}}</p>
+          </li>
+        </ul>
       </div>
-    </div>
-    <div id = 'app'>
-      <div id="overlay">
-        <div class="modal-mask">
-          <div class="modal-wrapper">
-            <div class="modal-container">
-              <div class="modal-header">
-                <slot name="header">
-                  <h1 id = 'reviewTitle'>Add Review</h1>
-                  <button type="button" id='closeReview'>
-                    <font-awesome-icon icon="times" />
-                  </button>
-                </slot>
-              </div>
-              <div class="modal-body">
-                <div id = 'timeTaken'>Year and Sem taken: 
-                  <select id="year" style='float:right'>
-                    <option v-for="year in yearlist">{{year.slice(0,2)+'/'+year.slice(3,5)+' Semester '+year[6]}}</option>
-                  </select>
-                </div>
-                <div id = 'rating'>Overall: <input id = 'overall' type = 'number' step='0.1' min='1' max='5' value='3' style='float:right'></input></div>
-                <div id = 'learning'>Learning Content: <input id = 'content' type = 'number' step='0.1' min='1' max='5' value='3' style='float:right'></input></div>
-                <div id = 'admin'>Staff and Administration: <input id = 'staff' type = 'number' step='0.1' min='1' max='5' value='3' style='float:right'></input></div>
-                <slot name="body" id='writtenBody'>
-                  <textarea id ='writtenReview' rows=10 cols=105 placeholder = 'Write your review here!'></textarea>
-                </slot>
-              </div>
 
-              <div class="modal-footer">
-                <slot name="footer">
-                  Click 'OK' to submit your review!
-                  <button id = 'submitReview' @click="submitReview()">
-                    OK
-                  </button>
-                </slot>
-              </div>
+      <!-- If module is searched for, display results-->
+      <div id = 'res'></div>
+
+      <!-- DASHBOARD SECTION -->
+      
+      <!-- REVIEWS SECTION -->
+      <!-- checks whether reviews should appear or not-->
+      <div id="overlay"> 
+        <div class="modal-mask modal-wrapper modal-container">
+          <div class="modal-header">
+            <slot name="header">
+              <h1 id = 'reviewTitle'>Add Review</h1>
+              <button type="button" id='closeReview'>
+                <font-awesome-icon icon="times" />
+              </button>
+            </slot>
+          </div>
+
+          <div class="modal-body">
+            <div id = 'timeTaken'>Year and Sem taken: 
+              <select id="year" style='float:right'>
+                <option v-for="year in yearlist">{{year.slice(0,2)+'/'+year.slice(3,5)+' Semester '+year[6]}}</option>
+              </select>
             </div>
+            <div id = 'rating'>Overall: <input id = 'overall' type = 'number' step='0.1' min='1' max='5' value='3' style='float:right'></input></div>
+            <div id = 'learning'>Learning Content: <input id = 'content' type = 'number' step='0.1' min='1' max='5' value='3' style='float:right'></input></div>
+            <div id = 'admin'>Staff and Administration: <input id = 'staff' type = 'number' step='0.1' min='1' max='5' value='3' style='float:right'></input></div>
+            <slot name="body" id='writtenBody'>
+              <textarea id ='writtenReview' rows=10 cols=105 placeholder = 'Write your review here!'></textarea>
+            </slot>
+          </div>
+
+          <div class="modal-footer">
+            <slot name="footer">
+              Click 'OK' to submit your review!
+              <button id = 'submitReview' @click="submitReview()">
+                OK
+              </button>
+            </slot>
           </div>
         </div>
       </div>
-      <div id = 'res'></div>
-      </div>
+      <div id = 'res_review'></div>
+    </div>
   </body>
 </html>
