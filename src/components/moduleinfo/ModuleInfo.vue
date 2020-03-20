@@ -26,8 +26,67 @@ export default {
 			search:'',
 			mods: Object.values(modules),
 			show: true,
-			}
-		},
+
+			/* data required for dashboard */
+			preprocessed_data: {
+                '1819-S1': {
+                    total: 204,
+                    major: {
+                        'Business Analytics': 101,
+                        'Computer Science': 103,
+                    },
+                    year: [0, 198, 5, 1]
+                },
+                '1819-S2': {
+                    total: 201,
+                    major: {
+                        'Business Analytics': 98,
+                        'Computer Science': 87,
+                        'Information Systems': 16
+                    },
+                    year: [2, 197, 3, 0]
+                },
+                '1920-S1': {
+                    total: 197,
+                    major: {
+                        'Business Analytics': 99,
+                        'Computer Science': 88,
+                        'Information Systems': 10
+                    },
+                    year: [0, 195, 3, 0]
+                },
+                '1920-S2': {
+                    total: 204,
+                    major: {
+                        'Business Analytics': 91,
+                        'Computer Science': 87,
+                        'Information Systems': 21,
+                        'Information Security': 5
+                    },
+                    year: [0, 198, 5, 1]
+                },
+                '2021-S1': {
+                    total: 180,
+                    major: {
+                        'Business Analytics': 93,
+                        'Computer Science': 82,
+                        'Information Systems': 5
+                    },
+                    year: [1, 177, 2, 0]
+                },
+                '2021-S2': {
+                    total: 151,
+                    major: {
+                        'Business Analytics': 68,
+                        'Computer Science': 77,
+                        'Information Systems': 6
+                    },
+                    year: [0, 150, 1, 0]
+                },
+			},
+			current_ay: "1920-S1",
+		}
+	},
 
 	props: ['allmodules'],
 	
@@ -37,6 +96,7 @@ export default {
 			if(this.search != ''){
 				document.getElementById("res").innerHTML ="";
 			}
+			
 			return Object.keys(this.allmodules).filter(mod => {
 				return this.allmodules[mod].fullname.toUpperCase().includes(this.search.toUpperCase())
             })
@@ -279,6 +339,12 @@ export default {
 			//Reviews section
 			//console.log('Reviews');
 			this.fetchReviews();
+		},
+		dashboardInfo: function(mod_code) {
+			console.log(mod_code, "module in dashboard");
+		},
+		updateAcademicYear: function() {
+			
 		},
 		submitReview: function() {
 			var userid = "Guest";
