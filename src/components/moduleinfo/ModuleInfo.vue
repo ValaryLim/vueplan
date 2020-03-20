@@ -85,6 +85,8 @@ export default {
                 },
 			},
 			current_ay: "1920-S1",
+			show_dashboard: false,
+			data_unavailable: -1,
 		}
 	},
 
@@ -340,11 +342,44 @@ export default {
 			//console.log('Reviews');
 			this.fetchReviews();
 		},
-		dashboardInfo: function(mod_code) {
-			console.log(mod_code, "module in dashboard");
+		dashboardInfo: function(module_code) {
+			this.show_dashboard = false;
+			
+			// update academic year
+			this.updateAcademicYear();
+
+			// fetch data from firebase
+			this.fetchDashboard(module_code).then(doc => {
+				if (doc !== this.data_unavailable) {
+					// assign preprocessed data after fetching
+					this.preprocessed_data = doc;
+					this.show_dashboard = true;
+				}
+            });
+		},
+		fetchDashboard: function(module_code) {
+			let moduleRef = database.collection('dashboard').doc(module_code);
+
+            // need to check if module_Code in dashboard, else create the doc.
+            return moduleRef.get().then(doc => {
+                if (doc.exists) {
+                    return doc.data()['statistics'];
+                } else {
+                    return this.data_unavailable;
+                }
+            })
 		},
 		updateAcademicYear: function() {
-			
+			var today = new Date();
+			var month = today.getMonth() + 1; // +1 since month starts in June
+			var year = today.getFullYear() - 2000; // get year number, e.g. 19 for 2019
+			var academic_year; 
+			if (month < 6) {
+				academic_year = String(year-1) + String(year) + "-S2";
+			} else {
+				academic_year = String(year - 1) + String(year) + "-S1"
+			}
+			this.current_ay = academic_year;
 		},
 		submitReview: function() {
 			var userid = "Guest";

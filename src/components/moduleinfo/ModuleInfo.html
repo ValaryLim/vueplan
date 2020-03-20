@@ -34,7 +34,7 @@
       <div id = 'res'></div>
 
       <!-- DASHBOARD SECTION -->
-      <dashboard v-if="show == false" :preprocessed_data="preprocessed_data" :current_ay="current_ay"></dashboard>
+      <dashboard v-if="show == false && show_dashboard == true" :preprocessed_data="preprocessed_data" :current_ay="current_ay"></dashboard>
       
       <!-- REVIEWS SECTION -->
       <!-- checks whether reviews should appear or not-->
