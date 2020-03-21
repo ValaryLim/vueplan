@@ -27,6 +27,8 @@ export default {
             },
             /* error message */
             error: null,
+            modal_header: "Default header",
+            modal_body: "Default body",
             /* dashboard data */
             statistics: {}
         };
@@ -39,6 +41,12 @@ export default {
     },
     
     methods: {
+        printError: function(header, message) {
+            this.modal_header = header;
+            this.modal_body = message;
+            this.$bvModal.show('error-modal');
+        },
+
         load_details() {
             var user = firebase.auth().currentUser;
             let userRef = database.collection('acadplan').doc(user.uid);
@@ -61,7 +69,7 @@ export default {
             var user = firebase.auth().currentUser;
 
             if (this.form.name == "") {
-                alert("Username cannot be empty")
+                this.printError("Invalid Input", "Username cannot be empty.")
                 
             } else {
                 user.updateProfile({
@@ -91,9 +99,10 @@ export default {
                         "acadplan_exemptions": this.form.exemptions,
                     })
                 }
-
-                alert("Update successful");
-                this.$router.replace({ name: 'Profile' })
+                this.$bvModal.msgBoxOk("Update Successful")
+                .then(() => {
+                    this.$router.replace({ name: 'Profile' })
+                });
             }
         },
 
@@ -197,5 +206,11 @@ h2 {
 
 .save-button {
     width: 65%;
+}
+
+/* error message */
+.modal {
+    position: fixed;
+    top: 20%;
 }
 </style>
