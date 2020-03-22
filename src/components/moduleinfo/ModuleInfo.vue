@@ -10,6 +10,7 @@ import * as Treeviz from 'treeviz';
 import { mapGetters } from "vuex";
 import Chart from '../moduleinfo/Chart.vue'
 
+import Dashboard from '../dashboard/Dashboard.vue';
 
 var moduleReview = {};
 export default {
@@ -18,14 +19,76 @@ export default {
 	components: {
 		FontAwesomeIcon,
 		Treeviz,
+		Dashboard
 	},
 	data: function() {
 		return {
 			search:'',
 			mods: Object.values(modules),
 			show: true,
-			}
-		},
+
+			/* data required for dashboard */
+			preprocessed_data: {
+                '1819-S1': {
+                    total: 204,
+                    major: {
+                        'Business Analytics': 101,
+                        'Computer Science': 103,
+                    },
+                    year: [0, 198, 5, 1]
+                },
+                '1819-S2': {
+                    total: 201,
+                    major: {
+                        'Business Analytics': 98,
+                        'Computer Science': 87,
+                        'Information Systems': 16
+                    },
+                    year: [2, 197, 3, 0]
+                },
+                '1920-S1': {
+                    total: 197,
+                    major: {
+                        'Business Analytics': 99,
+                        'Computer Science': 88,
+                        'Information Systems': 10
+                    },
+                    year: [0, 195, 3, 0]
+                },
+                '1920-S2': {
+                    total: 204,
+                    major: {
+                        'Business Analytics': 91,
+                        'Computer Science': 87,
+                        'Information Systems': 21,
+                        'Information Security': 5
+                    },
+                    year: [0, 198, 5, 1]
+                },
+                '2021-S1': {
+                    total: 180,
+                    major: {
+                        'Business Analytics': 93,
+                        'Computer Science': 82,
+                        'Information Systems': 5
+                    },
+                    year: [1, 177, 2, 0]
+                },
+                '2021-S2': {
+                    total: 151,
+                    major: {
+                        'Business Analytics': 68,
+                        'Computer Science': 77,
+                        'Information Systems': 6
+                    },
+                    year: [0, 150, 1, 0]
+                },
+			},
+			current_ay: "1920-S1",
+			show_dashboard: false,
+			data_unavailable: -1,
+		}
+	},
 
 	props: ['allmodules'],
 	computed: {
@@ -33,6 +96,7 @@ export default {
 			if(this.search != ''){
 				document.getElementById("res").innerHTML ="";
 			}
+			
 			return Object.keys(this.allmodules).filter(mod => {
 				return this.allmodules[mod].fullname.toUpperCase().includes(this.search.toUpperCase())
             })
@@ -284,6 +348,45 @@ export default {
 			//console.log('Reviews');
 			this.fetchReviews();
 		},
+		dashboardInfo: function(module_code) {
+			this.show_dashboard = false;
+			
+			// update academic year
+			this.updateAcademicYear();
+
+			// fetch data from firebase
+			this.fetchDashboard(module_code).then(doc => {
+				if (doc !== this.data_unavailable) {
+					// assign preprocessed data after fetching
+					this.preprocessed_data = doc;
+					this.show_dashboard = true;
+				}
+            });
+		},
+		fetchDashboard: function(module_code) {
+			let moduleRef = database.collection('dashboard').doc(module_code);
+
+            // need to check if module_Code in dashboard, else create the doc.
+            return moduleRef.get().then(doc => {
+                if (doc.exists) {
+                    return doc.data()['statistics'];
+                } else {
+                    return this.data_unavailable;
+                }
+            })
+		},
+		updateAcademicYear: function() {
+			var today = new Date();
+			var month = today.getMonth() + 1; // +1 since month starts in June
+			var year = today.getFullYear() - 2000; // get year number, e.g. 19 for 2019
+			var academic_year; 
+			if (month < 6) {
+				academic_year = String(year-1) + String(year) + "-S2";
+			} else {
+				academic_year = String(year - 1) + String(year) + "-S1"
+			}
+			this.current_ay = academic_year;
+		},
 		submitReview: function() {
 			var userid;
 			var user = this.fetchUser();
@@ -394,7 +497,7 @@ export default {
 		fetchReviews: function() {
 			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
 			let userRef = database.collection('reviews').doc(module_code);
-			var res = document.getElementById("res");
+			var res = document.getElementById("res_review");
 			const overlay = document.querySelector('#overlay');
 			var overallReviewNum = 0;
 			var avgQualityContent = 0;

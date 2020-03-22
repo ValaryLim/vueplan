@@ -6,97 +6,96 @@
   </head>
   
   <body>
-    <div id = "profile">
-        <h2> Update Profile </h2>
-
-        <form action="#" @submit.prevent="save">
-            <!-- Update name -->
-            <div class="form-group row">
-                <label for="name" class="col-md-4 col-form-label text-md-right">Name*</label>
-                <div class="col-md-6">
-                    <input
-                        id="name"
-                        type="name"
-                        class="form-control"
-                        name="name"
-                        placeholder= "Enter your username"
-                        value
-                        autofocus
-                        v-model="form.name"
-                    />
-                </div>
+    <form action="#" @submit.prevent="save">
+        <div class="row justify-content-center">
+            <h2> Update Profile </h2>
+        </div>
+        <!-- Update name -->
+        <div class="form-group row">
+            <label for="name" class="col-md-4 col-form-label text-md-right">Name*</label>
+            <div class="col-md-6">
+                <input
+                    id="name"
+                    type="name"
+                    class="form-control"
+                    name="name"
+                    placeholder= "Enter your username"
+                    value
+                    autofocus
+                    v-model="form.name"
+                />
             </div>
+        </div>
 
-            <!-- Note: Disallow users to change email -->
-            <div class="form-group row">
-                <label for="email" class="col-md-4 col-form-label text-md-right">Email*</label>
-                <div class = "col-md-6 text-md-left"> {{ user.data.email }} </div>
+        <!-- Note: Disallow users to change email -->
+        <div class="form-group row">
+            <label for="email" class="col-md-4 col-form-label text-md-right">Email*</label>
+            <div class = "col-md-6 text-md-left"> {{ user.data.email }} </div>
+        </div>
+
+        <!-- Update year of matriculation
+        <div class="form-group row">
+            <label for="year" class="col-md-4 col-form-label text-md-right">Year of Matriculation*</label>
+
+            <div class="col-md-6">
+                <multiselect 
+                    v-model="form.year" 
+                    deselect-label="Selected"
+                    :options="[2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]" 
+                    :multiple="false" 
+                    :close-on-select="true" 
+                    :clear-on-select="false" 
+                    :preserve-search="true" 
+                    :allow-empty="false"
+                    placeholder="Select Year">
+                    <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
+                    </template>
+                </multiselect>
             </div>
+        </div> -->
 
-            <!-- Update year of matriculation
-            <div class="form-group row">
-                <label for="year" class="col-md-4 col-form-label text-md-right">Year of Matriculation*</label>
-
-                <div class="col-md-6">
-                    <multiselect 
-                        v-model="form.year" 
-                        deselect-label="Selected"
-                        :options="[2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]" 
-                        :multiple="false" 
-                        :close-on-select="true" 
-                        :clear-on-select="false" 
-                        :preserve-search="true" 
-                        :allow-empty="false"
-                        placeholder="Select Year">
-                        <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
-                        </template>
-                    </multiselect>
-                </div>
-            </div> -->
-
-            <!-- Update major -->
-            <div class = "form-group row">
-                <label for="major" class="col-md-4 col-form-label text-md-right">Major*</label>
-                <div class="col-md-6">
-                    <multiselect 
-                        v-model="form.major" 
-                        deselect-label="Selected"
-                        :options="Object.keys(allmajors)" 
-                        :multiple="false" 
-                        :close-on-select="true" 
-                        :clear-on-select="false" 
-                        :preserve-search="true" 
-                        :allow-empty="false"
-                        placeholder="Select Major">
-                        <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
-                        </template>
-                    </multiselect>
-                </div>
+        <!-- Update major -->
+        <div class = "form-group row">
+            <label for="major" class="col-md-4 col-form-label text-md-right">Major*</label>
+            <div class="col-md-6">
+                <multiselect 
+                    v-model="form.major" 
+                    deselect-label="Selected"
+                    :options="Object.keys(allmajors)" 
+                    :multiple="false" 
+                    :close-on-select="true" 
+                    :clear-on-select="false" 
+                    :preserve-search="true" 
+                    :allow-empty="false"
+                    placeholder="Select Major">
+                    <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
+                    </template>
+                </multiselect>
             </div>
-            
-            <!-- Update exemptions -->
-            <div class = "form-group row">
-                <label for="exemptions" class="col-md-4 col-form-label text-md-right">Module Exemptions</label>
-                <div class="col-md-6">
-                    <multiselect 
-                        v-model="form.exemptions" 
-                        :options="Object.keys(allmodules)" 
-                        :multiple="true" 
-                        :close-on-select="false" 
-                        :clear-on-select="false" 
-                        :preserve-search="true" 
-                        placeholder="Select Exemption(s)">
-                        <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
-                        </template>
-                    </multiselect>
-                </div>
+        </div>
+        
+        <!-- Update exemptions -->
+        <div class = "form-group row">
+            <label for="exemptions" class="col-md-4 col-form-label text-md-right">Module Exemptions</label>
+            <div class="col-md-6">
+                <multiselect 
+                    v-model="form.exemptions" 
+                    :options="Object.keys(allmodules)" 
+                    :multiple="true" 
+                    :close-on-select="false" 
+                    :clear-on-select="false" 
+                    :preserve-search="true" 
+                    placeholder="Select Exemption(s)">
+                    <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
+                    </template>
+                </multiselect>
             </div>
-
-            <!-- Save button -->
-            <div class="form-group row mb-0">
-                    <button type="save" class="btn btn-primary">Save</button>
-            </div>
-        </form>
-    </div>
+        </div>
+        <!-- Save button -->
+        <div class="form-group row justify-content-center">
+            <button type="save" class="btn btn-primary save-button">Save</button>
+        </div>
+    </form>
+    
   </body>
 </html>
