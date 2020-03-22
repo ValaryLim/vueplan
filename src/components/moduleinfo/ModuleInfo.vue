@@ -8,6 +8,7 @@ import database from'../firebase.js';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import * as Treeviz from 'treeviz';
 import { mapGetters } from "vuex";
+import Chart from '../moduleinfo/Chart.vue'
 
 
 var moduleReview = {};
@@ -27,8 +28,6 @@ export default {
 		},
 
 	props: ['allmodules'],
-	
-
 	computed: {
 		filteredList() {
 			if(this.search != ''){
@@ -413,6 +412,7 @@ export default {
 			res.insertAdjacentHTML('beforeend','<div id = "DifficultyContentFeedback">Difficulty of Content: ' + avgDifficultyContent + "</div>");
 			res.insertAdjacentHTML('beforeend','<div id = "WorkloadFeedback">Heaviness of Workload: ' + avgWorkload + "</div>");
 			res.insertAdjacentHTML('beforeend','<div id = "StaffFeedback">Quality of teaching staff: ' + avgStaff + "</div>");
+			res.insertAdjacentHTML('beforeend','<canvas id="myChart" width="400" height="400"></canvas>');
 			res.insertAdjacentHTML('beforeend','<br></br>');
 			res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview">Review this module now!</button></h4>');	
 			const reviewMod = document.querySelector('#userReview');
@@ -439,6 +439,20 @@ export default {
 					avgDifficultyContent = Math.round(avgDifficultyContent*10)/10;
 					avgStaff = Math.round(avgStaff*10)/10;
 					avgWorkload = Math.round(avgWorkload*10)/10;
+					var ctx = document.getElementById('myChart').getContext('2d');
+					var data = {
+						labels: ['Quality of content', 'Relevance of content', 'Difficulty of content', 'Heaviness of Workload', 'Quality of teaching staff'],
+						datasets: [{
+							label: 'Breakdown of rating',
+							backgroundColor: 'rgb(255, 99, 132)',
+							borderColor: 'rgb(255, 99, 132)',
+							data: [avgQualityContent, avgRelevanceContent, avgDifficultyContent, avgWorkload, avgStaff],
+						}]
+					}
+					new Chart(ctx, {
+						type: 'radar',
+						data: data,
+					});
 					document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum;
 					document.getElementById('QualityContentFeedback').innerHTML = 'Quality of content: '+ avgQualityContent.toString();
 					document.getElementById('RelevanceContentFeedback').innerHTML = 'Relevance of content: '+ avgRelevanceContent.toString();
@@ -455,7 +469,7 @@ export default {
 				document.querySelector("#StarsInner").style.width = starPercentageRounded;
 				try {
 					var x = document.getElementById("tabody");
-					x.innerHTML = "";	
+					x.innerHTML = "";
 				} catch (error) {
 					res.insertAdjacentHTML('beforeend','<hr></hr><table><tbody id = "tabody">');
 					console.log("No tag found error")
