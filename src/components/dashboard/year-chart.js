@@ -50,7 +50,7 @@ export default{
             var data = [];
             var backgroundColor = [];
             var index = 0;
-
+            
             // fill in chart_data based on current_ay
             for (var y in this.preprocessed_data[this.current_ay]['year']) {
                 labels.push("Year " + String(parseInt(y) + 1));
