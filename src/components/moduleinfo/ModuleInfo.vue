@@ -43,6 +43,10 @@ export default {
 			var years = [];
 			var date = new Date();
 			var currYear = date.getFullYear();
+			var currMonth = date.getMonth();
+			if (currMonth > 7) {
+				currYear = currYear-1;
+			}
 			while (firstYear < currYear){
 				var firstTwo = firstYear%100;
 				var lstTwo = (firstYear+1)%100;
@@ -56,8 +60,12 @@ export default {
 				}
 				var acadsem1 = firstTwo+'/'+lstTwo+'s1';
 				var acadsem2 = firstTwo+'/'+lstTwo+'s2';
-				years.push(acadsem1);
-				years.push(acadsem2);
+				if (currMonth > 7 && firstYear == currYear) {
+					years.push(acadsem1);
+				} else {
+					years.push(acadsem1);
+					years.push(acadsem2);
+				}
 				firstYear++;
 			}
 			years.reverse();
@@ -281,21 +289,24 @@ export default {
 			var userid;
 			var user = this.fetchUser();
 			if (user != null) {
-				userid = user.displayName;
+				userid = user.uid;
 			}
 			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
-			var quality = document.getElementById('quality').value;
+			var quality = document.getElementById('qualityc').value;
 			var relevance = document.getElementById('relevance').value;
 			var difficulty = document.getElementById('difficulty').value;
 			var review = document.getElementById('writtenReview');
 			var staff = document.getElementById('staff').value;
+			var workload = document.getElementById('workload').value;
 			var year = document.getElementById('year').value;
 			year = year.slice(0,2)+year.slice(3,5)+'s'+year.slice(-1)[0];
 			var reviewDict = {};
+			reviewDict['userid'] = user.displayName;
 			reviewDict['quality'] = parseFloat(quality);
 			reviewDict['relevance'] = parseFloat(relevance);
 			reviewDict['difficulty'] = parseFloat(difficulty);
 			reviewDict['staff'] = parseFloat(staff);
+			reviewDict['workload'] = parseFloat(workload);
 			reviewDict['review'] = review.value;
 			reviewDict['year'] = year;
 			
@@ -304,29 +315,44 @@ export default {
 			}
 			moduleReview[userid] = reviewDict;
 			database.collection('reviews').doc(module_code).set({
-				"module_review": moduleReview,
+				"module_reviews": moduleReview,
 			},{merge:true});
 			document.querySelector('#overlay').style.display = 'none';
-			console.log(Object.keys(moduleReview).length);
 			moduleReview = {};
 			this.updateReviews();
 		},
 		updateReviews: function() {
 			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
 			let userRef = database.collection('reviews').doc(module_code);
+			var overallReviewNum = 0;
+			var avgQualityContent = 0;
+			var avgRelevanceContent = 0;
+			var avgDifficultyContent = 0;
+			var avgWorkload = 0;
+			var avgStaff = 0;
+			var module_review = {};
             userRef.get().then( doc => {
-				var module_review = doc.data()['module_review'];
+				module_review = doc.data()['module_reviews'];
 				moduleReview = module_review;
-				var overallReviewNum = Object.values(module_review).map(function(x) {return x['overall']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
-				var avgStaffAdmin = Object.values(module_review).map(function(x) {return x['admin']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
-				var avgContent = Object.values(module_review).map(function(x) {return x['content']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+				avgQualityContent = Object.values(module_review).map(function(x) {return x['quality']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+				avgRelevanceContent = Object.values(module_review).map(function(x) {return x['relevance']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+				avgDifficultyContent = Object.values(module_review).map(function(x) {return x['difficulty']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+				avgWorkload = Object.values(module_review).map(function(x) {return x['workload']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+				avgStaff = Object.values(module_review).map(function(x) {return x['staff']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+				overallReviewNum = (avgQualityContent+avgRelevanceContent+avgDifficultyContent+avgWorkload+avgStaff)/5;
 				overallReviewNum = Math.round(overallReviewNum*10)/10;
-				avgStaffAdmin = Math.round(avgStaffAdmin*10)/10;
-				avgContent = Math.round(avgContent*10)/10;
-				document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum.toString();
-				document.getElementById("ContentFeedback").innerHTML = 'Learning Contents: ' + avgContent.toString();
-				document.getElementById("StaffFeedback").innerHTML = 'Staff and Administration: ' + avgStaffAdmin.toString();
-				document.querySelector('#userReview').disabled = true;
+				avgQualityContent = Math.round(avgQualityContent*10)/10;
+				avgRelevanceContent = Math.round(avgRelevanceContent*10)/10;
+				avgDifficultyContent = Math.round(avgDifficultyContent*10)/10;
+				avgStaff = Math.round(avgStaff*10)/10;
+				avgWorkload = Math.round(avgWorkload*10)/10;
+				document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum;
+				document.getElementById('QualityContentFeedback').innerHTML = 'Quality of content: '+ avgQualityContent.toString() + '/5';
+				document.getElementById('RelevanceContentFeedback').innerHTML = 'Relevance of content: '+ avgRelevanceContent.toString() + '/5';
+				document.getElementById('DifficultyContentFeedback').innerHTML = 'Difficulty of content: '+ avgDifficultyContent.toString() + '/5';
+				document.getElementById('WorkloadFeedback').innerHTML = 'Heaviness of Workload: '+ avgWorkload.toString() + '/5';
+				document.getElementById('StaffFeedback').innerHTML = 'Quality of teaching staff: '+ avgStaff.toString() + '/5';
+				document.querySelector('#userReview').style.disabled = true;
 				var writtenReviews = {};
 				for (let [id, written] of Object.entries(module_review)) {
 					if (written['review'].length > 0) {
@@ -337,12 +363,25 @@ export default {
 				r.innerHTML = "";
 				for (let [id, review] of Object.entries(writtenReviews)) {
 					var y = review["year"];
+					var d = review['difficulty'];
+					var q = review['quality'];
+					var re = review['relevance'];
+					var s = review['staff'];
+					var w = review['workload'];
+					var n = review['userid'];
 					var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Sem " + y.slice(5,6);
 					r.insertAdjacentHTML('beforeend','<tr>');
 					if (id.includes("Guest")){
 						id = "Guest";
 					}
-					r.insertAdjacentHTML('beforeend','<td>'+ id+'<br></br>'+ year +'</td>' + '<td>'+ '\n' +review['review']+'</td></tr>');
+					r.insertAdjacentHTML('beforeend','<td>'+ id+'<br></br>'+ year +'</td>' + '<td>'+
+					'<div id = "quality">Quality of content: ' + q +'/5</div>'+ 
+					'<div id = "quality">Relevance of content: ' + re +'/5</div>'+
+					'<div id = "quality">Difficulty of content: ' + d +'/5</div>'+
+					'<div id = "quality">Heaviness of Workload: ' + w +'/5</div>'+
+					'<div id = "quality">Teaching staff: ' + s +'/5</div>'
+					+review['review']+'</td></tr>');
+					r.insertAdjacentHTML('beforeend','<td>'+ n +'<br></br>'+ year +'</td>' + '<td>'+ '\n' +review['review']+'</td></tr>');
 				}
 				const starPercentage = (overallReviewNum / 5) * 100;
 				const starPercentageRounded = `${(Math.round(starPercentage))}%`;
@@ -365,45 +404,63 @@ export default {
 			var avgWorkload = 0;
 			var avgStaff = 0;
 			var module_review = {};
-			var userid = this.fetchUser().displayName;
+			var userid = this.fetchUser().uid;
+			res.insertAdjacentHTML('beforeend', '<h2>Ratings and Reviews</h2><hr></hr>');
+			res.insertAdjacentHTML('beforeend','<h3 id = "OverallFeedbackNum">'+overallReviewNum+'</h3>');
+			res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><div id = "StarsInner"></div></div><div></div>');
+			res.insertAdjacentHTML('beforeend','<div id = "QualityContentFeedback">Quality of content: '+ avgQualityContent + '</div>');
+			res.insertAdjacentHTML('beforeend','<div id = "RelevanceContentFeedback">Relevance of Content: ' + avgRelevanceContent + "</div>");
+			res.insertAdjacentHTML('beforeend','<div id = "DifficultyContentFeedback">Difficulty of Content: ' + avgDifficultyContent + "</div>");
+			res.insertAdjacentHTML('beforeend','<div id = "WorkloadFeedback">Heaviness of Workload: ' + avgWorkload + "</div>");
+			res.insertAdjacentHTML('beforeend','<div id = "StaffFeedback">Quality of teaching staff: ' + avgStaff + "</div>");
+			res.insertAdjacentHTML('beforeend','<br></br>');
+			res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview">Review this module now!</button></h4>');	
+			const reviewMod = document.querySelector('#userReview');
+			reviewMod.addEventListener('click',function(){
+				overlay.style.display = 'block';
+				});
+			const closeReview = document.querySelector('#closeReview');
+			closeReview.addEventListener('click',function(){
+				overlay.style.display = 'none';
+			});
             userRef.get().then( doc => {
 				if (doc.exists) {
-					module_review = doc.data()['module_review'];
+					module_review = doc.data()['module_reviews'];
 					moduleReview = module_review;
 					avgQualityContent = Object.values(module_review).map(function(x) {return x['quality']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
 					avgRelevanceContent = Object.values(module_review).map(function(x) {return x['relevance']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
 					avgDifficultyContent = Object.values(module_review).map(function(x) {return x['difficulty']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
 					avgWorkload = Object.values(module_review).map(function(x) {return x['workload']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
 					avgStaff = Object.values(module_review).map(function(x) {return x['staff']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
-					overallReviewNum = Math.
+					overallReviewNum = (avgQualityContent+avgRelevanceContent+avgDifficultyContent+avgWorkload+avgStaff)/5;
+					overallReviewNum = Math.round(overallReviewNum*10)/10;
 					avgQualityContent = Math.round(avgQualityContent*10)/10;
 					avgRelevanceContent = Math.round(avgRelevanceContent*10)/10;
 					avgDifficultyContent = Math.round(avgDifficultyContent*10)/10;
 					avgStaff = Math.round(avgStaff*10)/10;
 					avgWorkload = Math.round(avgWorkload*10)/10;
+					document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum;
+					document.getElementById('QualityContentFeedback').innerHTML = 'Quality of content: '+ avgQualityContent.toString();
+					document.getElementById('RelevanceContentFeedback').innerHTML = 'Relevance of content: '+ avgRelevanceContent.toString();
+					document.getElementById('DifficultyContentFeedback').innerHTML = 'Difficulty of content: '+ avgDifficultyContent.toString();
+					document.getElementById('WorkloadFeedback').innerHTML = 'Heaviness of Workload: '+ avgWorkload.toString();
+					document.getElementById('StaffFeedback').innerHTML = 'Quality of teaching staff: '+ avgStaff.toString();
 				}
-				res.insertAdjacentHTML('beforeend', '<h2>Ratings and Reviews</h2><hr></hr>');
-				res.insertAdjacentHTML('beforeend','<h3 id = "OverallFeedbackNum">'+overallReviewNum+'</h3>');
-				res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><div id = "StarsInner"></div></div><div></div>');
-				res.insertAdjacentHTML('beforeend','<div id = "ContentFeedback">Learning Contents: ' + avgContent + '</div><div id = "sep"></div><div id = "StaffFeedback">Staff and Administration: ' + avgStaffAdmin + "</div><br></br>");
-				res.insertAdjacentHTML('beforeend', '<div id = "overlain"></div>');
-				if (userid in Object.keys(module_review)) {
-					res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview" disabled=true>Review this module now!</button></h4>');	
-				} else {
-					res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview">Review this module now!</button></h4>');
+				if (Object.keys(module_review).includes(userid)) {
+					reviewMod.disabled = true;
 				}
-				res.insertAdjacentHTML('beforeend','<hr></hr><table><tbody id = "tabody">');
+				
 				const starPercentage = (overallReviewNum / 5) * 100;
 				const starPercentageRounded = `${(Math.round(starPercentage))}%`;
 				document.querySelector("#StarsInner").style.width = starPercentageRounded;
-				const reviewMod = document.querySelector('#userReview');
-				reviewMod.addEventListener('click',function(){
-					overlay.style.display = 'block';
-					});
-				const closeReview = document.querySelector('#closeReview');
-				closeReview.addEventListener('click',function(){
-					overlay.style.display = 'none';
-					});
+				try {
+					var x = document.getElementById("tabody");
+					x.innerHTML = "";	
+				} catch (error) {
+					res.insertAdjacentHTML('beforeend','<hr></hr><table><tbody id = "tabody">');
+					console.log("No tag found error")
+				}
+				
 				var writtenReviews = {};
 				if (moduleReview != {}) {
 					for (let [id, written] of Object.entries(module_review)) {
@@ -414,17 +471,23 @@ export default {
 					for (let [id, review] of Object.entries(writtenReviews)) {
 						var r = document.getElementById("tabody");
 						var y = review["year"];
+						var d = review['difficulty'];
+						var q = review['quality'];
+						var re = review['relevance'];
+						var s = review['staff'];
+						var w = review['workload'];
+						var n = review['userid']
 						var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Sem " + y.slice(5,6);
 						r.insertAdjacentHTML('beforeend','<tr>');
 						if (id.includes("Guest")){
 							id = "Guest";
 						}
-						r.insertAdjacentHTML('beforeend','<td>'+ id+'<br></br>'+ year +'</td>' + '<td>'+
-						'<div id = "quality">Quality of content: ' + quality +'</div> | '+ 
-						'<div id = "quality">Relevance of content: ' + relevance +'</div> | '+
-						'<div id = "quality">Difficulty of content: ' + difficulty +'</div> | '+
-						'<div id = "quality">Heaviness of Workload: ' + workload +'</div> | '+
-						'<div id = "quality">Teaching staff: ' + teaching +'</div> | '+'\n' 
+						r.insertAdjacentHTML('beforeend','<td>'+ n+'<br></br>'+ year +'</td>' + '<td>'+
+						'<div id = "quality">Quality of content: ' + q + '/5</div>'+ 
+						'<div id = "quality">Relevance of content: ' + re +'/5</div>'+
+						'<div id = "quality">Difficulty of content: ' + d +'/5</div>'+
+						'<div id = "quality">Heaviness of Workload: ' + w +'/5</div>'+
+						'<div id = "quality">Teaching staff: ' + s +'/5</div>'
 						+review['review']+'</td></tr>');
 					}
 				}

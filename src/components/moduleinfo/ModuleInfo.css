@@ -16,6 +16,10 @@
   margin: 0;
 }
 
+#tabody {
+  width:65%;
+}
+
 #modules li{
   align-items: left;
   text-align: left;
@@ -40,11 +44,6 @@
   width: 70%;
 }
 
-#sep {
-  display: inline-block;
-  white-space: pre-wrap;
-}
-
 #StarsOuter {
   display: inline-block;
   position: relative;
@@ -54,22 +53,6 @@
 
 #StarsOuter::before {
   content: "\f006 \f006 \f006 \f006 \f006";
-}
-.modal-mask {
-  position: fixed;
-  z-index: 9998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: table;
-  transition: opacity 0.3s ease;
-}
-
-.modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
 }
 
 .modal-container {
@@ -111,14 +94,20 @@
   z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
   cursor: pointer; /* Add a pointer on hover */
 }
-#rating {
-  padding-top: 5px;
+#CQuality {
+  padding-top: 10px;
 }
-#learning {
-  padding-top: 5px;
+#CRelevance {
+  padding-top: 10px;
 }
-#admin {
-  padding-top: 5px;
+#Cdifficulty {
+  padding-top: 10px;
+}
+#heavy {
+  padding-top: 10px;
+}
+#teaching {
+  padding-top: 10px;
 }
 #writtenReview {
   margin-top: 15px;
@@ -133,7 +122,19 @@
   width: 0;
   font-size: 20px;
 }
-#ContentFeedback::after {
+#QualityContentFeedback::after {
+  font-family: FontAwesome;
+  content: " \f005";
+}
+#RelevanceContentFeedback::after {
+  font-family: FontAwesome;
+  content: " \f005";
+}
+#DifficultyContentFeedback::after {
+  font-family: FontAwesome;
+  content: " \f005";
+}
+#WorkloadFeedback::after {
   font-family: FontAwesome;
   content: " \f005";
 }

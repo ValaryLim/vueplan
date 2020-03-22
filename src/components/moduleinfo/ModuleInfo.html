@@ -37,7 +37,7 @@
       <!-- REVIEWS SECTION -->
       <!-- checks whether reviews should appear or not-->
       <div id="overlay"> 
-        <div class="modal-mask modal-wrapper modal-container">
+        <div class="modal-container">
           <div class="modal-header">
             <slot name="header">
               <h1 id = 'reviewTitle'>Add Review</h1>
@@ -53,9 +53,11 @@
                 <option v-for="year in yearlist">{{year.slice(0,2)+'/'+year.slice(3,5)+' Semester '+year[6]}}</option>
               </select>
             </div>
-            <div id = 'rating'>Overall: <input id = 'overall' type = 'number' step='0.1' min='1' max='5' value='3' style='float:right'></input></div>
-            <div id = 'learning'>Learning Content: <input id = 'content' type = 'number' step='0.1' min='1' max='5' value='3' style='float:right'></input></div>
-            <div id = 'admin'>Staff and Administration: <input id = 'staff' type = 'number' step='0.1' min='1' max='5' value='3' style='float:right'></input></div>
+              <div id = 'CQuality'>Quality of Content: <input id = 'qualityc' type = 'number' step='0.1' min='1' max='5' value='3' style='float:right'></input></div>
+              <div id = 'CRelevance'>Relevance of Content: <input id = 'relevance' type = 'number' step='0.1' min='1' max='5' value='3' style='float:right'></input></div>
+              <div id = 'Cdifficulty'>Difficulty of content: <input id = 'difficulty' type = 'number' step='0.1' min='1' max='5' value='3' style='float:right'></input></div>
+              <div id = 'heavy'>Heaviness of workload: <input id = 'workload' type = 'number' step='0.1' min='1' max='5' value='3' style='float:right'></input></div>
+              <div id = 'teaching'>Quality of teaching staff: <input id = 'staff' type = 'number' step='0.1' min='1' max='5' value='3' style='float:right'></input></div>
             <slot name="body" id='writtenBody'>
               <textarea id ='writtenReview' rows=10 cols=105 placeholder = 'Write your review here!'></textarea>
             </slot>
