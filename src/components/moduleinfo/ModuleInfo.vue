@@ -8,7 +8,7 @@ import database from'../firebase.js';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import * as Treeviz from 'treeviz';
 import { mapGetters } from "vuex";
-import Chart from '../moduleinfo/Chart.vue'
+//import Chart from '../moduleinfo/Chart.vue'
 
 import Dashboard from '../dashboard/Dashboard.vue';
 
@@ -26,6 +26,7 @@ export default {
 			search:'',
 			mods: Object.values(modules),
 			show: true,
+			value:5 ,
 
 			/* data required for dashboard */
 			preprocessed_data: {
@@ -393,8 +394,8 @@ export default {
 			if (user != null) {
 				userid = user.uid;
 			}
-			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
-			var quality = document.getElementById('qualityc').value;
+			//var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
+			//var quality = document.getElementById('qualityc').value;
 			var relevance = document.getElementById('relevance').value;
 			var difficulty = document.getElementById('difficulty').value;
 			var review = document.getElementById('writtenReview');
@@ -404,21 +405,23 @@ export default {
 			year = year.slice(0,2)+year.slice(3,5)+'s'+year.slice(-1)[0];
 			var reviewDict = {};
 			reviewDict['userid'] = user.displayName;
-			reviewDict['quality'] = parseFloat(quality);
+			//reviewDict['quality'] = parseFloat(quality);
 			reviewDict['relevance'] = parseFloat(relevance);
 			reviewDict['difficulty'] = parseFloat(difficulty);
 			reviewDict['staff'] = parseFloat(staff);
 			reviewDict['workload'] = parseFloat(workload);
 			reviewDict['review'] = review.value;
 			reviewDict['year'] = year;
+			console.log(document.getElementsByClassName('rating'));
+			console.log('New star rating: ' + document.getElementsByClassName('rating').value);
 			
 			if (moduleReview == undefined) {
 				moduleReview = {};
 			}
 			moduleReview[userid] = reviewDict;
-			database.collection('reviews').doc(module_code).set({
+			/*database.collection('reviews').doc(module_code).set({
 				"module_reviews": moduleReview,
-			},{merge:true});
+			},{merge:true});*/
 			document.querySelector('#overlay').style.display = 'none';
 			moduleReview = {};
 			this.updateReviews();
@@ -542,7 +545,7 @@ export default {
 					avgDifficultyContent = Math.round(avgDifficultyContent*10)/10;
 					avgStaff = Math.round(avgStaff*10)/10;
 					avgWorkload = Math.round(avgWorkload*10)/10;
-					var ctx = document.getElementById('myChart').getContext('2d');
+					/*var ctx = document.getElementById('myChart').getContext('2d');
 					var data = {
 						labels: ['Quality of content', 'Relevance of content', 'Difficulty of content', 'Heaviness of Workload', 'Quality of teaching staff'],
 						datasets: [{
@@ -555,7 +558,7 @@ export default {
 					new Chart(ctx, {
 						type: 'radar',
 						data: data,
-					});
+					});*/
 					document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum;
 					document.getElementById('QualityContentFeedback').innerHTML = 'Quality of content: '+ avgQualityContent.toString();
 					document.getElementById('RelevanceContentFeedback').innerHTML = 'Relevance of content: '+ avgRelevanceContent.toString();
@@ -613,9 +616,6 @@ export default {
 		}
 	}
 }
-//unique userid
-//disable button
 //reviews load too long
-//close button
 //reviews showing everything
 </script>

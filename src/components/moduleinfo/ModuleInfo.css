@@ -94,23 +94,26 @@
   z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
   cursor: pointer; /* Add a pointer on hover */
 }
-#CQuality {
-  padding-top: 10px;
+#review {
+  width: 750px;
 }
-#CRelevance {
-  padding-top: 10px;
+#year {
+  position: relative;
+  margin-left: 350px;
 }
-#Cdifficulty {
-  padding-top: 10px;
+.one {
+  width: 200px;
 }
-#heavy {
-  padding-top: 10px;
+.rows {
+  display: inline-block;
+  height: 50px;
 }
-#teaching {
-  padding-top: 10px;
+.spin {
+  position: relative;
+  padding-left: 400px;
 }
 #writtenReview {
-  margin-top: 15px;
+  margin-top: 40px;
 }
 
 #StarsInner {
