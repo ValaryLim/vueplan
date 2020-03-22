@@ -411,6 +411,7 @@ export default {
 			var avgWorkload = 0;
 			var avgStaff = 0;
 			var module_review = {};
+			document.querySelector('#userReview').style.disabled = true;
             userRef.get().then( doc => {
 				module_review = doc.data()['module_reviews'];
 				moduleReview = module_review;
@@ -427,8 +428,6 @@ export default {
 				avgStaff = Math.round(avgStaff*10)/10;
 				avgWorkload = Math.round(avgWorkload*10)/10;
 				document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum;
-				
-				document.querySelector('#userReview').style.disabled = true;
 				var writtenReviews = {};
 				for (let [id, written] of Object.entries(module_review)) {
 					if (written['review'].length > 0) {
