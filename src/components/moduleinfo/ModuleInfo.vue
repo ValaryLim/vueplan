@@ -8,11 +8,12 @@ import database from'../firebase.js';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import * as Treeviz from 'treeviz';
 import { mapGetters } from "vuex";
-//import Chart from '../moduleinfo/Chart.vue'
+import Chart from 'chart.js';
 
 import Dashboard from '../dashboard/Dashboard.vue';
 
 var moduleReview = {};
+var myChart;
 export default {
 	name: "App",
 	display: "Module Information",
@@ -26,7 +27,11 @@ export default {
 			search:'',
 			mods: Object.values(modules),
 			show: true,
-			value:5 ,
+			quality:5 ,
+			relevance:5,
+			staff:5,
+			difficulty:5,
+			workload:5,
 
 			/* data required for dashboard */
 			preprocessed_data: {
@@ -394,18 +399,18 @@ export default {
 			if (user != null) {
 				userid = user.uid;
 			}
-			//var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
-			//var quality = document.getElementById('qualityc').value;
-			var relevance = document.getElementById('relevance').value;
-			var difficulty = document.getElementById('difficulty').value;
+			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
+			var quality = this.quality
+			var relevance = this.relevance;
+			var difficulty = this.difficulty;
 			var review = document.getElementById('writtenReview');
-			var staff = document.getElementById('staff').value;
-			var workload = document.getElementById('workload').value;
+			var staff = this.staff;
+			var workload = this.workload;
 			var year = document.getElementById('year').value;
 			year = year.slice(0,2)+year.slice(3,5)+'s'+year.slice(-1)[0];
 			var reviewDict = {};
 			reviewDict['userid'] = user.displayName;
-			//reviewDict['quality'] = parseFloat(quality);
+			reviewDict['quality'] = parseFloat(quality);
 			reviewDict['relevance'] = parseFloat(relevance);
 			reviewDict['difficulty'] = parseFloat(difficulty);
 			reviewDict['staff'] = parseFloat(staff);
@@ -419,9 +424,9 @@ export default {
 				moduleReview = {};
 			}
 			moduleReview[userid] = reviewDict;
-			/*database.collection('reviews').doc(module_code).set({
+			database.collection('reviews').doc(module_code).set({
 				"module_reviews": moduleReview,
-			},{merge:true});*/
+			},{merge:true});
 			document.querySelector('#overlay').style.display = 'none';
 			moduleReview = {};
 			this.updateReviews();
@@ -452,11 +457,7 @@ export default {
 				avgStaff = Math.round(avgStaff*10)/10;
 				avgWorkload = Math.round(avgWorkload*10)/10;
 				document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum;
-				document.getElementById('QualityContentFeedback').innerHTML = 'Quality of content: '+ avgQualityContent.toString() + '/5';
-				document.getElementById('RelevanceContentFeedback').innerHTML = 'Relevance of content: '+ avgRelevanceContent.toString() + '/5';
-				document.getElementById('DifficultyContentFeedback').innerHTML = 'Difficulty of content: '+ avgDifficultyContent.toString() + '/5';
-				document.getElementById('WorkloadFeedback').innerHTML = 'Heaviness of Workload: '+ avgWorkload.toString() + '/5';
-				document.getElementById('StaffFeedback').innerHTML = 'Quality of teaching staff: '+ avgStaff.toString() + '/5';
+				
 				document.querySelector('#userReview').style.disabled = true;
 				var writtenReviews = {};
 				for (let [id, written] of Object.entries(module_review)) {
@@ -464,6 +465,35 @@ export default {
 						writtenReviews[id] = written;
 					}
 				}
+				var mc = document.getElementById('myChart');
+				var ctx = mc.getContext('2d');
+				var data = {
+					labels: ['Quality of content', 'Relevance of content', 'Difficulty of content', 'Heaviness of Workload', 'Quality of teaching staff'],
+					datasets: [{
+						label: 'Breakdown of rating',
+						backgroundColor: 'rgb(255, 99, 132)',
+						borderColor: 'rgb(255, 99, 132)',
+						data: [avgQualityContent, avgRelevanceContent, avgDifficultyContent, avgWorkload, avgStaff],
+						fill: false,
+					}]
+				}
+				myChart.destroy();
+				myChart = new Chart(ctx, {
+					type: 'radar',
+					data: data,
+					options: {
+						responsive: true,
+						scale: {
+							angleLines: {
+								display: false
+							},
+							ticks: {
+								suggestedMin: 0,
+								suggestedMax: 5
+							}
+						}
+					}
+				});
 				var r = document.getElementById("tabody");
 				r.innerHTML = "";
 				for (let [id, review] of Object.entries(writtenReviews)) {
@@ -479,14 +509,13 @@ export default {
 					if (id.includes("Guest")){
 						id = "Guest";
 					}
-					r.insertAdjacentHTML('beforeend','<td>'+ id+'<br></br>'+ year +'</td>' + '<td>'+
+					r.insertAdjacentHTML('beforeend','<td>'+ n+'<br></br>'+ year +'</td>' + '<td>'+
 					'<div id = "quality">Quality of content: ' + q +'/5</div>'+ 
 					'<div id = "quality">Relevance of content: ' + re +'/5</div>'+
 					'<div id = "quality">Difficulty of content: ' + d +'/5</div>'+
 					'<div id = "quality">Heaviness of Workload: ' + w +'/5</div>'+
 					'<div id = "quality">Teaching staff: ' + s +'/5</div>'
 					+review['review']+'</td></tr>');
-					r.insertAdjacentHTML('beforeend','<td>'+ n +'<br></br>'+ year +'</td>' + '<td>'+ '\n' +review['review']+'</td></tr>');
 				}
 				const starPercentage = (overallReviewNum / 5) * 100;
 				const starPercentageRounded = `${(Math.round(starPercentage))}%`;
@@ -501,6 +530,7 @@ export default {
 			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
 			let userRef = database.collection('reviews').doc(module_code);
 			var res = document.getElementById("res_review");
+			res.innerHTML = "";
 			const overlay = document.querySelector('#overlay');
 			var overallReviewNum = 0;
 			var avgQualityContent = 0;
@@ -511,14 +541,8 @@ export default {
 			var module_review = {};
 			var userid = this.fetchUser().uid;
 			res.insertAdjacentHTML('beforeend', '<h2>Ratings and Reviews</h2><hr></hr>');
-			res.insertAdjacentHTML('beforeend','<h3 id = "OverallFeedbackNum">'+overallReviewNum+'</h3>');
-			res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><div id = "StarsInner"></div></div><div></div>');
-			res.insertAdjacentHTML('beforeend','<div id = "QualityContentFeedback">Quality of content: '+ avgQualityContent + '</div>');
-			res.insertAdjacentHTML('beforeend','<div id = "RelevanceContentFeedback">Relevance of Content: ' + avgRelevanceContent + "</div>");
-			res.insertAdjacentHTML('beforeend','<div id = "DifficultyContentFeedback">Difficulty of Content: ' + avgDifficultyContent + "</div>");
-			res.insertAdjacentHTML('beforeend','<div id = "WorkloadFeedback">Heaviness of Workload: ' + avgWorkload + "</div>");
-			res.insertAdjacentHTML('beforeend','<div id = "StaffFeedback">Quality of teaching staff: ' + avgStaff + "</div>");
-			res.insertAdjacentHTML('beforeend','<canvas id="myChart" width="400" height="400"></canvas>');
+			res.insertAdjacentHTML('beforeend','<div id = "reviewOverall"><div id = "overall">Overall Rating</div><h3 id = "OverallFeedbackNum">'+overallReviewNum+'</h3><div id = "StarsOuter"><div id = "StarsInner"></div></div></div>');
+			res.insertAdjacentHTML('beforeend','<div id = "reviewChart"><canvas id="myChart"></canvas></div>');
 			res.insertAdjacentHTML('beforeend','<br></br>');
 			res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview">Review this module now!</button></h4>');	
 			const reviewMod = document.querySelector('#userReview');
@@ -545,7 +569,8 @@ export default {
 					avgDifficultyContent = Math.round(avgDifficultyContent*10)/10;
 					avgStaff = Math.round(avgStaff*10)/10;
 					avgWorkload = Math.round(avgWorkload*10)/10;
-					/*var ctx = document.getElementById('myChart').getContext('2d');
+					var mc = document.getElementById('myChart');
+					var ctx = mc.getContext('2d');
 					var data = {
 						labels: ['Quality of content', 'Relevance of content', 'Difficulty of content', 'Heaviness of Workload', 'Quality of teaching staff'],
 						datasets: [{
@@ -553,23 +578,30 @@ export default {
 							backgroundColor: 'rgb(255, 99, 132)',
 							borderColor: 'rgb(255, 99, 132)',
 							data: [avgQualityContent, avgRelevanceContent, avgDifficultyContent, avgWorkload, avgStaff],
+							fill: false,
 						}]
 					}
-					new Chart(ctx, {
+					myChart = new Chart(ctx, {
 						type: 'radar',
 						data: data,
-					});*/
+						options: {
+							responsive: true,
+							scale: {
+								angleLines: {
+									display: false
+								},
+								ticks: {
+									suggestedMin: 0,
+									suggestedMax: 5
+								}
+							}
+						}
+					});
 					document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum;
-					document.getElementById('QualityContentFeedback').innerHTML = 'Quality of content: '+ avgQualityContent.toString();
-					document.getElementById('RelevanceContentFeedback').innerHTML = 'Relevance of content: '+ avgRelevanceContent.toString();
-					document.getElementById('DifficultyContentFeedback').innerHTML = 'Difficulty of content: '+ avgDifficultyContent.toString();
-					document.getElementById('WorkloadFeedback').innerHTML = 'Heaviness of Workload: '+ avgWorkload.toString();
-					document.getElementById('StaffFeedback').innerHTML = 'Quality of teaching staff: '+ avgStaff.toString();
 				}
 				if (Object.keys(module_review).includes(userid)) {
 					reviewMod.disabled = true;
 				}
-				
 				const starPercentage = (overallReviewNum / 5) * 100;
 				const starPercentageRounded = `${(Math.round(starPercentage))}%`;
 				document.querySelector("#StarsInner").style.width = starPercentageRounded;

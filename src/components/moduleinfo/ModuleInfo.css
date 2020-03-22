@@ -53,6 +53,7 @@
 
 #StarsOuter::before {
   content: "\f006 \f006 \f006 \f006 \f006";
+  text-align: center;
 }
 
 .modal-container {
@@ -98,22 +99,24 @@
   width: 750px;
 }
 #year {
-  position: relative;
   margin-left: 350px;
 }
 .one {
   width: 200px;
 }
 .rows {
-  display: inline-block;
-  height: 50px;
+  display: inline;
 }
 .spin {
-  position: relative;
-  padding-left: 400px;
+  margin-left: 400px;
 }
 #writtenReview {
   margin-top: 40px;
+}
+#reviewChart {
+  display: block;
+  width:600px;
+  height:300px;
 }
 
 #StarsInner {
@@ -125,26 +128,6 @@
   width: 0;
   font-size: 20px;
 }
-#QualityContentFeedback::after {
-  font-family: FontAwesome;
-  content: " \f005";
-}
-#RelevanceContentFeedback::after {
-  font-family: FontAwesome;
-  content: " \f005";
-}
-#DifficultyContentFeedback::after {
-  font-family: FontAwesome;
-  content: " \f005";
-}
-#WorkloadFeedback::after {
-  font-family: FontAwesome;
-  content: " \f005";
-}
-#StaffFeedback::after {
-  font-family: FontAwesome;
-  content: " \f005";
-}
 #StarsInner::before {
   content: "\f005 \f005 \f005 \f005 \f005";
   color: #f8ce0b;
@@ -152,5 +135,14 @@
 #OverallFeedbackNum {
   font-size: 42px;
   text-align: center;
-  width: 90px;
+  width: 600px;
+}
+#reviewOverall {
+  width: 600px; 
+  text-align: center;
+}
+
+#overall {
+  text-align: center;
+  font-size: 24px;
 }
