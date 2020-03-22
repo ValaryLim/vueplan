@@ -104,6 +104,7 @@ export default {
 		filteredList() {
 			if(this.search != ''){
 				document.getElementById("res").innerHTML ="";
+				document.getElementById("res_review").innerHTML = "";
 			}
 			
 			return Object.keys(this.allmodules).filter(mod => {
