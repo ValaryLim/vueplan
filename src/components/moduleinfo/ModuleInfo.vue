@@ -11,6 +11,7 @@ import { mapGetters } from "vuex";
 import Chart from 'chart.js';
 
 import Dashboard from '../dashboard/Dashboard.vue';
+import Review from '../review/Review.vue';
 
 var moduleReview = {};
 var myChart;
@@ -20,7 +21,8 @@ export default {
 	components: {
 		FontAwesomeIcon,
 		Treeviz,
-		Dashboard
+		Dashboard,
+		Review
 	},
 	data: function() {
 		return {
@@ -32,6 +34,7 @@ export default {
 			staff:5,
 			difficulty:5,
 			workload:5,
+			years:[],
 
 			/* data required for dashboard */
 			preprocessed_data: {
@@ -107,39 +110,6 @@ export default {
 				return this.allmodules[mod].fullname.toUpperCase().includes(this.search.toUpperCase())
             })
 		},
-		yearlist() {
-			var firstYear = 1994;
-			var years = [];
-			var date = new Date();
-			var currYear = date.getFullYear();
-			var currMonth = date.getMonth();
-			if (currMonth > 7) {
-				currYear = currYear-1;
-			}
-			while (firstYear < currYear){
-				var firstTwo = firstYear%100;
-				var lstTwo = (firstYear+1)%100;
-				firstTwo = firstTwo.toString();
-				lstTwo = lstTwo.toString();
-				if (firstTwo.length < 2) {
-					firstTwo = '0' + firstTwo;
-				}
-				if (lstTwo.length < 2) {
-					lstTwo = '0' + lstTwo;
-				}
-				var acadsem1 = firstTwo+'/'+lstTwo+'s1';
-				var acadsem2 = firstTwo+'/'+lstTwo+'s2';
-				if (currMonth > 7 && firstYear == currYear) {
-					years.push(acadsem1);
-				} else {
-					years.push(acadsem1);
-					years.push(acadsem2);
-				}
-				firstYear++;
-			}
-			years.reverse();
-			return years;
-		},
 		// map `this.user` to `this.$store.getters.user`
         ...mapGetters({
             user: "user"
@@ -188,7 +158,6 @@ export default {
 				if (arr.length == 0 && mod.prereq.length == 0) {
 					res.insertAdjacentHTML('beforeend', "None");
 				}
-
 
 				//joining the substrings to form the necessary output
 				for(let i = 0; i<arr.length; i++){ 
@@ -504,11 +473,9 @@ export default {
 					var s = review['staff'];
 					var w = review['workload'];
 					var n = review['userid'];
+					id;
 					var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Sem " + y.slice(5,6);
 					r.insertAdjacentHTML('beforeend','<tr>');
-					if (id.includes("Guest")){
-						id = "Guest";
-					}
 					r.insertAdjacentHTML('beforeend','<td>'+ n+'<br></br>'+ year +'</td>' + '<td>'+
 					'<div id = "quality">Quality of content: ' + q +'/5</div>'+ 
 					'<div id = "quality">Relevance of content: ' + re +'/5</div>'+
@@ -569,34 +536,6 @@ export default {
 					avgDifficultyContent = Math.round(avgDifficultyContent*10)/10;
 					avgStaff = Math.round(avgStaff*10)/10;
 					avgWorkload = Math.round(avgWorkload*10)/10;
-					var mc = document.getElementById('myChart');
-					var ctx = mc.getContext('2d');
-					var data = {
-						labels: ['Quality of content', 'Relevance of content', 'Difficulty of content', 'Heaviness of Workload', 'Quality of teaching staff'],
-						datasets: [{
-							label: 'Breakdown of rating',
-							backgroundColor: 'rgb(255, 99, 132)',
-							borderColor: 'rgb(255, 99, 132)',
-							data: [avgQualityContent, avgRelevanceContent, avgDifficultyContent, avgWorkload, avgStaff],
-							fill: false,
-						}]
-					}
-					myChart = new Chart(ctx, {
-						type: 'radar',
-						data: data,
-						options: {
-							responsive: true,
-							scale: {
-								angleLines: {
-									display: false
-								},
-								ticks: {
-									suggestedMin: 0,
-									suggestedMax: 5
-								}
-							}
-						}
-					});
 					document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum;
 				}
 				if (Object.keys(module_review).includes(userid)) {
@@ -628,12 +567,10 @@ export default {
 						var re = review['relevance'];
 						var s = review['staff'];
 						var w = review['workload'];
-						var n = review['userid']
+						var n = review['userid'];
+						id;
 						var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Sem " + y.slice(5,6);
 						r.insertAdjacentHTML('beforeend','<tr>');
-						if (id.includes("Guest")){
-							id = "Guest";
-						}
 						r.insertAdjacentHTML('beforeend','<td>'+ n+'<br></br>'+ year +'</td>' + '<td>'+
 						'<div id = "quality">Quality of content: ' + q + '/5</div>'+ 
 						'<div id = "quality">Relevance of content: ' + re +'/5</div>'+
@@ -644,6 +581,34 @@ export default {
 					}
 				}
 				res.insertAdjacentHTML('beforeend','</tbody></table');
+				var mc = document.getElementById('myChart');
+				var ctx = mc.getContext('2d');
+				var data = {
+					labels: ['Quality of content', 'Relevance of content', 'Difficulty of content', 'Heaviness of Workload', 'Quality of teaching staff'],
+					datasets: [{
+						label: 'Breakdown of rating',
+						backgroundColor: 'rgb(255, 99, 132)',
+						borderColor: 'rgb(255, 99, 132)',
+						data: [avgQualityContent, avgRelevanceContent, avgDifficultyContent, avgWorkload, avgStaff],
+						fill: false,
+					}]
+				}
+				myChart = new Chart(ctx, {
+					type: 'radar',
+					data: data,
+					options: {
+						responsive: true,
+						scale: {
+							angleLines: {
+								display: false
+							},
+							ticks: {
+								suggestedMin: 0,
+								suggestedMax: 5
+							}
+						}
+					}
+				});
 			});
 		}
 	}
