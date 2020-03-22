@@ -11,7 +11,7 @@ import { mapGetters } from "vuex";
 
 
 var moduleReview = {};
-var counter = 1;
+//var counter = 1;
 export default {
 	name: "App",
 	display: "Module Information",
@@ -24,6 +24,15 @@ export default {
 			search:'',
 			mods: Object.values(modules),
 			show: true,
+			form: {
+          year: "",
+          rating: "",
+          learning: "",
+          admin: "",
+          writtenReview: "",
+						},
+					userName:"",
+					module_code:""
 			}
 		},
 
@@ -297,14 +306,16 @@ export default {
 			reviewDict['overall'] = parseFloat(overall);
 			reviewDict['review'] = review.value;
 			reviewDict['year'] = year;
-			
+			/*
 			if (moduleReview == undefined) {
 				moduleReview = {};
 			}
+			//Maybe we should just ask the user to update his reivew
 			if (Object.keys(moduleReview).includes(userid)) {
 				userid = userid+counter.toString();
 				counter++;
 			}
+			*/
 			moduleReview[userid] = reviewDict;
 			database.collection('reviews').doc(module_code).set({
 				"module_review": moduleReview,
@@ -314,6 +325,50 @@ export default {
 			moduleReview = {};
 			this.updateReviews();
 		},
+
+    // Update a single review
+		updateReview: function() {
+			var userid = "Guest";
+			var user = this.fetchUser();
+			if (user != null) {
+				userid = user.displayName;
+			}
+			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
+			var content = document.getElementById('content2').value;
+			var admin = document.getElementById('staff2').value;
+			var review = document.getElementById('writtenReview2');
+			var overall = document.getElementById('overall2').value;
+			var year = document.getElementById('year').value;
+			year = year.slice(0,2)+year.slice(3,5)+'s'+year.slice(-1)[0];
+			var reviewDict = {};
+			reviewDict['content'] = parseFloat(content);
+			reviewDict['admin'] = parseFloat(admin);
+			reviewDict['overall'] = parseFloat(overall);
+			reviewDict['review'] = review.value;
+			reviewDict['year'] = year;
+			/*
+			if (moduleReview == undefined) {
+				moduleReview = {};
+			}
+			//Maybe we should just ask the user to update his reivew
+			if (Object.keys(moduleReview).includes(userid)) {
+				userid = userid+counter.toString();
+				counter++;
+			}
+			*/
+			moduleReview[userid] = reviewDict;
+			console.log("delete for " + module_code + " " + userid);
+			database.collection('reviews').doc(module_code).set(
+				{ module_review : {[userid]: firebase.firestore.FieldValue.delete()}}, { merge: true });
+			database.collection('reviews').doc(module_code).set({
+				"module_review": moduleReview,
+			},{merge:true});
+			document.querySelector('#overlay2').style.display = 'none';
+			console.log(Object.keys(moduleReview).length);
+			moduleReview = {};
+			this.updateReviews();
+		},
+
 		updateReviews: function() {
 			const module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
 			let userRef = database.collection('reviews').doc(module_code);
@@ -333,7 +388,7 @@ export default {
 					res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview" disabled=true>Review this module now!</button></h4>');	
 				} else {}
 				*/
-				document.querySelector('#userReview').disabled = true;
+				document.querySelector('#userReview').disabled = false;
 				var writtenReviews = {};
 				for (let [id, written] of Object.entries(module_review)) {
 					if (written['review'].length > 0) {
@@ -350,6 +405,23 @@ export default {
 						id = "Guest";
 					}
 					r.insertAdjacentHTML('beforeend','<td>'+ id+'<br></br>'+ year +'</td>' + '<td>'+review['review']+'</td></tr>');
+				
+				
+				if(this.fetchUser().displayName == id){
+							r.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
+							r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
+							document.getElementById("reviewBtn").addEventListener("click", ()=>{
+								this.deleteReview(module_code, id);
+							});
+							const overlayEdit = document.querySelector('#overlay2');
+							document.getElementById("editBtn").addEventListener("click", ()=>{
+								overlayEdit.style.display = 'block';
+								this.loadReview(module_code, id);
+								//const overlay_edit = document.querySelector('#overlay_edit');
+								//const overlayEdit = document.querySelector('p');
+								//overlayEdit.style.display = 'block';
+							});						
+				}
 				}
 				const starPercentage = (overallReviewNum / 5) * 100;
 				const starPercentageRounded = `${(Math.round(starPercentage))}%`;
@@ -360,11 +432,45 @@ export default {
 			var user = firebase.auth().currentUser;
 			return user;
 		},
+
+		deleteReview: function(modCode, user) {
+			database.collection('reviews').doc(modCode).set(
+				{ module_review : {[user]: firebase.firestore.FieldValue.delete()}}, { merge: true });
+			this.updateReviews();
+		},
+
+		loadReview(modCode, user) {
+            //var user = firebase.auth().currentUser;
+            let reviewRef = database.collection('reviews').doc(modCode);
+            reviewRef.get()
+                .then(doc => {
+										// populate form
+										this.form.userName = user;
+										this.form.module_code = modCode;
+                    this.form.year = doc.data()['module_review'][user].year;
+                    this.form.rating = doc.data()['module_review'][user].overall;
+                    this.form.learning = doc.data()['module_review'][user].content;
+										this.form.admin = doc.data()['module_review'][user].admin;
+										this.form.writtenReview = doc.data()['module_review'][user].review;
+										console.log("loading review");
+										console.log("load year" + this.form.year);
+										console.log("load rating" + this.form.rating);
+										console.log("load review" + this.form.writtenReview);
+                    /* populate store
+                    this.store.year = doc.data()['year'];
+                    this.store.major = doc.data()['major'];
+										this.store.module_semester_mapping = doc.data()['module_semester_mapping'];
+										*/
+                })
+        },
+
 		fetchReviews: function() {
 			const module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
 			let userRef = database.collection('reviews').doc(module_code);
 			var res = document.getElementById("res");
 			const overlay = document.querySelector('#overlay');
+			const overlayEdit = document.querySelector('#overlay2');
+			console.log("**inititial" + overlay);
 			var overallReviewNum = 0;
 			var avgStaffAdmin = 0;
 			var avgContent = 0;
@@ -389,18 +495,29 @@ export default {
 					res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview" disabled=true>Review this module now!</button></h4>');	
 				} else {}
 				*/
-				res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview">Review this module now!</button></h4>');
+				res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview" >Review this module now!</button></h4>');
 				res.insertAdjacentHTML('beforeend','<hr></hr><table><tbody id = "tabody">');
 				const starPercentage = (overallReviewNum / 5) * 100;
 				const starPercentageRounded = `${(Math.round(starPercentage))}%`;
 				document.querySelector("#StarsInner").style.width = starPercentageRounded;
 				const reviewMod = document.querySelector('#userReview');
-				reviewMod.addEventListener('click',function(){
-					overlay.style.display = 'block';
-					});
+				if (moduleReview == undefined) {
+						moduleReview = {};
+				}
+				reviewMod.addEventListener("click", () => {
+          if (
+            Object.keys(moduleReview).includes(this.fetchUser().displayName)
+          ) {
+						console.log("get the keys: " + Object.keys(moduleReview));
+            alert("You have already reviewed this module");
+          } else {
+            overlay.style.display = "block";
+          }
+        });
 				const closeReview = document.querySelector('#closeReview');
 				closeReview.addEventListener('click',function(){
 					overlay.style.display = 'none';
+					overlayEdit.style.display = 'none';
 					});
 				var writtenReviews = {};
 				if (moduleReview != {}) {
@@ -417,7 +534,21 @@ export default {
 						if (id.includes("Guest")){
 							id = "Guest";
 						}
-						r.insertAdjacentHTML('beforeend','<td>'+ id+'<br></br>'+ year +'</td>' + '<td>'+review['review']+'</td></tr>');
+						r.insertAdjacentHTML('beforeend','<td id = '+ id +' >'+ id+'<br></br>'+ year +'</td>' + '<td>'+review['review']+'</td></tr>');
+						if(this.fetchUser().displayName == id){
+							r.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
+							r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
+							document.getElementById("reviewBtn").addEventListener("click", ()=>{
+								this.deleteReview(module_code, id);
+							});
+							document.getElementById("editBtn").addEventListener("click", ()=>{
+								overlayEdit.style.display = 'block';
+								this.loadReview(module_code, id);
+								//const overlay_edit = document.querySelector('#overlay_edit');
+								//const overlayEdit = document.querySelector('p');
+								//overlayEdit.style.display = 'block';
+							});						
+				}
 					}
 				}
 				res.insertAdjacentHTML('beforeend','</tbody></table');
@@ -426,4 +557,16 @@ export default {
 		}
 	}
 }
+/*
+//Remove the old entry if review alreay exits
+			console.log("***submit executed");
+			console.log("module_code: " + this.form.module_code);
+			console.log("userName: " + this.form.userName);
+			if(this.form.module_code!= null && this.form.userName != null){
+				console.log("***if entered");
+				this.deleteReview(this.form.module_code, this.form.userName);
+				this.form.module_code = '';
+				this.form.userName = '';
+			}
+			*/
 </script>
