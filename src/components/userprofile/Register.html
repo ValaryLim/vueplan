@@ -11,6 +11,10 @@
                 <div class="col-md-8">
                     <div class="card">
                         <div class="card-body">
+                            <b-modal id="error-modal" :title="modal_header" hide-footer>
+                                <p>{{ this.modal_body }}</p>
+                                <b-button id="modal-ok-btn" @click="$bvModal.hide('error-modal')">OK</b-button>
+                            </b-modal>
                             <div v-if="error" class="alert alert-danger">{{error}}</div>
                             <form action="#" @submit.prevent="submit">
     

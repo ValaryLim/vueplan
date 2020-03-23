@@ -16,7 +16,7 @@ export default {
         major: "Business Analytics",
         exemptions: ["ES1000"],
       },
-      error: null
+      error: null,
     };
   },
   
@@ -55,16 +55,15 @@ export default {
             num_semester_mapping: ["Y1S1",  "Y1S2", "Y2S1", "Y2S2",  "Y3S1",  "Y3S2", "Y4S1",  "Y4S2"],
             index: 8,
           })
-          .then(function() {
-              alert("Registered successfully");
-          })
           .then(data.user
             .updateProfile({
               displayName: this.form.name,
             })
             .then(() =>{
-            // bring user to profile page
-            this.$router.replace({ name: "Home" });
+              this.$bvModal.msgBoxOk("Successfully Registered")
+              .then(() => {
+                  this.$router.replace({ name: 'Home' })
+              });
             }
           ))
         })
@@ -76,3 +75,11 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+/* error message */
+.modal {
+    position: fixed;
+    top: 20%;
+}
+</style>
