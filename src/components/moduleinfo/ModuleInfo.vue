@@ -546,9 +546,9 @@ export default {
 								this.deleteReview(module_code, id);
 								this.updateReviews();
 							});
-							const overlayEdit = document.querySelector('#overlay2');
+							//const overlayEdit = document.querySelector('#overlay2');
 							document.getElementById("editBtn").addEventListener("click", ()=>{
-								overlayEdit.style.display = 'block';
+								//overlayEdit.style.display = 'block';
 								this.loadReview(module_code, id);
 								//const overlay_edit = document.querySelector('#overlay_edit');
 								//const overlayEdit = document.querySelector('p');
@@ -582,12 +582,16 @@ export default {
 
 		loadReview(modCode, user) {
             //var user = firebase.auth().currentUser;
-            let reviewRef = database.collection('reviews').doc(modCode);
+			let reviewRef = database.collection('reviews').doc(modCode);
+			document.getElementById('overlay').style.display = 'block';
             reviewRef.get()
                 .then(doc => {
+					var review = document.getElementById('writtenReview');
+					review.value = doc.data()['module_reviews'][user]['review'];
 										// populate form
-										this.form.userName = user;
-										this.form.module_code = modCode;
+										/*
+					this.form.userName = user;
+					this.form.module_code = modCode;
                     this.form.year = doc.data()['module_reviews'][user].year;
                     this.form.rating = doc.data()['module_reviews'][user].overall;
                     this.form.learning = doc.data()['module_reviews'][user].content;
@@ -611,7 +615,7 @@ export default {
 			var res = document.getElementById("res_review");
 			res.innerHTML = "";
 			const overlay = document.querySelector('#overlay');
-			const overlayEdit = document.querySelector('#overlay2');
+			//const overlayEdit = document.querySelector('#overlay2');
 			console.log("**inititial" + overlay);
 			var overallReviewNum = 0;
 			var avgQualityContent = 0;
@@ -732,9 +736,10 @@ export default {
 							document.getElementById("reviewBtn").addEventListener("click", ()=>{
 								this.deleteReview(module_code, id);
 								this.updateReviews();
+								reviewMod.disabled = true;
 							});
 							document.getElementById("editBtn").addEventListener("click", ()=>{
-								overlayEdit.style.display = 'block';
+								//overlayEdit.style.display = 'block';
 								this.loadReview(module_code, id);
 								//const overlay_edit = document.querySelector('#overlay_edit');
 								//const overlayEdit = document.querySelector('p');
