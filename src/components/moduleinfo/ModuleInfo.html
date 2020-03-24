@@ -18,14 +18,14 @@
       <!-- Display all modules at first tab -->
       <div v-if = "show == true"> 
         <ul id = 'modules'>
-          <li v-for="mod in filteredList" v-on:click = 'modInfo(allmodules[mod])'>
-            <p id = "title" v-on:click = 'modInfo(allmodules[mod])'>{{allmodules[mod].code}} {{allmodules[mod].title}} </p> 
-            <p id = 'info'>{{allmodules[mod].department}} | {{allmodules[mod].mc}} MCs </p>
-            <p v-show = 'allmodules[mod].desc.length > 350' id = 'des'>{{allmodules[mod].desc.substring(0,350)}}...</p>
- 
-            <p v-show = 'allmodules[mod].desc.length <= 350' id = 'des'>{{allmodules[mod].desc}}</p>
-            <p v-show = "allmodules[mod].prereq != ''"id = 'prer'>Prerequisites: {{allmodules[mod].prereq}}</p>
-            <p v-show = "allmodules[mod].preclusion != ''" id = 'prec'>Preclusions: {{allmodules[mod].preclusion}}</p>
+          <li v-for="mod_index in filteredList" v-on:click = 'modInfo(allmodules[mod_index]); dashboardInfo(allmodules[mod_index]["code"])'>
+            <!-- Searching for particular module-->
+            <p id = "title">{{allmodules[mod_index].code}} {{allmodules[mod_index].title}} </p> 
+            <p id = 'info'>{{allmodules[mod_index].department}} | {{allmodules[mod_index].mc}} MCs </p>
+            <p v-show = 'allmodules[mod_index].desc.length > 350' id = 'des'>{{allmodules[mod_index].desc.substring(0,350)}}...</p>
+            <p v-show = 'allmodules[mod_index].desc.length <= 350' id = 'des'>{{allmodules[mod_index].desc}}</p>
+            <p v-show = "allmodules[mod_index].prereq != ''"id = 'prer'>Prerequisites: {{allmodules[mod_index].prereq}}</p>
+            <p v-show = "allmodules[mod_index].preclusion != ''" id = 'prec'>Preclusions: {{allmodules[mod_index].preclusion}}</p>
           </li>
         </ul>
       </div>
@@ -34,9 +34,11 @@
       <div id = 'res'></div>
 
       <!-- DASHBOARD SECTION -->
+      <dashboard v-if="show == false && show_dashboard == true" :preprocessed_data="preprocessed_data" :current_ay="current_ay"></dashboard>
       
       <!-- REVIEWS SECTION -->
       <!-- checks whether reviews should appear or not-->
+      <!--
         <div id="overlay"> 
           <div class="modal-mask modal-wrapper modal-container">
             <div class="modal-header">
@@ -72,8 +74,8 @@
             </div>
           </div>
         </div>
-        
-        <!--For edit reveiw-->
+        -->
+        <!-- For edit reveiw 
         <div id="overlay2"> 
           <form action="#">
           <div class="modal-mask modal-wrapper modal-container">
@@ -109,13 +111,13 @@
               </slot>
             </div>
           </div>
+        -->
         </form>
         </div>
-
-
       
 
 
+      <review :years = "yearlist"></review>
       <div id = 'res_review'></div>
     </div>
   </body>

@@ -10,6 +10,13 @@
         <div class="row justify-content-center">
             <h2> Update Profile </h2>
         </div>
+
+        <!-- Successful update message -->
+        <b-modal id="error-modal" :title="modal_header" hide-footer>
+            <p>{{ this.modal_body }}</p>
+            <b-button id="modal-ok-btn" @click="$bvModal.hide('error-modal')">OK</b-button>
+        </b-modal>
+
         <!-- Update name -->
         <div class="form-group row">
             <label for="name" class="col-md-4 col-form-label text-md-right">Name*</label>
