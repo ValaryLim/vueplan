@@ -122,13 +122,23 @@ export default {
           var staff = document.getElementById("staff").value;
           var difficulty = document.getElementById("difficulty").value;
           var workload = document.getElementById("workload").value;
-            this.$parent.submitReview(quality, 
-                                      relevance, 
-                                      workload, 
-                                      staff, 
-                                      difficulty,
-                                      document.getElementById('writtenReview'),
-                                      document.getElementById('year').value);
+          var review = document.getElementById('writtenReview');
+          var year = document.getElementById('year').value
+          this.$parent.submitReview(quality, 
+                                    relevance, 
+                                    workload, 
+                                    staff, 
+                                    difficulty,
+                                    review,
+                                    year);
+          quality = 5;
+          relevance = 5;
+          staff = 5;
+          difficulty = 5;
+          workload = 5;
+          review = "";
+          console.log(this.yearlist()[0]);
+          year = this.yearlist()[0];
         }
     },
 }

@@ -399,6 +399,7 @@ export default {
 			var avgWorkload = 0;
 			var avgStaff = 0;
 			var module_review = {};
+			var userid = this.fetchUser().uid;
 			document.querySelector('#userReview').disabled = true;
             userRef.get().then( doc => {
 				module_review = doc.data()['module_reviews'];
@@ -469,7 +470,21 @@ export default {
 					'<div id = "quality">Difficulty of content: ' + d +'/5</div>'+
 					'<div id = "quality">Heaviness of Workload: ' + w +'/5</div>'+
 					'<div id = "quality">Teaching staff: ' + s +'/5</div>'
-					+review['review']+'</td></tr>');
+					+review['review']);
+					if(userid == id){
+							r.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
+							r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
+							document.getElementById("reviewBtn").addEventListener("click", ()=>{
+								this.deleteReview(module_code, id);
+								this.updateReviews();
+								const reviewMod = document.querySelector('#userReview');
+								reviewMod.disabled = true;
+							});
+							document.getElementById("editBtn").addEventListener("click", ()=>{
+								this.loadReview(module_code, id);
+							});
+						}
+						r.insertAdjacentHTML('beforeend','</td></tr>');
 				}
 				const starPercentage = (overallReviewNum / 5) * 100;
 				const starPercentageRounded = `${(Math.round(starPercentage))}%`;
@@ -480,6 +495,42 @@ export default {
 			var user = firebase.auth().currentUser;
 			return user;
 		},
+		deleteReview: function(modCode, user) {
+			console.log("delete entered");
+			database.collection('reviews').doc(modCode).set(
+				{ module_reviews : {[user]: firebase.firestore.FieldValue.delete()}}, { merge: true });
+		},
+
+		loadReview(modCode, user) {
+            //var user = firebase.auth().currentUser;
+			let reviewRef = database.collection('reviews').doc(modCode);
+			var overlay = document.getElementById('overlay');
+			overlay.style.display = 'block';
+			const closeReview = document.querySelector('#closeReview');
+			closeReview.addEventListener('click',function(){
+				overlay.style.display = 'none';
+			});
+            reviewRef.get()
+                .then(doc => {
+					var review = document.getElementById('writtenReview');
+					review.value = doc.data()['module_reviews'][user]['review'];
+					var quality = document.getElementById('quality');
+					quality.value = doc.data()['module_reviews'][user]['quality'];
+					var relevance = document.getElementById('relevance');
+					relevance.value = doc.data()['module_reviews'][user]['relevance'];
+					var difficulty = document.getElementById('difficulty');
+					difficulty.value = doc.data()['module_reviews'][user]['difficulty'];
+					var workload = document.getElementById('workload');
+					workload.value = doc.data()['module_reviews'][user]['workload'];
+					var staff = document.getElementById('staff');
+					staff.value = doc.data()['module_reviews'][user]['staff'];
+					var year = document.getElementById('year');
+					var value = doc.data()['module_reviews'][user]['year'];
+					var yearString = value.slice(0,2)+"/"+value.slice(2,4)+' Semester '+value[5];
+					console.log(yearString);
+					year.value = yearString;
+                })
+        },
 		fetchReviews: function() {
 			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
 			let userRef = database.collection('reviews').doc(module_code);
@@ -564,7 +615,20 @@ export default {
 						'<div id = "quality">Difficulty of content: ' + d +'/5</div>'+
 						'<div id = "quality">Heaviness of Workload: ' + w +'/5</div>'+
 						'<div id = "quality">Teaching staff: ' + s +'/5</div>'
-						+review['review']+'</td></tr>');
+						+review['review']);
+						if(userid == id){
+							r.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
+							r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
+							document.getElementById("reviewBtn").addEventListener("click", ()=>{
+								this.deleteReview(module_code, id);
+								this.updateReviews();
+								reviewMod.disabled = true;
+							});
+							document.getElementById("editBtn").addEventListener("click", ()=>{
+								this.loadReview(module_code, id);
+							});
+						}
+						r.insertAdjacentHTML('beforeend','</td></tr>');
 					}
 				}
 				res.insertAdjacentHTML('beforeend','</tbody></table');
