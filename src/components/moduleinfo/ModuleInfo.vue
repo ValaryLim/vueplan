@@ -29,11 +29,6 @@ export default {
 			search:'',
 			mods: Object.values(modules),
 			show: true,
-			quality:5 ,
-			relevance:5,
-			staff:5,
-			difficulty:5,
-			workload:5,
 			years:[],
 
 			/* data required for dashboard */
@@ -363,20 +358,13 @@ export default {
 			}
 			this.current_ay = academic_year;
 		},
-		submitReview: function() {
+		submitReview: function(quality, relevance, workload, staff, difficulty, review, year) {
 			var userid;
 			var user = this.fetchUser();
 			if (user != null) {
 				userid = user.uid;
 			}
 			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
-			var quality = this.quality
-			var relevance = this.relevance;
-			var difficulty = this.difficulty;
-			var review = document.getElementById('writtenReview');
-			var staff = this.staff;
-			var workload = this.workload;
-			var year = document.getElementById('year').value;
 			year = year.slice(0,2)+year.slice(3,5)+'s'+year.slice(-1)[0];
 			var reviewDict = {};
 			reviewDict['userid'] = user.displayName;
@@ -411,10 +399,9 @@ export default {
 			var avgWorkload = 0;
 			var avgStaff = 0;
 			var module_review = {};
-			document.querySelector('#userReview').style.disabled = true;
+			document.querySelector('#userReview').disabled = true;
             userRef.get().then( doc => {
 				module_review = doc.data()['module_reviews'];
-				moduleReview = module_review;
 				avgQualityContent = Object.values(module_review).map(function(x) {return x['quality']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
 				avgRelevanceContent = Object.values(module_review).map(function(x) {return x['relevance']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
 				avgDifficultyContent = Object.values(module_review).map(function(x) {return x['difficulty']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;

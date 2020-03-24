@@ -25,31 +25,31 @@
               <tr class = "rows">
                 <td class="one">Quality of Content: </td>
                 <td class="spin">
-                <b-form-spinbutton id="quality" v-model="quality" min="1" max="5" placeholder="5" inline></b-form-spinbutton>
+                <b-form-spinbutton id="quality" min="1" max="5" value="5" inline></b-form-spinbutton>
                 </td>
               </tr>
               <tr class = "rows">
               <td class="one">Relevance of Content: </td>
                 <td class="spin">
-                <b-form-spinbutton id="relevance" v-model="relevance" min="1" max="5" inline></b-form-spinbutton>
+                <b-form-spinbutton id="relevance" min="1" max="5" value="5" inline></b-form-spinbutton>
                 </td>
               </tr>
               <tr class = "rows">
               <td class="one">Difficulty of content: </td>
                 <td class="spin">
-                <b-form-spinbutton id="difficulty" v-model="difficulty" min="1" max="5" inline></b-form-spinbutton>
+                <b-form-spinbutton id="difficulty" value="5" min="1" max="5" inline></b-form-spinbutton>
                 </td>
               </tr>
               <tr class = "rows">
               <td class="one">Heaviness of workload: </td>
                 <td class="spin">
-                <b-form-spinbutton id="workload" v-model="workload" min="1" max="5" inline></b-form-spinbutton>
+                <b-form-spinbutton id="workload" value="5" min="1" max="5" inline></b-form-spinbutton>
                 </td>
               </tr>
               <tr class = "rows">
               <td class="one">Quality of teaching staff: </td>
                 <td class="spin">
-                <b-form-spinbutton id="staff" v-model="staff" min="1" max="5" inline></b-form-spinbutton>
+                <b-form-spinbutton id="staff" value="5" min="1" max="5" inline></b-form-spinbutton>
                 </td>
               </tr>
               <tr>
@@ -74,6 +74,11 @@
 <script>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 export default {
+    data() {
+      return {
+        
+      }
+    },
     components: {
         FontAwesomeIcon,
     },
@@ -112,7 +117,18 @@ export default {
 			return years;
         },
         submitR: function() {
-            this.$parent.submitReview();
+          var quality = document.getElementById("quality").value;
+          var relevance = document.getElementById("relevance").value;
+          var staff = document.getElementById("staff").value;
+          var difficulty = document.getElementById("difficulty").value;
+          var workload = document.getElementById("workload").value;
+            this.$parent.submitReview(quality, 
+                                      relevance, 
+                                      workload, 
+                                      staff, 
+                                      difficulty,
+                                      document.getElementById('writtenReview'),
+                                      document.getElementById('year').value);
         }
     },
 }
