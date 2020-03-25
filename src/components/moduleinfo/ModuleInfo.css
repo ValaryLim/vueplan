@@ -17,7 +17,7 @@
 }
 
 #tabody {
-  width:65%;
+  width:800px;
 }
 
 #modules li{
@@ -92,8 +92,6 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0,0,0,0.5); /* Black background with opacity */
-  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
-  cursor: pointer; /* Add a pointer on hover */
 }
 #review {
   width: 750px;
@@ -110,13 +108,22 @@
 .spin {
   margin-left: 400px;
 }
+.btn {
+  margin-top: 0px;
+  background-color: #24305E;
+  color: #fff;
+  border-color: #24305E;
+  height: auto;
+  width: 100%;
+  vertical-align: middle;
+}
 #writtenReview {
   margin-top: 40px;
 }
 #reviewChart {
   display: block;
-  width:600px;
-  height:300px;
+  width: 800px;
+  height: 400px;
 }
 
 #StarsInner {
@@ -135,14 +142,17 @@
 #OverallFeedbackNum {
   font-size: 42px;
   text-align: center;
-  width: 600px;
+  width: inherit;
 }
 #reviewOverall {
-  width: 600px; 
+  width: inherit;
   text-align: center;
 }
 
 #overall {
   text-align: center;
   font-size: 24px;
+}
+#res_review {
+  width: inherit;
 }
