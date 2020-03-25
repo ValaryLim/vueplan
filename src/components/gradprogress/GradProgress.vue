@@ -139,6 +139,13 @@ export default {
           }
         }
       }
+      // Check whether in exemption
+      for (var exeKey in this.acadplan_exemptions) {
+        var exemption = this.acadplan_exemptions[exeKey];
+        if (exemption.substring(0, 3) == type_dic[type]) {
+            return { mod: exemption, added: true, completed: true };
+        }
+      }
       return { mod: "", added: false, completed: false };
     },
 
@@ -227,8 +234,35 @@ export default {
     },
 
     check_status: function(modcode) {
-      var mod_added = this.get_mod_added(this.acadplan);
 
+      // Check whether this module is exempted
+      for (var exeKey in this.acadplan_exemptions) {
+        var exemption = this.acadplan_exemptions[exeKey];
+        if (exemption == modcode) {
+            return { mod: exemption, added: true, completed: true, self:true };
+        }
+      }
+
+      // Check whether this module's preclusion is exempted
+      if (this.allmodules[modcode]) {
+        var preclusions1 = this.get_all_preclu(
+          this.allmodules[modcode].parsepreclu,
+          []
+        );
+
+        for (var preclu_index1 in preclusions1) {
+          var preclu1 = preclusions1[preclu_index1];
+          for (var exeKey1 in this.acadplan_exemptions) {
+            var exemption1 = this.acadplan_exemptions[exeKey1];
+            if (exemption1 == preclu1) {
+              return { mod: exemption1, added: true, completed: true, self:false, instead: exemption1 };
+            }
+          }
+        }
+      }
+      
+      // Check whether acadplan has this module 
+      var mod_added = this.get_mod_added(this.acadplan);
       for (var key in mod_added) {
         var module = mod_added[key];
         if (module.code == modcode) {
@@ -240,7 +274,7 @@ export default {
         }
       }
 
-      // check for preclusions
+      // Check whether acadplan has this module's preclusion 
       if (this.allmodules[modcode]) {
         var preclusions = this.get_all_preclu(
           this.allmodules[modcode].parsepreclu,
@@ -362,6 +396,9 @@ export default {
                 completed: "x"
               });
             }
+          }
+          if(i == 6) {
+            break;
           }
         }
         if (i < 6) {
@@ -672,6 +709,20 @@ export default {
           }
         }
       }
+
+      for (var exeKey in this.acadplan_exemptions) {
+        var exemption = this.acadplan_exemptions[exeKey];
+        if(!appeared.includes(exemption)) {
+          ue_progress.push({
+            requirement: " ",
+            selected: this.get_mod_title(exemption),
+            added: "✓",
+            completed: "✓"
+          });
+          completed += 1;
+        }
+      }
+
 
       // make up for 8 mods in total (commom across all computing majors)
       for (var i = 0; i < 8 - completed; i++) {
