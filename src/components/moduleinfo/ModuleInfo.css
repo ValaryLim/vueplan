@@ -92,8 +92,6 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0,0,0,0.5); /* Black background with opacity */
-  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
-  cursor: pointer; /* Add a pointer on hover */
 }
 #review {
   width: 750px;
@@ -110,6 +108,15 @@
 .spin {
   margin-left: 400px;
 }
+.btn {
+  margin-top: 0px;
+  background-color: #24305E;
+  color: #fff;
+  border-color: #24305E;
+  height: auto;
+  width: 100%;
+  vertical-align: middle;
+}
 #writtenReview {
   margin-top: 40px;
 }
@@ -120,7 +127,7 @@
 }
 
 #StarsInner {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   white-space: nowrap;
