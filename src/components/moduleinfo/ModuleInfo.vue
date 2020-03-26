@@ -496,17 +496,6 @@ export default {
 					var n = review['userid'];
 					id;
 					var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Sem " + y.slice(5,6);
-					if(userid == id) {
-						r.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
-						r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
-						document.getElementById("reviewBtn").addEventListener("click", ()=>{
-							this.deleteReview(module_code, id);
-							this.updateReviews();
-						});
-						document.getElementById("editBtn").addEventListener("click", ()=>{
-							this.loadReview(module_code, id);
-						});						
-					}
 				
 					r.insertAdjacentHTML('beforeend','<td>'+ n+'<br></br>'+ year +'</td>' + '<td>'+
 					'<div id = "quality">Quality of content: ' + q +'/5</div>'+ 
@@ -516,17 +505,17 @@ export default {
 					'<div id = "quality">Teaching staff: ' + s +'/5</div>'
 					+review['review']);
 					if(userid == id){
-							r.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
-							r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
-							document.getElementById("reviewBtn").addEventListener("click", ()=>{
-								this.deleteReview(module_code, id);
-								this.updateReviews();
-							});
-							document.getElementById("editBtn").addEventListener("click", ()=>{
-								this.loadReview(module_code, id);
-							});
-						}
-						r.insertAdjacentHTML('beforeend','</td></tr>');
+						r.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
+						r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
+						document.getElementById("reviewBtn").addEventListener("click", ()=>{
+							this.deleteReview(module_code, id);
+							this.updateReviews();
+						});
+						document.getElementById("editBtn").addEventListener("click", ()=>{
+							this.loadReview(module_code, id);
+						});
+					}
+					r.insertAdjacentHTML('beforeend','</td></tr>');
 				}
 				var starPercentage = (overallReviewNum / 5) * 100;
 				var starPercentageRounded = `${(Math.round(starPercentage))}%`;
