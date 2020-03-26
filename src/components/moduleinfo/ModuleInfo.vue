@@ -572,8 +572,8 @@ export default {
 							this.difficulty,
 							this.workload,
 							r,
-							y);*/
-			});
+							y);
+			});*/
 		},
 
 		loadReview(modCode, user) {
