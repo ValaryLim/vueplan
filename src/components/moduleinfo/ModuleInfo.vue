@@ -544,22 +544,21 @@ export default {
 			this.relevance = 5;
 			this.difficulty = 5;
 			this.workload = 5;
+			var value = this.yearlist()[0];
+			var yearString = value.slice(0,5)+' Semester '+ value[6];
+			document.getElementById('writtenReview').value = "";
+			document.getElementById('year').value = yearString;
 			var submitReview = document.querySelector('#submitReview');
 			submitReview.addEventListener('click',function(){
-				var review = document.getElementById('writtenReview');
-				var year = document.getElementById('year').value
+				var r = document.getElementById('writtenReview');
+				var y = document.getElementById('year').value
 				this.submitR(this.quality,
 									this.staff, 
 									this.relevance, 
 									this.difficulty, 
 									this.workload, 
-									review,
-									year);
-				review = "";
-				var value = this.yearlist()[0];
-				var yearString = value.slice(0,5)+' Semester '+ value[6];
-				console.log(yearString);
-				year = yearString;
+									r,
+									y);
 			});
 		},
 
