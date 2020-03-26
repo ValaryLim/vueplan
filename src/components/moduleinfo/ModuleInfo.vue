@@ -566,7 +566,7 @@ export default {
 			submitReview.addEventListener('click',function(){
 				var r = document.getElementById('writtenReview');
 				var y = document.getElementById('year').value
-				this.submitR(this.quality,
+				this.$refs.overlayReview.submitR(this.quality,
 							this.staff,
 							this.relevance,
 							this.difficulty,
