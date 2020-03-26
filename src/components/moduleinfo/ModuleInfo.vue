@@ -404,49 +404,6 @@ export default {
 			this.updateReviews();
 		},
 
-    // Update a single review
-		updateReview: function() {
-			var userid = "Guest";
-			var user = this.fetchUser();
-			if (user != null) {
-				userid = user.displayName;
-			}
-			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
-			var content = document.getElementById('content2').value;
-			var admin = document.getElementById('staff2').value;
-			var review = document.getElementById('writtenReview2');
-			var overall = document.getElementById('overall2').value;
-			var year = document.getElementById('year').value;
-			year = year.slice(0,2)+year.slice(3,5)+'s'+year.slice(-1)[0];
-			var reviewDict = {};
-			reviewDict['content'] = parseFloat(content);
-			reviewDict['admin'] = parseFloat(admin);
-			reviewDict['overall'] = parseFloat(overall);
-			reviewDict['review'] = review.value;
-			reviewDict['year'] = year;
-			/*
-			if (moduleReview == undefined) {
-				moduleReview = {};
-			}
-			//Maybe we should just ask the user to update his reivew
-			if (Object.keys(moduleReview).includes(userid)) {
-				userid = userid+counter.toString();
-				counter++;
-			}
-			*/
-			moduleReview[userid] = reviewDict;
-			console.log("delete for " + module_code + " " + userid);
-			database.collection('reviews').doc(module_code).set(
-				{ module_review : {[userid]: firebase.firestore.FieldValue.delete()}}, { merge: true });
-			database.collection('reviews').doc(module_code).set({
-				"module_review": moduleReview,
-			},{merge:true});
-			document.querySelector('#overlay2').style.display = 'none';
-			console.log(Object.keys(moduleReview).length);
-			moduleReview = {};
-			this.updateReviews();
-		},
-
 		updateReviews: function() {
 			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
 			let userRef = database.collection('reviews').doc(module_code);
@@ -539,31 +496,16 @@ export default {
 					var n = review['userid'];
 					id;
 					var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Sem " + y.slice(5,6);
-					/*
-					r.insertAdjacentHTML('beforeend','<tr>');
-
-					if (id.includes("Guest")){
-						id = "Guest";
-					}
-					r.insertAdjacentHTML('beforeend','<td>'+ id+'<br></br>'+ year +'</td>' + '<td>'+review['review']+'</td></tr>');
-				
-				*/
 				if(this.fetchUser().uid == id) {
-					console.log("button entered");
-							r.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
-							r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
-							document.getElementById("reviewBtn").addEventListener("click", ()=>{
-								this.deleteReview(module_code, id);
-								this.updateReviews();
-							});
-							//const overlayEdit = document.querySelector('#overlay2');
-							document.getElementById("editBtn").addEventListener("click", ()=>{
-								//overlayEdit.style.display = 'block';
-								this.loadReview(module_code, id);
-								//const overlay_edit = document.querySelector('#overlay_edit');
-								//const overlayEdit = document.querySelector('p');
-								//overlayEdit.style.display = 'block';
-							});						
+					r.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
+					r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
+					document.getElementById("reviewBtn").addEventListener("click", ()=>{
+						this.deleteReview(module_code, id);
+						this.updateReviews();
+					});
+					document.getElementById("editBtn").addEventListener("click", ()=>{
+						this.loadReview(module_code, id);
+					});						
 				}
 				
 					r.insertAdjacentHTML('beforeend','<td>'+ n+'<br></br>'+ year +'</td>' + '<td>'+
