@@ -57,7 +57,7 @@
 }
 
 .modal-container {
-  width: 800px;
+  width: 52.5vw;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -101,7 +101,7 @@
   width: 750px;
 }
 #year {
-  margin-left: 350px;
+  margin-left: 21vw;
 }
 .one {
   width: 200px;
@@ -123,6 +123,7 @@
 }
 #writtenReview {
   margin-top: 40px;
+  width: 46vw;
 }
 #reviewChart {
   display: block;
