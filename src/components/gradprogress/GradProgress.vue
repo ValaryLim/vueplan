@@ -363,6 +363,9 @@ export default {
               });
             }
           }
+          if (i >= 6) {
+            break;
+          }
         }
         if (i < 6) {
           for (var j = i + 1; j <= 6; j++) {
