@@ -78,7 +78,7 @@ export default {
 
                 if (this.form.major !== this.store.major) {
                     // update dashboard
-                    console.log(this, "this")
+                    //console.log(this, "this")
                     this.update_dashboard(this.store.major, this.form.major);
                 }
 
