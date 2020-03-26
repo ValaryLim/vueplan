@@ -54,7 +54,7 @@
               </tr>
               <tr>
               <slot name="body" id='writtenBody'>
-                <textarea id ='writtenReview' rows=10 cols=105 placeholder = 'Write your review here!'></textarea>
+                <textarea id ='writtenReview' rows=10 placeholder = 'Write your review here!'></textarea>
               </slot>
               </tr>
             </table>

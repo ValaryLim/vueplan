@@ -123,6 +123,7 @@
 }
 #writtenReview {
   margin-top: 40px;
+  width: 700px;
 }
 #reviewChart {
   display: block;
