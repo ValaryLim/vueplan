@@ -54,7 +54,7 @@
               </tr>
               <tr>
               <slot name="body" id='writtenBody'>
-                <textarea id ='writtenReview' rows=10 cols=105 placeholder = 'Write your review here!'></textarea>
+                <textarea id ='writtenReview' rows=10 placeholder = 'Write your review here!'></textarea>
               </slot>
               </tr>
             </table>
@@ -150,7 +150,7 @@ export default {
         },
         submitR: function() {
           var review = document.getElementById('writtenReview');
-          var year = document.getElementById('year').value
+          var year = document.getElementById('year').value;
           this.$parent.submitReview(this.quality,
                                     this.staff,
                                     this.relevance,
@@ -161,8 +161,8 @@ export default {
           review.value = "";
           var value = this.yearlist()[0];
           var yearString = value.slice(0,5)+' Semester '+ value[6];
-          console.log(yearString);
-          year = yearString;
+          document.getElementById('year').value = yearString;
+          console.log(document.getElementById('year').value);
         }
     },
 }
