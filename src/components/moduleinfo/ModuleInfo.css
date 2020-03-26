@@ -93,6 +93,10 @@
   bottom: 0;
   background-color: rgba(0,0,0,0.5); /* Black background with opacity */
 }
+
+#rating {
+  padding-top: 5px;
+}
 #review {
   width: 750px;
 }
