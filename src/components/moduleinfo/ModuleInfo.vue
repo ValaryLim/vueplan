@@ -389,8 +389,6 @@ export default {
 			reviewDict['workload'] = parseFloat(workload);
 			reviewDict['review'] = review.value;
 			reviewDict['year'] = year;
-			//console.log(document.getElementsByClassName('rating'));
-			//console.log('New star rating: ' + document.getElementsByClassName('rating').value);
 			
 			if (moduleReview == undefined) {
 				moduleReview = {};
@@ -402,10 +400,12 @@ export default {
 			document.querySelector('#overlay').style.display = 'none';
 			moduleReview = {};
 			document.querySelector('#userReview').disabled = true;
+			console.log("submitted reviews");
 			this.updateReviews();
 		},
 
 		updateReviews: function() {
+			console.log("updated reviews");
 			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
 			let userRef = database.collection('reviews').doc(module_code);
 			var overallReviewNum = 0;
