@@ -418,20 +418,22 @@ export default {
 			var r = document.getElementById("tabody");
 			let userRef = database.collection('reviews').doc(module_code);
             userRef.get().then( doc => {
-				module_review = doc.data()['module_reviews'];
-				avgQualityContent = Object.values(module_review).map(function(x) {return x['quality']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
-				avgRelevanceContent = Object.values(module_review).map(function(x) {return x['relevance']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
-				avgDifficultyContent = Object.values(module_review).map(function(x) {return x['difficulty']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
-				avgWorkload = Object.values(module_review).map(function(x) {return x['workload']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
-				avgStaff = Object.values(module_review).map(function(x) {return x['staff']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
-				overallReviewNum = (avgQualityContent+avgRelevanceContent+avgDifficultyContent+avgWorkload+avgStaff)/5;
-				overallReviewNum = Math.round(overallReviewNum*10)/10;
-				avgQualityContent = Math.round(avgQualityContent*10)/10;
-				avgRelevanceContent = Math.round(avgRelevanceContent*10)/10;
-				avgDifficultyContent = Math.round(avgDifficultyContent*10)/10;
-				avgStaff = Math.round(avgStaff*10)/10;
-				avgWorkload = Math.round(avgWorkload*10)/10;
-				document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum;
+				if (doc.exists) {
+					module_review = doc.data()['module_reviews'];
+					avgQualityContent = Object.values(module_review).map(function(x) {return x['quality']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+					avgRelevanceContent = Object.values(module_review).map(function(x) {return x['relevance']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+					avgDifficultyContent = Object.values(module_review).map(function(x) {return x['difficulty']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+					avgWorkload = Object.values(module_review).map(function(x) {return x['workload']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+					avgStaff = Object.values(module_review).map(function(x) {return x['staff']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+					overallReviewNum = (avgQualityContent+avgRelevanceContent+avgDifficultyContent+avgWorkload+avgStaff)/5;
+					overallReviewNum = Math.round(overallReviewNum*10)/10;
+					avgQualityContent = Math.round(avgQualityContent*10)/10;
+					avgRelevanceContent = Math.round(avgRelevanceContent*10)/10;
+					avgDifficultyContent = Math.round(avgDifficultyContent*10)/10;
+					avgStaff = Math.round(avgStaff*10)/10;
+					avgWorkload = Math.round(avgWorkload*10)/10;
+					document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum;
+				}
 				try {
 					var removeEdit = document.getElementById("editBtn");
 					removeEdit.parentNode.removeChild(removeEdit);
