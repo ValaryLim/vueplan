@@ -567,12 +567,12 @@ export default {
 				var r = document.getElementById('writtenReview');
 				var y = document.getElementById('year').value
 				this.submitR(this.quality,
-									this.staff, 
-									this.relevance, 
-									this.difficulty, 
-									this.workload, 
-									r,
-									y);
+							this.staff,
+							this.relevance,
+							this.difficulty,
+							this.workload,
+							r,
+							y);
 			});
 		},
 
