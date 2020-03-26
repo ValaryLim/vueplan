@@ -496,7 +496,7 @@ export default {
 					var n = review['userid'];
 					id;
 					var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Sem " + y.slice(5,6);
-				if(this.fetchUser().uid == id) {
+				if(Object.keys(module_review).includes(userid) && !Object.keys(writtenReviews).includes(userid)) {
 					r.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
 					r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
 					document.getElementById("reviewBtn").addEventListener("click", ()=>{
