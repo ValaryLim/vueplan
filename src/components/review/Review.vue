@@ -150,7 +150,7 @@ export default {
         },
         submitR: function() {
           var review = document.getElementById('writtenReview');
-          var year = document.getElementById('year').value
+          var year = document.getElementById('year').value;
           this.$parent.submitReview(this.quality,
                                     this.staff,
                                     this.relevance,
@@ -161,8 +161,8 @@ export default {
           review.value = "";
           var value = this.yearlist()[0];
           var yearString = value.slice(0,5)+' Semester '+ value[6];
-          console.log(yearString);
-          year = yearString;
+          document.getElementById('year').value = yearString;
+          console.log(document.getElementById('year').value);
         }
     },
 }
