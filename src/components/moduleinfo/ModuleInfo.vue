@@ -418,19 +418,21 @@ export default {
 			var r = document.getElementById("tabody");
 			let userRef = database.collection('reviews').doc(module_code);
             userRef.get().then( doc => {
-				module_review = doc.data()['module_reviews'];
-				avgQualityContent = Object.values(module_review).map(function(x) {return x['quality']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
-				avgRelevanceContent = Object.values(module_review).map(function(x) {return x['relevance']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
-				avgDifficultyContent = Object.values(module_review).map(function(x) {return x['difficulty']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
-				avgWorkload = Object.values(module_review).map(function(x) {return x['workload']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
-				avgStaff = Object.values(module_review).map(function(x) {return x['staff']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
-				overallReviewNum = (avgQualityContent+avgRelevanceContent+avgDifficultyContent+avgWorkload+avgStaff)/5;
-				overallReviewNum = Math.round(overallReviewNum*10)/10;
-				avgQualityContent = Math.round(avgQualityContent*10)/10;
-				avgRelevanceContent = Math.round(avgRelevanceContent*10)/10;
-				avgDifficultyContent = Math.round(avgDifficultyContent*10)/10;
-				avgStaff = Math.round(avgStaff*10)/10;
-				avgWorkload = Math.round(avgWorkload*10)/10;
+				if (doc.exists) {
+					module_review = doc.data()['module_reviews'];
+					avgQualityContent = Object.values(module_review).map(function(x) {return x['quality']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+					avgRelevanceContent = Object.values(module_review).map(function(x) {return x['relevance']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+					avgDifficultyContent = Object.values(module_review).map(function(x) {return x['difficulty']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+					avgWorkload = Object.values(module_review).map(function(x) {return x['workload']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+					avgStaff = Object.values(module_review).map(function(x) {return x['staff']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
+					overallReviewNum = (avgQualityContent+avgRelevanceContent+avgDifficultyContent+avgWorkload+avgStaff)/5;
+					overallReviewNum = Math.round(overallReviewNum*10)/10;
+					avgQualityContent = Math.round(avgQualityContent*10)/10;
+					avgRelevanceContent = Math.round(avgRelevanceContent*10)/10;
+					avgDifficultyContent = Math.round(avgDifficultyContent*10)/10;
+					avgStaff = Math.round(avgStaff*10)/10;
+					avgWorkload = Math.round(avgWorkload*10)/10;
+				}
 				document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum;
 				try {
 					var removeEdit = document.getElementById("editBtn");
@@ -451,7 +453,6 @@ export default {
 					r.insertAdjacentHTML('beforebegin', '<button id = "reviewBtn">Delete</button>');
 					document.getElementById("reviewBtn").addEventListener("click", ()=>{
 						this.deleteReview(module_code, userid);
-						this.updateReviews();
 					});
 					document.getElementById("editBtn").addEventListener("click", ()=>{
 						this.loadReview(module_code, userid);
@@ -510,7 +511,6 @@ export default {
 						r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
 						document.getElementById("reviewBtn").addEventListener("click", ()=>{
 							this.deleteReview(module_code, id);
-							this.updateReviews();
 						});
 						document.getElementById("editBtn").addEventListener("click", ()=>{
 							this.loadReview(module_code, id);
@@ -532,6 +532,16 @@ export default {
 			reviewMod.disabled = false;
 			database.collection('reviews').doc(modCode).set(
 				{ module_reviews : {[user]: firebase.firestore.FieldValue.delete()}}, { merge: true });
+			database.collection('reviews').doc(modCode).get().then( doc => {
+				var module_review = doc.data()['module_reviews'];
+				console.log(Object.keys(module_review).length);
+				if(Object.keys(module_review).length == 0) {
+					console.log("deleted");
+					database.collection('reviews').doc(modCode).delete();
+				}
+				module_review = {};
+				this.updateReviews();
+			});
 			reviewMod.addEventListener('click',function(){
 				document.querySelector('#overlay').style.display = 'block';
 			});
@@ -629,7 +639,6 @@ export default {
 						res.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
 						document.getElementById("reviewBtn").addEventListener("click", ()=>{
 							this.deleteReview(module_code, userid);
-							this.updateReviews();
 						});
 						document.getElementById("editBtn").addEventListener("click", ()=>{
 							this.loadReview(module_code, userid);
