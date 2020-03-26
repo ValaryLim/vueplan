@@ -746,12 +746,6 @@ export default {
 						id;
 						var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Sem " + y.slice(5,6);
 						r.insertAdjacentHTML('beforeend','<tr>');
-						/*
-						if (id.includes("Guest")){
-							id = "Guest";
-						}
-						r.insertAdjacentHTML('beforeend','<td id = '+ id +' >'+ id+'<br></br>'+ year +'</td>' + '<td>'+review['review']+'</td></tr>');
-						*/
 						if(this.fetchUser().uid == id){
 							r.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
 							r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
@@ -761,11 +755,7 @@ export default {
 								reviewMod.disabled = true;
 							});
 							document.getElementById("editBtn").addEventListener("click", ()=>{
-								//overlayEdit.style.display = 'block';
 								this.loadReview(module_code, id);
-								//const overlay_edit = document.querySelector('#overlay_edit');
-								//const overlayEdit = document.querySelector('p');
-								//overlayEdit.style.display = 'block';
 							});						
 				}
 						r.insertAdjacentHTML('beforeend','<td>'+ n+'<br></br>'+ year +'</td>' + '<td>'+
@@ -775,17 +765,6 @@ export default {
 						'<div id = "quality">Heaviness of Workload: ' + w +'/5</div>'+
 						'<div id = "quality">Teaching staff: ' + s +'/5</div>'
 						+review['review']);
-						if(userid == id){
-							r.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
-							r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
-							document.getElementById("reviewBtn").addEventListener("click", ()=>{
-								this.deleteReview(module_code, id);
-								this.updateReviews();
-							});
-							document.getElementById("editBtn").addEventListener("click", ()=>{
-								this.loadReview(module_code, id);
-							});
-						}
 						r.insertAdjacentHTML('beforeend','</td></tr>');
 					}
 				}
@@ -822,18 +801,4 @@ export default {
 		}
 	}
 }
-/*
-//Remove the old entry if review alreay exits
-			console.log("***submit executed");
-			console.log("module_code: " + this.form.module_code);
-			console.log("userName: " + this.form.userName);
-			if(this.form.module_code!= null && this.form.userName != null){
-				console.log("***if entered");
-				this.deleteReview(this.form.module_code, this.form.userName);
-				this.form.module_code = '';
-				this.form.userName = '';
-			}
-			*/
-//reviews load too long
-//reviews showing everything
 </script>
