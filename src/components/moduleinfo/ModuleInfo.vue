@@ -591,8 +591,8 @@ export default {
 			res.insertAdjacentHTML('beforeend','<div id = "reviewOverall"><div id = "overall">Overall Rating</div><h3 id = "OverallFeedbackNum">'+overallReviewNum+'</h3><div id = "StarsOuter"><div id = "StarsInner"></div></div></div>');
 			res.insertAdjacentHTML('beforeend','<div id = "reviewChart"><canvas id="myChart"></canvas></div>');
 			res.insertAdjacentHTML('beforeend','<br></br>');
-			res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview" @click="showReview()">Review this module now!</button></h4>');	
-			var reviewMod = document.getElementById('#userReview');
+			res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview">Review this module now!</button></h4>');	
+			var reviewMod = document.querySelector('#userReview');
 			reviewMod.onClick(function(){
 				overlay.style.display = 'block';
 			});
