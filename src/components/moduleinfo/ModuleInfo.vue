@@ -529,7 +529,7 @@ export default {
 		},
 		deleteReview: function(modCode, user) {
 			var reviewMod = document.querySelector('#userReview');
-			var overlay = document.getElementById('overlay');
+			var overlay = document.querySelector('#overlay');
 			reviewMod.disabled = false;
 			database.collection('reviews').doc(modCode).set(
 				{ module_reviews : {[user]: firebase.firestore.FieldValue.delete()}}, { merge: true });
@@ -566,13 +566,7 @@ export default {
 					var yearString = value.slice(0,2)+"/"+value.slice(2,4)+' Semester '+ value[5];
 					year.value = yearString;
                 })
-		},
-		showReview: function() {
-			document.querySelector('#overlay').style.display = 'block';
-		},
-		hideReview: function() {
-			document.querySelector('#overlay').style.display = 'none';
-		},
+        },
 		fetchReviews: function() {
 			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
 			let userRef = database.collection('reviews').doc(module_code);
@@ -593,9 +587,9 @@ export default {
 			res.insertAdjacentHTML('beforeend','<br></br>');
 			res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview">Review this module now!</button></h4>');	
 			var reviewMod = document.querySelector('#userReview');
-			reviewMod.onClick(function(){
+			reviewMod.addEventListener('click',function(){
 				overlay.style.display = 'block';
-			});
+				});
 			var closeReview = document.querySelector('#closeReview');
 			closeReview.addEventListener('click',function(){
 				overlay.style.display = 'none';
