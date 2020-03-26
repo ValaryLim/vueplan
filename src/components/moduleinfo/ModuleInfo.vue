@@ -532,6 +532,15 @@ export default {
 			reviewMod.disabled = false;
 			database.collection('reviews').doc(modCode).set(
 				{ module_reviews : {[user]: firebase.firestore.FieldValue.delete()}}, { merge: true });
+			database.collection('reviews').doc(modCode).get().then( doc => {
+				var module_review = doc.data()['module_reviews'];
+				if(module_review == {}) {
+					database.collection('reviews').doc(modCode).update({
+						module_reviews : firebase.firestore.FieldValue.delete()
+					});
+				}
+				module_review = {};
+			});
 			reviewMod.addEventListener('click',function(){
 				document.querySelector('#overlay').style.display = 'block';
 			});
