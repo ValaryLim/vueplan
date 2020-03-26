@@ -2,7 +2,7 @@
     @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
 </style>
 <template>
-    <div id="overlay"> 
+    <div id="overlay">
         <div class="modal-container">
           <div class="modal-header">
             <slot name="header">
@@ -25,31 +25,31 @@
               <tr class = "rows">
                 <td class="one">Quality of Content: </td>
                 <td class="spin">
-                <b-form-spinbutton id="quality" v-model="quality" min="1" max="5" placeholder="5" inline></b-form-spinbutton>
+                <b-form-spinbutton id="quality" v-model="quality" min=1 max=5 inline></b-form-spinbutton>
                 </td>
               </tr>
               <tr class = "rows">
               <td class="one">Relevance of Content: </td>
                 <td class="spin">
-                <b-form-spinbutton id="relevance" v-model="relevance" min="1" max="5" inline></b-form-spinbutton>
+                <b-form-spinbutton id="relevance" v-model="relevance" min=1 max=5 inline></b-form-spinbutton>
                 </td>
               </tr>
               <tr class = "rows">
               <td class="one">Difficulty of content: </td>
                 <td class="spin">
-                <b-form-spinbutton id="difficulty" v-model="difficulty" min="1" max="5" inline></b-form-spinbutton>
+                <b-form-spinbutton id="difficulty" v-model="difficulty" min=1 max=5 inline></b-form-spinbutton>
                 </td>
               </tr>
               <tr class = "rows">
               <td class="one">Heaviness of workload: </td>
                 <td class="spin">
-                <b-form-spinbutton id="workload" v-model="workload" min="1" max="5" inline></b-form-spinbutton>
+                <b-form-spinbutton id="workload" v-model="workload" min=1 max=5 inline></b-form-spinbutton>
                 </td>
               </tr>
               <tr class = "rows">
               <td class="one">Quality of teaching staff: </td>
                 <td class="spin">
-                <b-form-spinbutton id="staff" v-model="staff" min="1" max="5" inline></b-form-spinbutton>
+                <b-form-spinbutton id="staff" v-model="staff" min=1 max=5 inline></b-form-spinbutton>
                 </td>
               </tr>
               <tr>
@@ -78,6 +78,39 @@
 <script>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 export default {
+    data() {
+      return {
+        quality:5,
+        staff:5,
+        relevance:5,
+        difficulty:5,
+        workload:5,
+      }
+    },
+    props : {
+      q: Number,
+      s: Number,
+      r: Number,
+      d: Number,
+      w: Number,
+    },
+    watch: {
+      q: function(val) {
+        this.quality = val;
+      },
+      s: function(val) {
+        this.staff = val;
+      },
+      r: function(val) {
+        this.relevance = val;
+      },
+      d: function(val) {
+        this.difficulty = val;
+      },
+      w: function(val) {
+        this.workload = val;
+      }
+    },
     components: {
         FontAwesomeIcon,
     },
@@ -116,7 +149,20 @@ export default {
 			return years;
         },
         submitR: function() {
-            this.$parent.submitReview();
+          var review = document.getElementById('writtenReview');
+          var year = document.getElementById('year').value
+          this.$parent.submitReview(this.quality,
+                                    this.staff,
+                                    this.relevance,
+                                    this.difficulty,
+                                    this.workload,
+                                    review,
+                                    year);
+          review.value = "";
+          var value = this.yearlist()[0];
+          var yearString = value.slice(0,5)+' Semester '+ value[6];
+          console.log(yearString);
+          year = yearString;
         }
     },
 }

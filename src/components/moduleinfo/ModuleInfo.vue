@@ -29,11 +29,6 @@ export default {
 			search:'',
 			mods: Object.values(modules),
 			show: true,
-			quality:5 ,
-			relevance:5,
-			staff:5,
-			difficulty:5,
-			workload:5,
 			years:[],
 			/* data required for edit button*/
       form: {
@@ -105,6 +100,11 @@ export default {
 			current_ay: "1920-S1",
 			show_dashboard: false,
 			data_unavailable: -1,
+			quality: 5,
+			relevance: 5,
+			difficulty: 5,
+			workload: 5,
+			staff: 5,
 		}
 	},
 
@@ -132,7 +132,6 @@ export default {
 			this.show = false;
 			var res = document.getElementById("res");
 			window.scrollTo(0,0);
-
 			res.innerHTML = "<h1 id='mod_title'>" + mod.code + " " + mod.title + "</h1>";
 			res.insertAdjacentHTML('beforeend', '<div id = indicators>' + mod.department + " | " +  mod.mc + " MCs</div><hr></hr>");
 			res.insertAdjacentHTML('beforeend', "<p>" + mod.desc + "</p>");
@@ -372,20 +371,13 @@ export default {
 			}
 			this.current_ay = academic_year;
 		},
-		submitReview: function() {
+		submitReview: function(quality, staff, relevance, difficulty, workload, review, year) {
 			var userid;
 			var user = this.fetchUser();
 			if (user != null) {
 				userid = user.uid;
 			}
 			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
-			var quality = this.quality
-			var relevance = this.relevance;
-			var difficulty = this.difficulty;
-			var review = document.getElementById('writtenReview');
-			var staff = this.staff;
-			var workload = this.workload;
-			var year = document.getElementById('year').value;
 			year = year.slice(0,2)+year.slice(3,5)+'s'+year.slice(-1)[0];
 			var reviewDict = {};
 			reviewDict['userid'] = user.displayName;
@@ -396,8 +388,8 @@ export default {
 			reviewDict['workload'] = parseFloat(workload);
 			reviewDict['review'] = review.value;
 			reviewDict['year'] = year;
-			console.log(document.getElementsByClassName('rating'));
-			console.log('New star rating: ' + document.getElementsByClassName('rating').value);
+			//console.log(document.getElementsByClassName('rating'));
+			//console.log('New star rating: ' + document.getElementsByClassName('rating').value);
 			
 			if (moduleReview == undefined) {
 				moduleReview = {};
@@ -408,6 +400,7 @@ export default {
 			},{merge:true});
 			document.querySelector('#overlay').style.display = 'none';
 			moduleReview = {};
+			document.querySelector('#userReview').disabled = true;
 			this.updateReviews();
 		},
 
@@ -464,10 +457,10 @@ export default {
 			var avgWorkload = 0;
 			var avgStaff = 0;
 			var module_review = {};
-			document.querySelector('#userReview').style.disabled = true;
+			var userid = this.fetchUser().uid;
+			var r = document.getElementById("tabody");
             userRef.get().then( doc => {
 				module_review = doc.data()['module_reviews'];
-				moduleReview = module_review;
 				avgQualityContent = Object.values(module_review).map(function(x) {return x['quality']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
 				avgRelevanceContent = Object.values(module_review).map(function(x) {return x['relevance']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
 				avgDifficultyContent = Object.values(module_review).map(function(x) {return x['difficulty']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
@@ -481,13 +474,31 @@ export default {
 				avgStaff = Math.round(avgStaff*10)/10;
 				avgWorkload = Math.round(avgWorkload*10)/10;
 				document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum;
+				try {
+					var removeEdit = document.getElementById("editBtn");
+					removeEdit.parentNode.removeChild(removeEdit);
+					var removeDel = document.getElementById("reviewBtn");
+					removeDel.parentNode.removeChild(removeDel);
+				} catch {
+					console.log('No buttons!');
+				}
 				var writtenReviews = {};
 				for (let [id, written] of Object.entries(module_review)) {
 					if (written['review'].length > 0) {
 						writtenReviews[id] = written;
 					}
 				}
-
+				if (Object.keys(module_review).includes(userid) && !Object.keys(writtenReviews).includes(userid)) {
+					r.insertAdjacentHTML("beforebegin", '<button id = "editBtn">Edit</button>');
+					r.insertAdjacentHTML('beforebegin', '<button id = "reviewBtn">Delete</button>');
+					document.getElementById("reviewBtn").addEventListener("click", ()=>{
+						this.deleteReview(module_code, userid);
+						this.updateReviews();
+					});
+					document.getElementById("editBtn").addEventListener("click", ()=>{
+						this.loadReview(module_code, userid);
+					});
+				}
 				var mc = document.getElementById('myChart');
 				var ctx = mc.getContext('2d');
 				var data = {
@@ -517,7 +528,6 @@ export default {
 						}
 					}
 				});
-				var r = document.getElementById("tabody");
 				r.innerHTML = "";
 				for (let [id, review] of Object.entries(writtenReviews)) {
 					var y = review["year"];
@@ -562,10 +572,22 @@ export default {
 					'<div id = "quality">Difficulty of content: ' + d +'/5</div>'+
 					'<div id = "quality">Heaviness of Workload: ' + w +'/5</div>'+
 					'<div id = "quality">Teaching staff: ' + s +'/5</div>'
-					+review['review']+'</td></tr>');
+					+review['review']);
+					if(userid == id){
+							r.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
+							r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
+							document.getElementById("reviewBtn").addEventListener("click", ()=>{
+								this.deleteReview(module_code, id);
+								this.updateReviews();
+							});
+							document.getElementById("editBtn").addEventListener("click", ()=>{
+								this.loadReview(module_code, id);
+							});
+						}
+						r.insertAdjacentHTML('beforeend','</td></tr>');
 				}
-				const starPercentage = (overallReviewNum / 5) * 100;
-				const starPercentageRounded = `${(Math.round(starPercentage))}%`;
+				var starPercentage = (overallReviewNum / 5) * 100;
+				var starPercentageRounded = `${(Math.round(starPercentage))}%`;
 				document.querySelector("#StarsInner").style.width = starPercentageRounded;
 			});
 		},
@@ -573,50 +595,73 @@ export default {
 			var user = firebase.auth().currentUser;
 			return user;
 		},
-
 		deleteReview: function(modCode, user) {
-			console.log("delete entered");
+			var reviewMod = document.querySelector('#userReview');
+			var overlay = document.getElementById('overlay');
+			reviewMod.disabled = false;
 			database.collection('reviews').doc(modCode).set(
 				{ module_reviews : {[user]: firebase.firestore.FieldValue.delete()}}, { merge: true });
+			reviewMod.addEventListener('click',function(){
+				overlay.style.display = 'block';
+			});
+			var closeReview = document.querySelector('#closeReview');
+			closeReview.addEventListener('click',function(){
+				overlay.style.display = 'none';
+			});
+			this.quality = 5;
+			this.staff = 5;
+			this.relevance = 5;
+			this.difficulty = 5;
+			this.workload = 5;
+			var submitReview = document.querySelector('#submitReview');
+			submitReview.addEventListener('click',function(){
+				var review = document.getElementById('writtenReview');
+				var year = document.getElementById('year').value
+				this.submitR(this.quality,
+									this.staff, 
+									this.relevance, 
+									this.difficulty, 
+									this.workload, 
+									review,
+									year);
+				review = "";
+				var value = this.yearlist()[0];
+				var yearString = value.slice(0,4)+' Semester '+ value[6];
+				//console.log(yearString);
+				year = yearString;
+			});
 		},
 
 		loadReview(modCode, user) {
             //var user = firebase.auth().currentUser;
 			let reviewRef = database.collection('reviews').doc(modCode);
-			document.getElementById('overlay').style.display = 'block';
+			var overlay = document.getElementById('overlay');
+			overlay.style.display = 'block';
+			var closeReview = document.querySelector('#closeReview');
+			closeReview.addEventListener('click',function(){
+				overlay.style.display = 'none';
+			});
             reviewRef.get()
                 .then(doc => {
 					var review = document.getElementById('writtenReview');
 					review.value = doc.data()['module_reviews'][user]['review'];
-										// populate form
-										/*
-					this.form.userName = user;
-					this.form.module_code = modCode;
-                    this.form.year = doc.data()['module_reviews'][user].year;
-                    this.form.rating = doc.data()['module_reviews'][user].overall;
-                    this.form.learning = doc.data()['module_reviews'][user].content;
-										this.form.admin = doc.data()['module_reviews'][user].admin;
-										this.form.writtenReview = doc.data()['module_reviews'][user].review;
-										console.log("loading review");
-										console.log("load year" + this.form.year);
-										console.log("load rating" + this.form.rating);
-										console.log("load review" + this.form.writtenReview);
-                    /* populate store
-                    this.store.year = doc.data()['year'];
-                    this.store.major = doc.data()['major'];
-										this.store.module_semester_mapping = doc.data()['module_semester_mapping'];
-										*/
+					this.quality = doc.data()['module_reviews'][user]['quality'];
+					this.relevance = doc.data()['module_reviews'][user]['relevance'];
+					this.staff = doc.data()['module_reviews'][user]['staff'];
+					this.difficulty = doc.data()['module_reviews'][user]['difficulty'];
+					this.workload = doc.data()['module_reviews'][user]['workload'];
+					var year = document.getElementById('year');
+					var value = doc.data()['module_reviews'][user]['year'];
+					var yearString = value.slice(0,2)+"/"+value.slice(2,4)+' Semester '+ value[5];
+					year.value = yearString;
                 })
         },
-
 		fetchReviews: function() {
 			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
 			let userRef = database.collection('reviews').doc(module_code);
 			var res = document.getElementById("res_review");
 			res.innerHTML = "";
-			const overlay = document.querySelector('#overlay');
-			//const overlayEdit = document.querySelector('#overlay2');
-			console.log("**inititial" + overlay);
+			var overlay = document.querySelector('#overlay');
 			var overallReviewNum = 0;
 			var avgQualityContent = 0;
 			var avgRelevanceContent = 0;
@@ -630,11 +675,11 @@ export default {
 			res.insertAdjacentHTML('beforeend','<div id = "reviewChart"><canvas id="myChart"></canvas></div>');
 			res.insertAdjacentHTML('beforeend','<br></br>');
 			res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview">Review this module now!</button></h4>');	
-			const reviewMod = document.querySelector('#userReview');
+			var reviewMod = document.querySelector('#userReview');
 			reviewMod.addEventListener('click',function(){
 				overlay.style.display = 'block';
 				});
-			const closeReview = document.querySelector('#closeReview');
+			var closeReview = document.querySelector('#closeReview');
 			closeReview.addEventListener('click',function(){
 				overlay.style.display = 'none';
 			});
@@ -659,52 +704,9 @@ export default {
 				if (Object.keys(module_review).includes(userid)) {
 					reviewMod.disabled = true;
 				}
-				/*
-				res.insertAdjacentHTML('beforeend', '<h2>Ratings and Reviews</h2><hr></hr>');
-				res.insertAdjacentHTML('beforeend','<h3 id = "OverallFeedbackNum">'+overallReviewNum+'</h3>');
-				res.insertAdjacentHTML('beforeend','<div id = "StarsOuter"><div id = "StarsInner"></div></div><div></div>');
-				res.insertAdjacentHTML('beforeend','<div id = "ContentFeedback">Learning Contents: ' + avgContent + '</div><div id = "sep"></div><div id = "StaffFeedback">Staff and Administration: ' + avgStaffAdmin + "</div><br></br>");
-				res.insertAdjacentHTML('beforeend', '<div id = "overlain"></div>');
-				/*if (userid in Object.keys(module_review) && userid != "Guest") {
-					res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview" disabled=true>Review this module now!</button></h4>');	
-				} else {}
-				
-				res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview" >Review this module now!</button></h4>');
-				res.insertAdjacentHTML('beforeend','<hr></hr><table><tbody id = "tabody">');
-				const starPercentage = (overallReviewNum / 5) * 100;
-				const starPercentageRounded = `${(Math.round(starPercentage))}%`;
+				var starPercentage = (overallReviewNum / 5) * 100;
+				var starPercentageRounded = `${(Math.round(starPercentage))}%`;
 				document.querySelector("#StarsInner").style.width = starPercentageRounded;
-				const reviewMod = document.querySelector('#userReview');
-				if (moduleReview == undefined) {
-						moduleReview = {};
-				}
-				reviewMod.addEventListener("click", () => {
-          if (
-            Object.keys(moduleReview).includes(this.fetchUser().displayName)
-          ) {
-						console.log("get the keys: " + Object.keys(moduleReview));
-            alert("You have already reviewed this module");
-          } else {
-            overlay.style.display = "block";
-          }
-				});
-				const closeReview = document.querySelector('#closeReview');
-				closeReview.addEventListener('click',function(){
-					overlay.style.display = 'none';
-					overlayEdit.style.display = 'none';
-					});
-				*/
-				const starPercentage = (overallReviewNum / 5) * 100;
-				const starPercentageRounded = `${(Math.round(starPercentage))}%`;
-				document.querySelector("#StarsInner").style.width = starPercentageRounded;
-				try {
-					var x = document.getElementById("tabody");
-					x.innerHTML = "";
-				} catch (error) {
-					res.insertAdjacentHTML('beforeend','<hr></hr><table><tbody id = "tabody">');
-					console.log("No tag found error")
-				}
-				
 				var writtenReviews = {};
 				if (moduleReview != {}) {
 					for (let [id, written] of Object.entries(module_review)) {
@@ -712,6 +714,26 @@ export default {
 							writtenReviews[id] = written;
 						}
 					}
+					if (Object.keys(module_review).includes(userid) && !Object.keys(writtenReviews).includes(userid)) {
+						res.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
+						res.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
+						document.getElementById("reviewBtn").addEventListener("click", ()=>{
+							this.deleteReview(module_code, userid);
+							this.updateReviews();
+						});
+						document.getElementById("editBtn").addEventListener("click", ()=>{
+							this.loadReview(module_code, userid);
+						});
+					}
+				}
+				try {
+					var x = document.getElementById("tabody");
+					x.innerHTML = "";
+				} catch (error) {
+					res.insertAdjacentHTML('beforeend','<hr></hr><table><tbody id = "tabody">');
+					console.log("No tag found error")
+				}
+				if (moduleReview != {}) {
 					for (let [id, review] of Object.entries(writtenReviews)) {
 						var r = document.getElementById("tabody");
 						var y = review["year"];
@@ -752,7 +774,19 @@ export default {
 						'<div id = "quality">Difficulty of content: ' + d +'/5</div>'+
 						'<div id = "quality">Heaviness of Workload: ' + w +'/5</div>'+
 						'<div id = "quality">Teaching staff: ' + s +'/5</div>'
-						+review['review']+'</td></tr>');
+						+review['review']);
+						if(userid == id){
+							r.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
+							r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
+							document.getElementById("reviewBtn").addEventListener("click", ()=>{
+								this.deleteReview(module_code, id);
+								this.updateReviews();
+							});
+							document.getElementById("editBtn").addEventListener("click", ()=>{
+								this.loadReview(module_code, id);
+							});
+						}
+						r.insertAdjacentHTML('beforeend','</td></tr>');
 					}
 				}
 				res.insertAdjacentHTML('beforeend','</tbody></table');
