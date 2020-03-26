@@ -407,7 +407,6 @@ export default {
 		updateReviews: function() {
 			console.log("updated reviews");
 			var module_code = document.getElementById('mod_title').innerHTML.split(' ')[0];
-			let userRef = database.collection('reviews').doc(module_code);
 			var overallReviewNum = 0;
 			var avgQualityContent = 0;
 			var avgRelevanceContent = 0;
@@ -417,6 +416,7 @@ export default {
 			var module_review = {};
 			var userid = this.fetchUser().uid;
 			var r = document.getElementById("tabody");
+			let userRef = database.collection('reviews').doc(module_code);
             userRef.get().then( doc => {
 				module_review = doc.data()['module_reviews'];
 				avgQualityContent = Object.values(module_review).map(function(x) {return x['quality']}).reduce(function(a,b) {return a+b}) / Object.values(module_review).length;
