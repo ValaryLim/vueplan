@@ -544,10 +544,24 @@ export default {
 			this.relevance = 5;
 			this.difficulty = 5;
 			this.workload = 5;
-			var value = this.yearlist()[0];
-			var yearString = value.slice(0,5)+' Semester '+ value[6];
+			var date = new Date();
+			var currYear = date.getFullYear();
+			var currMonth = date.getMonth();
+			if (currMonth < 8) {
+				currYear = currYear-1;
+			}
+			var firstTwo = currYear%100;
+			var lstTwo = (currYear+1)%100;
+			firstTwo = firstTwo.toString();
+			lstTwo = lstTwo.toString();
+			var acadsem = firstTwo+'/'+lstTwo;
+			if (currMonth < 8) {
+				acadsem = acadsem+'Semester 2';
+			} else {
+				acadsem = acadsem+'Semester 1';
+			}
 			document.getElementById('writtenReview').value = "";
-			document.getElementById('year').value = yearString;
+			document.getElementById('year').value = acadsem;
 			var submitReview = document.querySelector('#submitReview');
 			submitReview.addEventListener('click',function(){
 				var r = document.getElementById('writtenReview');
