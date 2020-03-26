@@ -557,8 +557,8 @@ export default {
 									year);
 				review = "";
 				var value = this.yearlist()[0];
-				var yearString = value.slice(0,4)+' Semester '+ value[6];
-				//console.log(yearString);
+				var yearString = value.slice(0,5)+' Semester '+ value[6];
+				console.log(yearString);
 				year = yearString;
 			});
 		},
@@ -677,6 +677,13 @@ export default {
 						id;
 						var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Sem " + y.slice(5,6);
 						r.insertAdjacentHTML('beforeend','<tr>');
+						r.insertAdjacentHTML('beforeend','<td>'+ n+'<br></br>'+ year +'</td>' + '<td>'+
+						'<div id = "quality">Quality of content: ' + q + '/5</div>'+ 
+						'<div id = "quality">Relevance of content: ' + re +'/5</div>'+
+						'<div id = "quality">Difficulty of content: ' + d +'/5</div>'+
+						'<div id = "quality">Heaviness of Workload: ' + w +'/5</div>'+
+						'<div id = "quality">Teaching staff: ' + s +'/5</div>'
+						+review['review']);
 						if(this.fetchUser().uid == id){
 							r.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
 							r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
@@ -688,14 +695,7 @@ export default {
 							document.getElementById("editBtn").addEventListener("click", ()=>{
 								this.loadReview(module_code, id);
 							});						
-				}
-						r.insertAdjacentHTML('beforeend','<td>'+ n+'<br></br>'+ year +'</td>' + '<td>'+
-						'<div id = "quality">Quality of content: ' + q + '/5</div>'+ 
-						'<div id = "quality">Relevance of content: ' + re +'/5</div>'+
-						'<div id = "quality">Difficulty of content: ' + d +'/5</div>'+
-						'<div id = "quality">Heaviness of Workload: ' + w +'/5</div>'+
-						'<div id = "quality">Teaching staff: ' + s +'/5</div>'
-						+review['review']);
+						}
 						r.insertAdjacentHTML('beforeend','</td></tr>');
 					}
 				}
