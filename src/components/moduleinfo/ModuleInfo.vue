@@ -529,16 +529,15 @@ export default {
 		},
 		deleteReview: function(modCode, user) {
 			var reviewMod = document.querySelector('#userReview');
-			var overlay = document.querySelector('#overlay');
 			reviewMod.disabled = false;
 			database.collection('reviews').doc(modCode).set(
 				{ module_reviews : {[user]: firebase.firestore.FieldValue.delete()}}, { merge: true });
 			reviewMod.addEventListener('click',function(){
-				overlay.style.display = 'block';
+				document.querySelector('#overlay').style.display = 'block';
 			});
 			var closeReview = document.querySelector('#closeReview');
 			closeReview.addEventListener('click',function(){
-				overlay.style.display = 'none';
+				document.querySelector('#overlay').style.display = 'none';
 			});
 			this.update+=1;
 		},
