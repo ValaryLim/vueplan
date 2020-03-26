@@ -451,7 +451,6 @@ export default {
 					r.insertAdjacentHTML('beforebegin', '<button id = "reviewBtn">Delete</button>');
 					document.getElementById("reviewBtn").addEventListener("click", ()=>{
 						this.deleteReview(module_code, userid);
-						this.updateReviews();
 					});
 					document.getElementById("editBtn").addEventListener("click", ()=>{
 						this.loadReview(module_code, userid);
@@ -510,7 +509,6 @@ export default {
 						r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
 						document.getElementById("reviewBtn").addEventListener("click", ()=>{
 							this.deleteReview(module_code, id);
-							this.updateReviews();
 						});
 						document.getElementById("editBtn").addEventListener("click", ()=>{
 							this.loadReview(module_code, id);
@@ -540,6 +538,7 @@ export default {
 					database.collection('reviews').doc(modCode).delete();
 				}
 				module_review = {};
+				this.updateReviews();
 			});
 			reviewMod.addEventListener('click',function(){
 				document.querySelector('#overlay').style.display = 'block';
@@ -638,7 +637,6 @@ export default {
 						res.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
 						document.getElementById("reviewBtn").addEventListener("click", ()=>{
 							this.deleteReview(module_code, userid);
-							this.updateReviews();
 						});
 						document.getElementById("editBtn").addEventListener("click", ()=>{
 							this.loadReview(module_code, userid);
