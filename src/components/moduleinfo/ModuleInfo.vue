@@ -535,6 +535,7 @@ export default {
 			database.collection('reviews').doc(modCode).get().then( doc => {
 				var module_review = doc.data()['module_reviews'];
 				if(module_review == {}) {
+					console.log("deleted");
 					database.collection('reviews').doc(modCode).update({
 						module_reviews : firebase.firestore.FieldValue.delete()
 					});
