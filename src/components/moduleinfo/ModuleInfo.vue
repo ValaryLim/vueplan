@@ -534,9 +534,10 @@ export default {
 				{ module_reviews : {[user]: firebase.firestore.FieldValue.delete()}}, { merge: true });
 			database.collection('reviews').doc(modCode).get().then( doc => {
 				var module_review = doc.data()['module_reviews'];
-				if(Object.keys(module_review).length) {
+				console.log(Object.keys(module_review).length);
+				if(Object.keys(module_review).length == 0) {
 					console.log("deleted");
-					database.collection('reviews').doc(modCode).delete()
+					database.collection('reviews').doc(modCode).delete();
 				}
 				module_review = {};
 			});
