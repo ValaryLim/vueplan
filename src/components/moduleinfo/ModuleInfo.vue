@@ -690,7 +690,6 @@ export default {
 							document.getElementById("reviewBtn").addEventListener("click", ()=>{
 								this.deleteReview(module_code, id);
 								this.updateReviews();
-								reviewMod.disabled = true;
 							});
 							document.getElementById("editBtn").addEventListener("click", ()=>{
 								this.loadReview(module_code, id);
