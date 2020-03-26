@@ -562,7 +562,7 @@ export default {
 			}
 			document.getElementById('writtenReview').value = "";
 			document.getElementById('year').value = acadsem;
-			var submitReview = document.querySelector('#submitReview');
+			/*var submitReview = document.querySelector('#submitReview');
 			submitReview.addEventListener('click',function(){
 				var r = document.getElementById('writtenReview');
 				var y = document.getElementById('year').value
@@ -572,7 +572,7 @@ export default {
 							this.difficulty,
 							this.workload,
 							r,
-							y);
+							y);*/
 			});
 		},
 
