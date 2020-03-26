@@ -432,8 +432,8 @@ export default {
 					avgDifficultyContent = Math.round(avgDifficultyContent*10)/10;
 					avgStaff = Math.round(avgStaff*10)/10;
 					avgWorkload = Math.round(avgWorkload*10)/10;
-					document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum;
 				}
+				document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum;
 				try {
 					var removeEdit = document.getElementById("editBtn");
 					removeEdit.parentNode.removeChild(removeEdit);
