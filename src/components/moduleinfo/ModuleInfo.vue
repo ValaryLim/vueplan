@@ -539,11 +539,11 @@ export default {
 			closeReview.addEventListener('click',function(){
 				overlay.style.display = 'none';
 			});
-			this.quality = 5;
-			this.staff = 5;
-			this.relevance = 5;
-			this.difficulty = 5;
-			this.workload = 5;
+			this.refs.overlayReview.quality = 5;
+			this.refs.overlayReview.staff = 5;
+			this.refs.overlayReview.relevance = 5;
+			this.refs.overlayReview.difficulty = 5;
+			this.refs.overlayReview.workload = 5;
 			var date = new Date();
 			var currYear = date.getFullYear();
 			var currMonth = date.getMonth();
@@ -566,11 +566,11 @@ export default {
 			submitReview.addEventListener('click',function(){
 				var r = document.getElementById('writtenReview');
 				var y = document.getElementById('year').value
-				this.$refs.overlayReview.submitR(this.quality,
-							this.staff,
-							this.relevance,
-							this.difficulty,
-							this.workload,
+				this.$refs.overlayReview.submitR(this.refs.overlayReview.quality,
+							this.refs.overlayReview.staff,
+							this.refs.overlayReview.relevance,
+							this.refs.overlayReview.difficulty,
+							this.refs.overlayReview.workload,
 							r,
 							y);
 			});
