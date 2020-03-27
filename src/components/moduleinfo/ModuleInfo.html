@@ -18,9 +18,9 @@
       <!-- Display all modules at first tab -->
       <div v-if = "show == true"> 
         <ul id = 'modules'>
-          <li v-for="mod_index in filteredList" v-on:click = 'modInfo(allmodules[mod_index]); dashboardInfo(allmodules[mod_index]["code"])'>
+          <li v-for="mod_index in filteredList">
             <!-- Searching for particular module-->
-            <p id = "title">{{allmodules[mod_index].code}} {{allmodules[mod_index].title}} </p> 
+            <p id = "title"  v-on:click = 'modInfo(allmodules[mod_index]); dashboardInfo(allmodules[mod_index]["code"])'>{{allmodules[mod_index].code}} {{allmodules[mod_index].title}} </p> 
             <p id = 'info'>{{allmodules[mod_index].department}} | {{allmodules[mod_index].mc}} MCs </p>
             <p v-show = 'allmodules[mod_index].desc.length > 350' id = 'des'>{{allmodules[mod_index].desc.substring(0,350)}}...</p>
             <p v-show = 'allmodules[mod_index].desc.length <= 350' id = 'des'>{{allmodules[mod_index].desc}}</p>
