@@ -394,14 +394,15 @@ export default {
 				moduleReview = {};
 			}
 			moduleReview[userid] = reviewDict;
-			database.collection('reviews').doc(module_code).set({
-				"module_reviews": moduleReview,
-			},{merge:true});
 			document.querySelector('#overlay').style.display = 'none';
-			moduleReview = {};
 			document.querySelector('#userReview').disabled = true;
 			console.log("submitted reviews");
-			this.updateReviews();
+			database.collection('reviews').doc(module_code).set({
+				"module_reviews": moduleReview,
+			},{merge:true}).then(()=>{
+				moduleReview = {};
+				this.updateReviews();
+			});
 		},
 
 		updateReviews: function() {
@@ -434,6 +435,9 @@ export default {
 					avgWorkload = Math.round(avgWorkload*10)/10;
 				}
 				document.getElementById('OverallFeedbackNum').innerHTML = overallReviewNum;
+				//submit new
+				//edit current
+				//delete --> reset like new
 				try {
 					var removeEdit = document.getElementById("editBtn");
 					removeEdit.parentNode.removeChild(removeEdit);
@@ -448,6 +452,8 @@ export default {
 						writtenReviews[id] = written;
 					}
 				}
+				console.log(writtenReviews);
+				console.log("Inject button for no written component");
 				if (Object.keys(module_review).includes(userid) && !Object.keys(writtenReviews).includes(userid)) {
 					r.insertAdjacentHTML("beforebegin", '<button id = "editBtn">Edit</button>');
 					r.insertAdjacentHTML('beforebegin', '<button id = "reviewBtn">Delete</button>');
@@ -471,6 +477,7 @@ export default {
 					}]
 				}
 				myChart.destroy();
+				console.log("Chart destroyed");
 				myChart = new Chart(ctx, {
 					type: 'radar',
 					data: data,
@@ -487,6 +494,7 @@ export default {
 						}
 					}
 				});
+				console.log("Chart renew");
 				r.innerHTML = "";
 				for (let [id, review] of Object.entries(writtenReviews)) {
 					var y = review["year"];
@@ -498,7 +506,6 @@ export default {
 					var n = review['userid'];
 					id;
 					var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Sem " + y.slice(5,6);
-				
 					r.insertAdjacentHTML('beforeend','<td>'+ n+'<br></br>'+ year +'</td>' + '<td>'+
 					'<div id = "quality">Quality of content: ' + q +'/5</div>'+ 
 					'<div id = "quality">Relevance of content: ' + re +'/5</div>'+
@@ -537,10 +544,11 @@ export default {
 				console.log(Object.keys(module_review).length);
 				if(Object.keys(module_review).length == 0) {
 					console.log("deleted");
-					database.collection('reviews').doc(modCode).delete();
+					database.collection('reviews').doc(modCode).delete().then(() => {
+						this.updateReviews();
+					});
 				}
 				module_review = {};
-				this.updateReviews();
 			});
 			reviewMod.addEventListener('click',function(){
 				document.querySelector('#overlay').style.display = 'block';
