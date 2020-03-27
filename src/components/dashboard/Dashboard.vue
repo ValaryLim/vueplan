@@ -1,6 +1,5 @@
 <template>
     <div class="row">
-        <h2>Module Popularity Dashboard</h2>
         <popularity-chart class="chart" :key="key1" :preprocessed_data="preprocessed_data" :current_ay="current_ay"></popularity-chart>
         <div>
             <major-chart class="chart" v-if="current_ay in preprocessed_data" :key="key2" :preprocessed_data="preprocessed_data" :current_ay="current_ay" :major="major"></major-chart>

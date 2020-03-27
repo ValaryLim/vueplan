@@ -1,25 +1,22 @@
+/* search bar */
 #searchIn {
   background-position: 10px 12px; /* Position the search icon */
   background-repeat: no-repeat; 
   width: 100%; 
   font-size: 16px; 
   padding: 12px 20px 12px 40px; /* Add some padding */
-  border: 1px solid #ddd; /* Add a grey border */
+  border: 1px solid #9CB2BC; /* Add a grey border */
   margin-bottom: 20px; 
+  border-radius: 5px;
 }
 
+/* list of modules in main search */
 #modules {
   /* Remove default list styling */
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
-
-
-#tabody {
-  width:800px;
-}
-
 
 #modules li{
   align-items: left;
@@ -29,11 +26,15 @@
   text-decoration: none; /* Remove default text underline */
   font-size: 18px; /* Increase the font-size */
   color: black; /* Add a black text color */
- display: block; /* Make it into a block element to fill the whole list */
- margin-top: 18px; 
+  display: block; /* Make it into a block element to fill the whole list */
+  margin-top: 18px; 
 }
 
+#tabody {
+  width: 80%;
+}
 
+/* module information - module titles */
 #title{
   text-decoration: underline;
   cursor: pointer;
@@ -43,82 +44,109 @@
 }
 
 #title:hover:not(.header) {
-  color: rgb(7, 46, 66);   
+  color:#24305E;   
 }
 
+/* module information */
 #info{
   font-size:15px;
   color:rgb(59, 59, 59);
 }
 
+/* module information - descriptions */
 #des{
   font-size: 15px;
   text-align: justify;
   margin-right: 8px;
 }
 
-#modDesc{
-  text-align: justify;
-}
-
+/* module information - preclusion */
 #prec{
   font-size: 15px
 }
 
+/* module information - prerequisite */
 #prer{
   font-size: 15px
 }
 
+/* search results */
 #res {
   position: top;
   align-items: left;
   text-align: left;
   display: block;
-  width: 85%;
+  width: 100%;
 }
 
 #mod_title{
   margin-top: 18px; 
 }
 
+/* tree visualisation */
 #tree {
   font-size: 14px;
+  border: none;
 }
 
-svg{
-  border: 1px solid white;
+/* tree visualisation - link */
+.link {
+  fill: none;
+  stroke: #778899;
+  stroke-width: 6px;
 }
 
+/* module preclusions/prerequisites hyperlinks */
 span[id*="temp"]{
   text-decoration: underline;
   cursor: pointer;
   color: rgb(73, 118, 143);
 }
 
-
 span[id*="temp"]:hover:not(.header) {
   color: rgb(7, 46, 66);  
 }
 
-
+/* module information - workload labels */
 #labels{
   font-weight: bold;
 }
 
+/* overall stars */
 #StarsOuter {
   display: inline-block;
   position: relative;
   font-family: FontAwesome;
   font-size: 20px;
+  margin-bottom: 20px;
 }
 
 #StarsOuter::before {
   content: "\f006 \f006 \f006 \f006 \f006";
   text-align: center;
+  margin-bottom: 20px;
 }
 
+#StarsInner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+#StarsInner::before {
+  content: "\f005 \f005 \f005 \f005 \f005";
+  color:#24305E;
+  margin-bottom: 20px;
+}
+
+/* add review modal */
 .modal-container {
-  width: 52.5vw;
+  width: 60%;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -128,21 +156,16 @@ span[id*="temp"]:hover:not(.header) {
   font-family: Helvetica, Arial, sans-serif;
 }
 
-.modal-header h3 {
-  margin-top: 0;
-  color: #42b983;
-}
-
 #closeReview {
-  text-align: right;
+  text-align: center;
+  border: none;
+  font-size: 20px;
 }
 
 .modal-body {
   text-align: left;
 }
-.modal-default-button {
-  float: right;
-}
+
 #overlay {
   position: fixed; /* Sit on top of the page content */
   display: none; /* Hidden by default */
@@ -158,60 +181,63 @@ span[id*="temp"]:hover:not(.header) {
 #rating {
   padding-top: 5px;
 }
-#review {
-  width: 750px;
-}
-#year {
-  margin-left: 21vw;
-}
-.one {
-  width: 200px;
-}
-.rows {
-  display: inline;
-}
-.spin {
-  margin-left: 400px;
-}
+
+/* buttons */
 .btn {
   margin-top: 0px;
   background-color: #24305E;
   color: #fff;
   border-color: #24305E;
+  border-radius: 5px;
   height: auto;
   width: 100%;
   vertical-align: middle;
 }
-#writtenReview {
-  margin-top: 40px;
-  width: 46vw;
-}
-#reviewChart {
-  display: block;
-  width: 800px;
-  height: 400px;
+
+.btn-addreview {
+  margin-left: 55%;
+  background-color: #24305E;
+  color: #fff;
+  border-color: #24305E;
+  border-radius: 5px;
+  height: auto;
+  width: 180px;
+  font-size: 18px;
+  vertical-align: middle;
+  align-self: flex-start;
+  padding: 10px;
 }
 
-#StarsInner {
-  position: absolute;
-  top: 0;
-  left: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  width: 0;
-  font-size: 20px;
+.btn-review {
+  background-color: #24305E;
+  border-color: #24305E;
+  color: #fff;
+  width: 80px;
+  font-size: 14px;
+  padding: 8px 10px;
+  border-radius: 5px;
+  margin: 20px 10px 0px 0px;
 }
-#StarsInner::before {
-  content: "\f005 \f005 \f005 \f005 \f005";
-  color: #f8ce0b;
+
+/* review radar chart */
+#reviewChart {
+  display: block;
+  align-self: center;
+  align-content: center;
+  align-items: center;
+  width: 60%;
+  margin-left: 20%;
 }
+
+/* overall review (before radar chart) */
 #OverallFeedbackNum {
   font-size: 42px;
   text-align: center;
-  width: inherit;
+  width: 100%;
 }
+
 #reviewOverall {
-  width: inherit;
+  width: 100%;
   text-align: center;
 }
 
@@ -219,6 +245,84 @@ span[id*="temp"]:hover:not(.header) {
   text-align: center;
   font-size: 24px;
 }
+
+/* written reviews */
+#writtenReview {
+  margin-top: 40px;
+  width: 100%;
+}
+
+/* overall review */
 #res_review {
-  width: inherit;
+  width: 100%;
+}
+
+/* add reviews: select semester */
+.custom-select {
+  position: relative;
+}
+
+.custom-select select {
+  display: none; /*hide original SELECT element: */
+}
+
+#year {
+  margin-left: 21vw; /* sets width for year */
+}
+
+.one .spin {
+  width: 50%;
+}
+
+.one {
+  font-size: 16px;
+}
+
+#review {
+  width: 90%;
+}
+
+/* text box for add module review */
+textarea {
+  display: block;
+  padding: 20px;
+  border-radius: 4px;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+/* add review - submit button */
+#submitReview {
+  margin-top: 20px;
+  padding: 10px;
+}
+
+#submitReview:hover {
+  margin-top: 20px;
+  padding: 10px;
+  color: white;
+  font-weight: bold;
+}
+
+/* detailed reviews css */
+td {
+  vertical-align: top;
+}
+
+tr {
+  margin-bottom: 10px;
+}
+
+.username {
+  font-weight: bold;
+}
+
+#indivReview {
+  font-weight: bold;
+}
+
+#reviewTd {
+  width: 100px;
 }

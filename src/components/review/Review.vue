@@ -15,9 +15,9 @@
           <div class="modal-body">
             <table id = "review">
               <tr class = "rows">
-                <td class="one">Year and Sem taken: </td>
+                <td class="one">Year and Semester: </td>
                 <td>
-                  <select id="year" style='float:right'>
+                  <select class="custom-select" id="year" style='float:right'>
                     <option v-for="year in yearlist()" :key="year">{{year.slice(0,2)+'/'+year.slice(3,5)+' Semester '+year[6]}}</option>
                   </select>
                 </td>
@@ -35,36 +35,30 @@
                 </td>
               </tr>
               <tr class = "rows">
-              <td class="one">Difficulty of content: </td>
+              <td class="one">Difficulty of Content: </td>
                 <td class="spin">
                 <b-form-spinbutton id="difficulty" v-model="difficulty" min=1 max=5 inline></b-form-spinbutton>
                 </td>
               </tr>
               <tr class = "rows">
-              <td class="one">Heaviness of workload: </td>
+              <td class="one">Heaviness of Workload: </td>
                 <td class="spin">
                 <b-form-spinbutton id="workload" v-model="workload" min=1 max=5 inline></b-form-spinbutton>
                 </td>
               </tr>
               <tr class = "rows">
-              <td class="one">Quality of teaching staff: </td>
+              <td class="one">Quality of Teaching Staff: </td>
                 <td class="spin">
                 <b-form-spinbutton id="staff" v-model="staff" min=1 max=5 inline></b-form-spinbutton>
                 </td>
               </tr>
-              <tr>
-              <slot name="body" id='writtenBody'>
-                <textarea id ='writtenReview' rows=10 placeholder = 'Write your review here!'></textarea>
-              </slot>
-              </tr>
             </table>
-          </div>
-
-          <div class="modal-footer">
+            <slot name="body" id='writtenBody'>
+              <textarea id ='writtenReview' cols=1000 rows=5 placeholder = 'Type your review here'></textarea>
+            </slot>
             <slot name="footer">
-              Click 'OK' to submit your review!
-              <button id = 'submitReview' @click="submitR()">
-                OK
+              <button class="btn" id = 'submitReview' @click="submitR()">
+                Submit Review
               </button>
             </slot>
           </div>
