@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Register Page</title>
+    </head>
+    
+    <body>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <b-modal id="error-modal" :title="modal_header" hide-footer>
+                                <p>{{ this.modal_body }}</p>
+                                <b-button id="modal-ok-btn" @click="$bvModal.hide('error-modal')">OK</b-button>
+                            </b-modal>
+                            <div v-if="error" class="alert alert-danger">{{error}}</div>
+                            <form action="#" @submit.prevent="submit">
+    
+                                <!-- Register name -->
+                                <div class="form-group row">
+                                    <label for="name" class="col-md-4 col-form-label text-md-right">Name*</label>
+                                    <div class="col-md-6">
+                                        <input
+                                            id="name"
+                                            type="name"
+                                            class="form-control"
+                                            name="name"
+                                            value
+                                            required
+                                            autofocus
+                                            v-model="form.name"
+                                        />
+                                        </div>
+                                    </div>
+    
+                                <!-- Register email -->
+                                <div class="form-group row">
+                                    <label for="email" class="col-md-4 col-form-label text-md-right">Email*</label>
+                                    <div class="col-md-6">
+                                    <input
+                                        id="email"
+                                        type="email"
+                                        class="form-control"
+                                        name="email"
+                                        value
+                                        required
+                                        autofocus
+                                        v-model="form.email"
+                                    />
+                                    </div>
+                                </div>
+    
+                                <!-- Register password -->
+                                <div class="form-group row">
+                                    <label for="password" class="col-md-4 col-form-label text-md-right">Password*</label>
+                                    <div class="col-md-6">
+                                    <input
+                                        id="password"
+                                        type="password"
+                                        class="form-control"
+                                        name="password"
+                                        required
+                                        v-model="form.password"
+                                    />
+                                    </div>
+                                </div>
+    
+                                <!-- Register year of matriculation -->
+                                <div class="form-group row">
+                                    <label for="year" class="col-md-4 col-form-label text-md-right">Year of Matriculation*</label>
+                    
+                                    <div class="col-md-6">
+                                        <multiselect 
+                                            v-model="form.year" 
+                                            deselect-label="Selected"
+                                            :options="[2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]" 
+                                            :multiple="false" 
+                                            :close-on-select="true" 
+                                            :clear-on-select="false" 
+                                            :preserve-search="true" 
+                                            :allow-empty="false"
+                                            placeholder="Select Year">
+                                            <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
+                                            </template>
+                                        </multiselect>
+                                    </div>
+                                </div>
+
+                                <!-- Register major -->
+                                <div class = "form-group row">
+                                    <label for="major" class="col-md-4 col-form-label text-md-right">Major*</label>
+                                    <div class="col-md-6">
+                                        <multiselect 
+                                            v-model="form.major" 
+                                            deselect-label="Selected"
+                                            :options="Object.keys(allmajors)" 
+                                            :multiple="false" 
+                                            :close-on-select="true" 
+                                            :clear-on-select="false" 
+                                            :preserve-search="true" 
+                                            :allow-empty="false"
+                                            placeholder="Select Major">
+                                            <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
+                                            </template>
+                                        </multiselect>
+                                    </div>
+                                </div>
+                                
+                                <!-- Register exemptions -->
+                                <div class = "form-group row">
+                                    <label for="exemptions" class="col-md-4 col-form-label text-md-right">Module Exemptions</label>
+                                    <div class="col-md-6">
+                                        <multiselect 
+                                            v-model="form.exemptions" 
+                                            :options="Object.keys(allmodules)" 
+                                            :multiple="true" 
+                                            :close-on-select="false" 
+                                            :clear-on-select="false" 
+                                            :preserve-search="true" 
+                                            placeholder="Select Exemption">
+                                            <template class="select-option" slot="selection" slot-scope="{ values, search, isOpen }">
+                                            </template>
+                                        </multiselect>
+                                    </div>
+                                </div>
+    
+                                <!-- Register button -->
+                                <div class="form-group row mb-0">
+                                    <button type="submit" class="btn btn-primary">Register</button>
+                                </div>
+    
+                                <!-- Redirect to login page -->
+                                <div class="form-group row justify-content-center">
+                                    <router-link to="/login">
+                                        <a>Already have an account? Login here.</a>
+                                    </router-link>
+                                </div>
+    
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

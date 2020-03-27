@@ -1,0 +1,169 @@
+<style>
+    @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
+</style>
+<template>
+    <div id="overlay">
+        <div class="modal-container">
+          <div class="modal-header">
+            <slot name="header">
+              <h1 id = 'reviewTitle'>Add Review</h1>
+              <button type="button" id='closeReview'>
+                <font-awesome-icon icon="times" />
+              </button>
+            </slot>
+          </div>
+          <div class="modal-body">
+            <table id = "review">
+              <tr class = "rows">
+                <td class="one">Year and Sem taken: </td>
+                <td>
+                  <select id="year" style='float:right'>
+                    <option v-for="year in yearlist()" :key="year">{{year.slice(0,2)+'/'+year.slice(3,5)+' Semester '+year[6]}}</option>
+                  </select>
+                </td>
+              </tr>
+              <tr class = "rows">
+                <td class="one">Quality of Content: </td>
+                <td class="spin">
+                <b-form-spinbutton id="quality" v-model="quality" min=1 max=5 inline></b-form-spinbutton>
+                </td>
+              </tr>
+              <tr class = "rows">
+              <td class="one">Relevance of Content: </td>
+                <td class="spin">
+                <b-form-spinbutton id="relevance" v-model="relevance" min=1 max=5 inline></b-form-spinbutton>
+                </td>
+              </tr>
+              <tr class = "rows">
+              <td class="one">Difficulty of content: </td>
+                <td class="spin">
+                <b-form-spinbutton id="difficulty" v-model="difficulty" min=1 max=5 inline></b-form-spinbutton>
+                </td>
+              </tr>
+              <tr class = "rows">
+              <td class="one">Heaviness of workload: </td>
+                <td class="spin">
+                <b-form-spinbutton id="workload" v-model="workload" min=1 max=5 inline></b-form-spinbutton>
+                </td>
+              </tr>
+              <tr class = "rows">
+              <td class="one">Quality of teaching staff: </td>
+                <td class="spin">
+                <b-form-spinbutton id="staff" v-model="staff" min=1 max=5 inline></b-form-spinbutton>
+                </td>
+              </tr>
+              <tr>
+              <slot name="body" id='writtenBody'>
+                <textarea id ='writtenReview' rows=10 placeholder = 'Write your review here!'></textarea>
+              </slot>
+              </tr>
+            </table>
+          </div>
+
+          <div class="modal-footer">
+            <slot name="footer">
+              Click 'OK' to submit your review!
+              <button id = 'submitReview' @click="submitR()">
+                OK
+              </button>
+            </slot>
+          </div>
+        </div>
+      </div>
+
+
+
+
+</template>
+<script>
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+export default {
+    data() {
+      return {
+        quality:5,
+        staff:5,
+        relevance:5,
+        difficulty:5,
+        workload:5,
+      }
+    },
+    props : {
+      q: Number,
+      s: Number,
+      r: Number,
+      d: Number,
+      w: Number,
+    },
+    watch: {
+      q: function(val) {
+        this.quality = val;
+      },
+      s: function(val) {
+        this.staff = val;
+      },
+      r: function(val) {
+        this.relevance = val;
+      },
+      d: function(val) {
+        this.difficulty = val;
+      },
+      w: function(val) {
+        this.workload = val;
+      }
+    },
+    components: {
+        FontAwesomeIcon,
+    },
+    methods: {
+        yearlist: function() {
+			var firstYear = 1994;
+			var years = [];
+			var date = new Date();
+			var currYear = date.getFullYear();
+			var currMonth = date.getMonth();
+			if (currMonth > 7) {
+				currYear = currYear-1;
+			}
+			while (firstYear < currYear){
+				var firstTwo = firstYear%100;
+				var lstTwo = (firstYear+1)%100;
+				firstTwo = firstTwo.toString();
+				lstTwo = lstTwo.toString();
+				if (firstTwo.length < 2) {
+					firstTwo = '0' + firstTwo;
+				}
+				if (lstTwo.length < 2) {
+					lstTwo = '0' + lstTwo;
+				}
+				var acadsem1 = firstTwo+'/'+lstTwo+'s1';
+				var acadsem2 = firstTwo+'/'+lstTwo+'s2';
+				if (currMonth > 7 && firstYear == currYear) {
+					years.push(acadsem1);
+				} else {
+					years.push(acadsem1);
+					years.push(acadsem2);
+				}
+				firstYear++;
+			}
+			years.reverse();
+			return years;
+        },
+        submitR: function() {
+          var review = document.getElementById('writtenReview');
+          var year = document.getElementById('year').value;
+          this.$parent.submitReview(this.quality,
+                                    this.staff,
+                                    this.relevance,
+                                    this.difficulty,
+                                    this.workload,
+                                    review,
+                                    year);
+          review.value = "";
+          var value = this.yearlist()[0];
+          var yearString = value.slice(0,5)+' Semester '+ value[6];
+          document.getElementById('year').value = yearString;
+          console.log(document.getElementById('year').value);
+        }
+    },
+}
+</script>

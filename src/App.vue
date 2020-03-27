@@ -349,13 +349,7 @@ export default {
                   {modCode: 'MA1101R', modTitle: 'Linear Algebra I', modType: 'core'},
                   {modCode: 'MA1521', modTitle: 'Calculus for Computing', modType: 'core'},
                   {modCode: 'ST2334', modTitle: 'Probability and Statistics', modType: 'core'}
-                  ],
-
-                  "Economics": [
-                  {modCode: "EC1301", modTitle: "Principles of Economics", modType: "core"},
-                  {modCode: "EC2101", modTitle: "Microeconomic Analysis I", modType: "core"},
-                  {modCode: "EC3101", modTitle: "Microeconomic Analysis II", modType: "core"},
-                  {modCode: "EC3312", modTitle: "Game Theory and Applications for Economics", modType: "elective"}]
+                  ]
       },
       sepMappings: sepMappings,
     }
