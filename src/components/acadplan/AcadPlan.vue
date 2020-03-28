@@ -18,13 +18,17 @@ import { mapGetters } from 'vuex';
 import firebase from 'firebase';
 import database from '../firebase.js'
 
+/* carousel */
+import carousel from 'vue-owl-carousel';
+
 export default {
     name: "App",
     display: "Academic Planner",
     order: 14,
     components: {
         draggable,
-        FontAwesomeIcon
+        FontAwesomeIcon,
+        carousel
     },
     data() {
         return {
@@ -199,6 +203,7 @@ export default {
             this.update_dashboard_add(module_code, new_semester);
         },
         add_module_sem: function() {
+            console.log("add module called");
             /** 
              * adds module to the earliest possible semester the student can take it 
              */
@@ -255,6 +260,7 @@ export default {
             }
         },
         update_module_credits: function(add_subtract, sem, mc) {
+            console.log("update module credits called");
             for (var module_index in this.acadplan[sem]) {
                 // get module
                 var module = this.acadplan[sem][module_index];
@@ -267,6 +273,7 @@ export default {
             }
         },
         check_valid_module: function(module_name) {
+            console.log("check valid module called");
             /** 
              * Check if module exists and can be inserted
              * If module can be inserted, returns the module code. 
@@ -315,6 +322,7 @@ export default {
             }
         }, 
         sort_modules: function(data, sem_num) {
+            console.log("sort modules called");
             data.sort(this.compare_module);
 
             // var current_sem = this.num_semester_mapping[sem_num];
@@ -375,6 +383,8 @@ export default {
             // var current_sem_name = this.num_semester_mapping[sem_num];
             // var previous_sem_name = this.num_semester_mapping[previous_sem];
 
+            console.log("sort modules prereq check called");
+
             // find the earliest date module can be shifted to
             var earliest_sem = this.check_prerequisites_sem(this.allmodules[check_module.mod].parseprereq);
                         
@@ -405,6 +415,8 @@ export default {
              */
             // var current_sem_name = this.num_semester_mapping[sem_num];
             // var previous_sem_name = this.num_semester_mapping[previous_sem];
+
+            console.log("sort modules locked check called");
 
             var latest_sem = this.check_locked_sem(check_module.mod);
 
@@ -444,6 +456,7 @@ export default {
              * returns the earliest sem that the module can be taken, -1 otherwise. 
              */
             // if there are no prerequisites, module can be inserted immediately after the first semester
+            console.log("check prerequisites sem called");
             if (Object.keys(prereq_tree).length === 0) {
                 return 0; // can insert into first semester
             }
@@ -612,6 +625,8 @@ export default {
              * true: module can be deleted, false: module cannot be deleted
             */
 
+           console.log("check unlocked called");
+
             // get array of all modules that are locked by this module
             var all_locked = this.get_locked(module_name);
 
@@ -639,6 +654,8 @@ export default {
             /**
              * returns an array of all modules locked
              */
+
+            console.log("get locked called");
             var preclu_tree = this.allmodules[module_name].parsepreclu;
             var preclu_arr = this.get_all_preclu(preclu_tree, []);
             var locked_arr = this.allmodules[module_name].locked.slice();
@@ -682,6 +699,8 @@ export default {
             /**
              * recursively finds all preclusions of one module (ignores "and", "or") and returns an array of preclusions
              */
+
+            console.log("get all preclu called");
             // if there are no preclusions
             if (Object.keys(preclu_tree).length === 0) {
                 return preclu_arr;

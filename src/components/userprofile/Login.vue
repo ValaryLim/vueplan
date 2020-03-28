@@ -11,9 +11,7 @@
             <div v-if="error" class="alert alert-danger">{{error}}</div>
             <!-- Welcome message if user is logged in -->
             <div v-if="user.loggedIn">
-              Welcome, {{ name }}!
-              <br>
-              Click on any tab above to start planning.
+              Welcome! Click on any tab above to start planning.
             </div>
 
             <!-- Login page if user not logged in -->

@@ -234,11 +234,11 @@ export default {
 
 			if (modules[mod.code]['workload']!=''){
 				var totalHours = workload.map(function(elt) {return parseInt(elt)}).reduce(function(a,b) {return a+b});
-				var totalString = totalHours + totalHours > 1 ? 'hrs' : 'hr';
+				var totalString = totalHours + totalHours > 1 ? ' hours' : ' hour';
 
-				res.insertAdjacentHTML('beforeend', '<h4>Weekly Workload - '+ totalHours  + totalString +'</h4>');
+				res.insertAdjacentHTML('beforeend', '<h4>Workload (Weekly): '+ totalHours + totalString +'</h4><hr></hr>');
 
-				var col = ["#A3586D","#5C4A72","#F3B05A","#F4874B","#F46A4E"];
+				var col = ["#24305E","#F67280","#8186D5","#96D1C7","#B9CCED"];
 				var names = ["Lec","Tut", "Lab","Proj","Prep"];
 
 				for (i = 0; i < 5; i++) {
@@ -253,9 +253,9 @@ export default {
 
 				for (i = 0; i < 5; i++) {
 					if (workload[i] == 1){
-						label.insertAdjacentHTML('beforeend', '<span style="color:'+ col[i] + '">' + names[i] + '&nbsp;'.repeat(3) + '</span>');
+						label.insertAdjacentHTML('beforeend', '<span style="color:'+ col[i] + '">' + names[i] + '&nbsp;'.repeat(5) + '</span>');
 					}else if (workload[i] >1){			
-						label.insertAdjacentHTML('beforeend', '<span style="color:'+ col[i] + '">' + names[i] + '&nbsp;'.repeat((workload[i]-1)*8 + 3) + '</span>');
+						label.insertAdjacentHTML('beforeend', '<span style="color:'+ col[i] + '">' + names[i] + '&nbsp;'.repeat((workload[i]-1)*8 + 5) + '</span>');
 					}
 				}
 			}
@@ -278,15 +278,15 @@ export default {
 
 			if(lst.length > 0){
 				var data_1 = [
-					{id: 1, text_1: mod.code, father: null, color:"#FF5722" },
+					{id: 1, text_1: mod.code, father: null, color:"#F67280" },
 				]
 				var count = 2;
 				for(var i in lst){
-					data_1.push({id: count, text_1: this.allmodules[lst[i]].code, father: 1, color:"#FFC107"});
+					data_1.push({id: count, text_1: this.allmodules[lst[i]].code, father: 1, color:"#B9CCED"});
 					count++;
 				}
 
-				res.insertAdjacentHTML('beforeend','<h4>'+'Dependent Modules' +'</h4>');
+				res.insertAdjacentHTML('beforeend','<h4>Dependent Modules</h4><hr></hr>');
 
 
 				var len = lst.length*40;
@@ -303,8 +303,9 @@ export default {
 					hasZoom:false,
 					hasFlatData: true,
 					relationnalField: "father",
-					nodeWidth:75,
-					nodeHeight:25,
+					nodeWidth:100,
+					nodeHeight:30,
+					strokeWidth: 1,
 					mainAxisNodeSpacing:2,
 					isHorizontal:true,
 					renderNode: function(node) {
@@ -452,8 +453,8 @@ export default {
 						writtenReviews[id] = written;
 					}
 				}
-				console.log(writtenReviews);
-				console.log("Inject button for no written component");
+				// console.log(writtenReviews);
+				// console.log("Inject button for no written component");
 				if (Object.keys(module_review).includes(userid) && !Object.keys(writtenReviews).includes(userid)) {
 					r.insertAdjacentHTML("beforebegin", '<button id = "editBtn">Edit</button>');
 					r.insertAdjacentHTML('beforebegin', '<button id = "reviewBtn">Delete</button>');
@@ -467,17 +468,17 @@ export default {
 				var mc = document.getElementById('myChart');
 				var ctx = mc.getContext('2d');
 				var data = {
-					labels: ['Quality of content', 'Relevance of content', 'Difficulty of content', 'Heaviness of Workload', 'Quality of teaching staff'],
+					labels: ['Quality of Content', 'Relevance of Content', 'Difficulty of Content', 'Heaviness of Workload', 'Quality of Teaching Staff'],
 					datasets: [{
-						label: 'Breakdown of rating',
-						backgroundColor: 'rgb(255, 99, 132)',
-						borderColor: 'rgb(255, 99, 132)',
+						label: 'Breakdown of Rating',
+						backgroundColor: 'rgba(247, 108, 108, 0.5)',
+						borderColor: '#F76C6C',
+						fill: true,
 						data: [avgQualityContent, avgRelevanceContent, avgDifficultyContent, avgWorkload, avgStaff],
-						fill: false,
 					}]
 				}
 				myChart.destroy();
-				console.log("Chart destroyed");
+				// console.log("Chart destroyed");
 				myChart = new Chart(ctx, {
 					type: 'radar',
 					data: data,
@@ -488,9 +489,20 @@ export default {
 								display: false
 							},
 							ticks: {
-								suggestedMin: 0,
-								suggestedMax: 5
+								min: 0,
+								max: 5,
+								stepSize: 1,
+								fontSize: 14,
+							},
+							pointLabels: {
+								fontSize: 16
 							}
+						},
+						legend: {
+							display: false,
+						},
+						tooltips: {
+							enabled: false,
 						}
 					}
 				});
@@ -506,24 +518,36 @@ export default {
 					var n = review['userid'];
 					id;
 					var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Sem " + y.slice(5,6);
-					r.insertAdjacentHTML('beforeend','<td>'+ n+'<br></br>'+ year +'</td>' + '<td>'+
-					'<div id = "quality">Quality of content: ' + q +'/5</div>'+ 
-					'<div id = "quality">Relevance of content: ' + re +'/5</div>'+
-					'<div id = "quality">Difficulty of content: ' + d +'/5</div>'+
-					'<div id = "quality">Heaviness of Workload: ' + w +'/5</div>'+
-					'<div id = "quality">Teaching staff: ' + s +'/5</div>'
-					+review['review']);
-					if(userid == id){
-						r.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
-						r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
+					
+					r.insertAdjacentHTML('beforeend','<tr>');
+
+					if (this.fetchUser().uid == id){
+						r.insertAdjacentHTML('beforeend','<td>'+ '<span class="username">' + n + '</span>' + '<br>'+ year + '<br>' 
+						+ '<button class="btn-review" id = "editBtn">Edit</button>' + '<button class="btn-review" id = "reviewBtn">Delete</button></td>' +
+						'<td><div id = "quality">Quality of Content: <span id="indivReview">' + q + '/5</span></div>'+ 
+						'<div id = "quality">Relevance of Content: <span id="indivReview">' + re +'/5</span></div>'+
+						'<div id = "quality">Difficulty of Content: <span id="indivReview">' + d +'/5</span></div>'+
+						'<div id = "quality">Heaviness of Workload: <span id="indivReview">' + w +'/5</span></div>'+
+						'<div id = "quality">Quality of Teaching Staff: <span id="indivReview">' + s +'/5</span></div></td> <td>'
+						+review['review'] + '</td>');
+						
 						document.getElementById("reviewBtn").addEventListener("click", ()=>{
 							this.deleteReview(module_code, id);
+							this.updateReviews();
 						});
 						document.getElementById("editBtn").addEventListener("click", ()=>{
 							this.loadReview(module_code, id);
-						});
+						});						
+					} else {
+						r.insertAdjacentHTML('beforeend','<td>'+ '<span class="username">' + n + '</span>' + '<br>'+ year +'</td>' +
+						'<td><div id = "quality">Quality of Content: <span id="indivReview">' + q + '/5</span></div>'+ 
+						'<div id = "quality">Relevance of Content: <span id="indivReview">' + re +'/5</span></div>'+
+						'<div id = "quality">Difficulty of Content: <span id="indivReview">' + d +'/5</span></div>'+
+						'<div id = "quality">Heaviness of Workload: <span id="indivReview">' + w +'/5</span></div>'+
+						'<div id = "quality">Quality of Teaching Staff: <span id="indivReview">' + s +'/5</span></div></td> <td>'
+						+review['review'] + '</td>');
 					}
-					r.insertAdjacentHTML('beforeend','</td></tr>');
+					r.insertAdjacentHTML('beforeend','</tr><br>');
 				}
 				var starPercentage = (overallReviewNum / 5) * 100;
 				var starPercentageRounded = `${(Math.round(starPercentage))}%`;
@@ -598,11 +622,11 @@ export default {
 			var avgStaff = 0;
 			var module_review = {};
 			var userid = this.fetchUser().uid;
-			res.insertAdjacentHTML('beforeend', '<h2>Ratings and Reviews</h2><hr></hr>');
+			res.insertAdjacentHTML('beforeend', '<h4>Ratings and Reviews</h4><hr></hr>');
 			res.insertAdjacentHTML('beforeend','<div id = "reviewOverall"><div id = "overall">Overall Rating</div><h3 id = "OverallFeedbackNum">'+overallReviewNum+'</h3><div id = "StarsOuter"><div id = "StarsInner"></div></div></div>');
 			res.insertAdjacentHTML('beforeend','<div id = "reviewChart"><canvas id="myChart"></canvas></div>');
 			res.insertAdjacentHTML('beforeend','<br></br>');
-			res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Written Reviews   <button id = "userReview">Review this module now!</button></h4>');	
+			res.insertAdjacentHTML('beforeend','<h4 id = "WrittenReviewsTitle">Detailed Reviews <button class = "btn-addreview" id = "userReview">Click to Review</bu></h4>');	
 			var reviewMod = document.querySelector('#userReview');
 			reviewMod.addEventListener('click',function(){
 				overlay.style.display = 'block';
@@ -643,6 +667,7 @@ export default {
 						}
 					}
 					if (Object.keys(module_review).includes(userid) && !Object.keys(writtenReviews).includes(userid)) {
+						/* add review and delete buttons here */
 						res.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
 						res.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
 						document.getElementById("reviewBtn").addEventListener("click", ()=>{
@@ -672,17 +697,19 @@ export default {
 						var n = review['userid'];
 						id;
 						var year = y.slice(0,2) + "/" + y.slice(2,4)+ " Sem " + y.slice(5,6);
+						
 						r.insertAdjacentHTML('beforeend','<tr>');
-						r.insertAdjacentHTML('beforeend','<td>'+ n+'<br></br>'+ year +'</td>' + '<td>'+
-						'<div id = "quality">Quality of content: ' + q + '/5</div>'+ 
-						'<div id = "quality">Relevance of content: ' + re +'/5</div>'+
-						'<div id = "quality">Difficulty of content: ' + d +'/5</div>'+
-						'<div id = "quality">Heaviness of Workload: ' + w +'/5</div>'+
-						'<div id = "quality">Teaching staff: ' + s +'/5</div>'
-						+review['review']);
-						if(this.fetchUser().uid == id){
-							r.insertAdjacentHTML('beforeend', '<button id = "editBtn">Edit</button>');
-							r.insertAdjacentHTML('beforeend', '<button id = "reviewBtn">Delete</button>');
+
+						if (this.fetchUser().uid == id){
+							r.insertAdjacentHTML('beforeend','<td>'+ '<span class="username">' + n + '</span>' + '<br>'+ year + '<br>' 
+							+ '<button class="btn-review" id = "editBtn">Edit</button>' + '<button class="btn-review" id = "reviewBtn">Delete</button></td>' +
+							'<td><div id = "quality">Quality of Content: <span id="indivReview">' + q + '/5</span></div>'+ 
+							'<div id = "quality">Relevance of Content: <span id="indivReview">' + re +'/5</span></div>'+
+							'<div id = "quality">Difficulty of Content: <span id="indivReview">' + d +'/5</span></div>'+
+							'<div id = "quality">Heaviness of Workload: <span id="indivReview">' + w +'/5</span></div>'+
+							'<div id = "quality">Quality of Teaching Staff: <span id="indivReview">' + s +'/5</span></div></td> <td>'
+							+review['review'] + '</td>');
+							
 							document.getElementById("reviewBtn").addEventListener("click", ()=>{
 								this.deleteReview(module_code, id);
 								this.updateReviews();
@@ -690,21 +717,29 @@ export default {
 							document.getElementById("editBtn").addEventListener("click", ()=>{
 								this.loadReview(module_code, id);
 							});						
+						} else {
+							r.insertAdjacentHTML('beforeend','<td>'+ '<span class="username">' + n + '</span>' + '<br>'+ year +'</td>' +
+							'<td><div id = "quality">Quality of Content: <span id="indivReview">' + q + '/5</span></div>'+ 
+							'<div id = "quality">Relevance of Content: <span id="indivReview">' + re +'/5</span></div>'+
+							'<div id = "quality">Difficulty of Content: <span id="indivReview">' + d +'/5</span></div>'+
+							'<div id = "quality">Heaviness of Workload: <span id="indivReview">' + w +'/5</span></div>'+
+							'<div id = "quality">Quality of Teaching Staff: <span id="indivReview">' + s +'/5</span></div></td> <td>'
+							+review['review'] + '</td>');
 						}
-						r.insertAdjacentHTML('beforeend','</td></tr>');
+						r.insertAdjacentHTML('beforeend','</tr><br>');
 					}
 				}
 				res.insertAdjacentHTML('beforeend','</tbody></table');
 				var mc = document.getElementById('myChart');
 				var ctx = mc.getContext('2d');
 				var data = {
-					labels: ['Quality of content', 'Relevance of content', 'Difficulty of content', 'Heaviness of Workload', 'Quality of teaching staff'],
+					labels: ['Quality of content', 'Relevance of content', 'Difficulty of content', 'Heaviness of Workload', 'Quality of Teaching Staff'],
 					datasets: [{
-						label: 'Breakdown of rating',
-						backgroundColor: 'rgb(255, 99, 132)',
-						borderColor: 'rgb(255, 99, 132)',
+						label: 'Breakdown of Rating',
+						backgroundColor: 'rgba(247, 108, 108, 0.5)',
+						borderColor: '#F76C6C',
 						data: [avgQualityContent, avgRelevanceContent, avgDifficultyContent, avgWorkload, avgStaff],
-						fill: false,
+						fill: true,
 					}]
 				}
 				myChart = new Chart(ctx, {
@@ -717,9 +752,20 @@ export default {
 								display: false
 							},
 							ticks: {
-								suggestedMin: 0,
-								suggestedMax: 5
+								min: 0,
+								max: 5,
+								stepSize: 1,
+								fontSize: 14,
+							},
+							pointLabels: {
+								fontSize: 16
 							}
+						},
+						legend: {
+							display: false,
+						},
+						tooltips: {
+							enabled: false,
 						}
 					}
 				});
