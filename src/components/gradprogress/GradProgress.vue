@@ -43,7 +43,7 @@ export default {
   methods: {
     getDateValue: function() {
       var today = new Date();
-      var dateValue = today.getFullYear() + (today.getMonth()) / 12;
+      var dateValue = today.getFullYear() + today.getMonth() / 12;
       return dateValue;
     },
 
@@ -53,7 +53,7 @@ export default {
       userRef.get().then(doc => {
         this.acadplan_exemptions = doc.data()["acadplan_exemptions"];
         this.major = doc.data()["major"];
-        this.year = doc.data()["year"];  //change this to the year. Sem completed is assigned in line 73
+        this.year = doc.data()["year"]; //change this to the year. Sem completed is assigned in line 73
         this.acadplan = doc.data()["module_location"];
       });
     },
@@ -70,7 +70,10 @@ export default {
     },
 
     get_ulr_table: function() {
-      this.sem_completed = parseInt((this.getDateValue() - this.year - 0.5) / 0.5, 10);
+      this.sem_completed = parseInt(
+        (this.getDateValue() - this.year - 0.5) / 0.5,
+        10
+      );
       if (this.sem_completed < 0) {
         this.sem_completed = 0;
       }
@@ -136,7 +139,14 @@ export default {
           }
         }
       }
-      return { mod: '', added: false, completed: false };
+      // Check whether in exemption
+      for (var exeKey in this.acadplan_exemptions) {
+        var exemption = this.acadplan_exemptions[exeKey];
+        if (exemption.substring(0, 3) == type_dic[type]) {
+            return { mod: exemption, added: true, completed: true };
+        }
+      }
+      return { mod: "", added: false, completed: false };
     },
 
     get_mod_title: function(code) {
@@ -168,19 +178,133 @@ export default {
       return electives;
     },
 
-    check_status: function(modcode) {
-      var mod_added = this.get_mod_added(this.acadplan);
+    get_all_preclu: function(preclu_tree, preclu_arr) {
+      /**
+       * recursively finds all preclusions of one module (ignores "and", "or") and returns an array of preclusions
+       */
+      // if there are no preclusions
+      if (Object.keys(preclu_tree).length === 0) {
+        return preclu_arr;
+      }
 
+      // if there is only one prerequisite
+      if (typeof preclu_tree === "string") {
+        if (this.allmodules[preclu_tree]) {
+          // not null
+          // check if preclu_arr already contains module
+          if (preclu_arr.includes(preclu_tree)) {
+            return preclu_arr;
+          } else {
+            // if not, push module into preclu_arr
+            preclu_arr.push(preclu_tree);
+            return preclu_arr;
+          }
+        } else {
+          return preclu_arr;
+        }
+      }
+
+      // else, go through each nest and get the preclusions
+      for (var key in preclu_tree) {
+        // access subtree
+        var preclu_subtree = preclu_tree[key];
+
+        for (var preclu_index in preclu_subtree) {
+          // precluded module
+          var preclu = preclu_subtree[preclu_index];
+
+          // if precluded module is a string and not yet included in preclu_arr
+          if (
+            typeof preclu === "string" &&
+            this.allmodules[preclu] &&
+            !preclu_arr.includes(preclu)
+          ) {
+            // add precluded module to preclu_arr
+            preclu_arr.push(preclu);
+
+            // recursively call get_all_preclu on new modules
+            preclu_arr = this.get_all_preclu(
+              this.allmodules[preclu].parsepreclu,
+              preclu_arr
+            );
+          }
+        }
+      }
+      return preclu_arr;
+    },
+
+    check_status: function(modcode) {
+
+      // Check whether this module is exempted
+      for (var exeKey in this.acadplan_exemptions) {
+        var exemption = this.acadplan_exemptions[exeKey];
+        if (exemption == modcode) {
+            return { mod: exemption, added: true, completed: true, self:true };
+        }
+      }
+
+      // Check whether this module's preclusion is exempted
+      if (this.allmodules[modcode]) {
+        var preclusions1 = this.get_all_preclu(
+          this.allmodules[modcode].parsepreclu,
+          []
+        );
+
+        for (var preclu_index1 in preclusions1) {
+          var preclu1 = preclusions1[preclu_index1];
+          for (var exeKey1 in this.acadplan_exemptions) {
+            var exemption1 = this.acadplan_exemptions[exeKey1];
+            if (exemption1 == preclu1) {
+              return { mod: exemption1, added: true, completed: true, self:false, instead: exemption1 };
+            }
+          }
+        }
+      }
+      
+      // Check whether acadplan has this module 
+      var mod_added = this.get_mod_added(this.acadplan);
       for (var key in mod_added) {
         var module = mod_added[key];
         if (module.code == modcode) {
           if (module.sem < this.sem_completed) {
-            return { added: true, completed: true };
+            return { added: true, completed: true, self: true };
           } else {
-            return { added: true, completed: false };
+            return { added: true, completed: false, self: true };
           }
         }
       }
+
+      // Check whether acadplan has this module's preclusion 
+      if (this.allmodules[modcode]) {
+        var preclusions = this.get_all_preclu(
+          this.allmodules[modcode].parsepreclu,
+          []
+        );
+        for (var preclu_index in preclusions) {
+          var preclu = preclusions[preclu_index];
+          for (var key1 in mod_added) {
+            var module1 = mod_added[key1];
+            if (module1.code == preclu) {
+              if (module1.sem < this.sem_completed) {
+                return {
+                  added: true,
+                  completed: true,
+                  self: false,
+                  instead: preclu
+                };
+              } else {
+                return {
+                  added: true,
+                  completed: false,
+                  self: false,
+                  instead: preclu
+                };
+              }
+            }
+          }
+        }
+      }
+
       return { added: false, completed: false };
     },
 
@@ -193,21 +317,41 @@ export default {
         var status = this.check_status(core.modCode);
         if (status.added) {
           if (status.completed) {
-            pr_progress.push({
-              requirement: core.modTitle,
-              code: core.modCode,
-              selected: this.get_mod_title(core.modCode),
-              added: "✓",
-              completed: "✓"
-            });
+            if (status.self) {
+              pr_progress.push({
+                requirement: core.modTitle,
+                code: core.modCode,
+                selected: this.get_mod_title(core.modCode),
+                added: "✓",
+                completed: "✓"
+              });
+            } else {
+              pr_progress.push({
+                requirement: core.modTitle,
+                code: status.instead,
+                selected: this.get_mod_title(status.instead),
+                added: "✓",
+                completed: "✓"
+              });
+            }
           } else {
-            pr_progress.push({
-              requirement: core.modTitle,
-              code: core.modCode,
-              selected: this.get_mod_title(core.modCode),
-              added: "✓",
-              completed: "x"
-            });
+            if (status.self) {
+              pr_progress.push({
+                requirement: core.modTitle,
+                code: core.modCode,
+                selected: this.get_mod_title(core.modCode),
+                added: "✓",
+                completed: "x"
+              });
+            } else {
+              pr_progress.push({
+                requirement: core.modTitle,
+                code: status.instead,
+                selected: this.get_mod_title(status.instead),
+                added: "✓",
+                completed: "x"
+              });
+            }
           }
         } else {
           pr_progress.push({
@@ -218,6 +362,7 @@ export default {
           });
         }
       }
+
       // Add programme electives
 
       // Business Analytics
@@ -251,6 +396,9 @@ export default {
                 completed: "x"
               });
             }
+          }
+          if(i == 6) {
+            break;
           }
         }
         if (i < 6) {
@@ -561,6 +709,20 @@ export default {
           }
         }
       }
+
+      for (var exeKey in this.acadplan_exemptions) {
+        var exemption = this.acadplan_exemptions[exeKey];
+        if(!appeared.includes(exemption)) {
+          ue_progress.push({
+            requirement: " ",
+            selected: this.get_mod_title(exemption),
+            added: "✓",
+            completed: "✓"
+          });
+          completed += 1;
+        }
+      }
+
 
       // make up for 8 mods in total (commom across all computing majors)
       for (var i = 0; i < 8 - completed; i++) {

@@ -4,12 +4,14 @@
       <div class="col-md-8">
         <div class="card">
           <div class="card-body">
+            <b-modal id="error-modal" :title="modal_header" hide-footer>
+              <p>{{ this.modal_body }}</p>
+              <b-button id="modal-ok-btn" @click="$bvModal.hide('error-modal')">OK</b-button>
+            </b-modal>
             <div v-if="error" class="alert alert-danger">{{error}}</div>
             <!-- Welcome message if user is logged in -->
             <div v-if="user.loggedIn">
-              Welcome, {{ name }}!
-              <br>
-              Click on any tab above to start planning.
+              Welcome! Click on any tab above to start planning.
             </div>
 
             <!-- Login page if user not logged in -->
@@ -78,12 +80,20 @@ export default {
         password: "",
       },
       error: null,
+      /* error message data */
+      modal_header: "Default header",
+      modal_body: "Default body",
     };
   },
   created() {
     this.showName()
   },
   methods: {
+    printError: function(header, message) {
+        this.modal_header = header;
+        this.modal_body = message;
+        this.$bvModal.show('error-modal');
+    },
     showName() {
       var user = firebase.auth().currentUser;
       this.name = user.displayName;
@@ -94,7 +104,7 @@ export default {
         .signInWithEmailAndPassword(this.form.email, this.form.password)
         .then(() =>{
           this.$router.replace({ name: "Home" });
-          alert("Logged in successfully.")
+          this.printError('Welcome!', "You have logged in successfully.")
         })
         .catch(err => {
           // will alert users that typed in an invalid email
@@ -114,3 +124,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* error message */
+.modal {
+    position: fixed;
+    top: 20%;
+}
+</style>
