@@ -95,7 +95,7 @@ export default {
 
 <style scoped>
 .chart {
-    width: 650px;
+    width: 580px;
     padding: 50px;
     float: left;
 }
