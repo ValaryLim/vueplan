@@ -311,6 +311,10 @@ td {
   vertical-align: top;
 }
 
+.rev-small {
+  width: 25%;
+}
+
 tr {
   margin-bottom: 10px;
 }
