@@ -30,7 +30,7 @@
                 <div class="col-3 add_feature">
                     <p class="inputTitle">Add Module</p>
                     <p>Use the textbox below to search and add modules.</p>
-                    <form>
+                    <form class="form-add">
                         <input type="text" class="input" list="allmodules" v-model="add_module_code"/>
                         <datalist id="allmodules">
                             <option class="datalist-style" v-for="(item, key) in allmodules" v-bind:key="key">

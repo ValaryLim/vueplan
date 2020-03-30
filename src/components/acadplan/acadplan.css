@@ -16,10 +16,10 @@
 
 /* academic plan table - content */
 .list-group-item.item {
-    font-size: 11px;
+    font-size: 9.5px;
     text-align: left;
     border-color: #EBEFF2;
-    height: 60px;
+    height: 55px;
 }
 
 .list-group-item .module_code {
@@ -33,9 +33,11 @@
 
 /* change last cell with total mc count to grey */
 .list-group-item.item.move-false {
-    padding-top: 22px;
+    padding-top: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
     background-color: #d8d8d8;
-    font-size: 10px;
+    font-size: 9.5px;
     font-weight: bold;
 }
 
@@ -95,3 +97,8 @@
     position: fixed;
     top: 20%;
 }
+
+.form-add {
+    margin-bottom: 10px;
+}
+

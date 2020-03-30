@@ -195,7 +195,7 @@ span[id*="temp"]:hover:not(.header) {
 }
 
 .btn-addreview {
-  margin-left: 55%;
+  margin-left: 51.5%;
   background-color: #24305E;
   color: #fff;
   border-color: #24305E;
@@ -248,7 +248,7 @@ span[id*="temp"]:hover:not(.header) {
 
 /* written reviews */
 #writtenReview {
-  margin-top: 40px;
+  margin-top: 10px;
   width: 100%;
 }
 
@@ -260,6 +260,7 @@ span[id*="temp"]:hover:not(.header) {
 /* add reviews: select semester */
 .custom-select {
   position: relative;
+  font-size: 14px;
 }
 
 .custom-select select {
@@ -272,10 +273,11 @@ span[id*="temp"]:hover:not(.header) {
 
 .one .spin {
   width: 50%;
+  margin: 0;
 }
 
 .one {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 #review {
@@ -309,6 +311,10 @@ textarea {
 /* detailed reviews css */
 td {
   vertical-align: top;
+}
+
+.rev-small {
+  width: 25%;
 }
 
 tr {

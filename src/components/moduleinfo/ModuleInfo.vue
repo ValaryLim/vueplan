@@ -522,9 +522,9 @@ export default {
 					r.insertAdjacentHTML('beforeend','<tr>');
 
 					if (this.fetchUser().uid == id){
-						r.insertAdjacentHTML('beforeend','<td>'+ '<span class="username">' + n + '</span>' + '<br>'+ year + '<br>' 
+						r.insertAdjacentHTML('beforeend','<td class="rev-small">'+ '<span class="username">' + n + '</span>' + '<br>'+ year + '<br>' 
 						+ '<button class="btn-review" id = "editBtn">Edit</button>' + '<button class="btn-review" id = "reviewBtn">Delete</button></td>' +
-						'<td><div id = "quality">Quality of Content: <span id="indivReview">' + q + '/5</span></div>'+ 
+						'<td class="rev-small"><div id = "quality">Quality of Content: <span id="indivReview">' + q + '/5</span></div>'+ 
 						'<div id = "quality">Relevance of Content: <span id="indivReview">' + re +'/5</span></div>'+
 						'<div id = "quality">Difficulty of Content: <span id="indivReview">' + d +'/5</span></div>'+
 						'<div id = "quality">Heaviness of Workload: <span id="indivReview">' + w +'/5</span></div>'+
@@ -539,8 +539,8 @@ export default {
 							this.loadReview(module_code, id);
 						});						
 					} else {
-						r.insertAdjacentHTML('beforeend','<td>'+ '<span class="username">' + n + '</span>' + '<br>'+ year +'</td>' +
-						'<td><div id = "quality">Quality of Content: <span id="indivReview">' + q + '/5</span></div>'+ 
+						r.insertAdjacentHTML('beforeend','<td class="rev-small">'+ '<span class="username">' + n + '</span>' + '<br>'+ year +'</td>' +
+						'<td class="rev-small"><div id = "quality">Quality of Content: <span id="indivReview">' + q + '/5</span></div>'+ 
 						'<div id = "quality">Relevance of Content: <span id="indivReview">' + re +'/5</span></div>'+
 						'<div id = "quality">Difficulty of Content: <span id="indivReview">' + d +'/5</span></div>'+
 						'<div id = "quality">Heaviness of Workload: <span id="indivReview">' + w +'/5</span></div>'+
@@ -701,9 +701,9 @@ export default {
 						r.insertAdjacentHTML('beforeend','<tr>');
 
 						if (this.fetchUser().uid == id){
-							r.insertAdjacentHTML('beforeend','<td>'+ '<span class="username">' + n + '</span>' + '<br>'+ year + '<br>' 
+							r.insertAdjacentHTML('beforeend','<td class="rev-small">'+ '<span class="username">' + n + '</span>' + '<br>'+ year + '<br>' 
 							+ '<button class="btn-review" id = "editBtn">Edit</button>' + '<button class="btn-review" id = "reviewBtn">Delete</button></td>' +
-							'<td><div id = "quality">Quality of Content: <span id="indivReview">' + q + '/5</span></div>'+ 
+							'<td class="rev-small"><div id = "quality">Quality of Content: <span id="indivReview">' + q + '/5</span></div>'+ 
 							'<div id = "quality">Relevance of Content: <span id="indivReview">' + re +'/5</span></div>'+
 							'<div id = "quality">Difficulty of Content: <span id="indivReview">' + d +'/5</span></div>'+
 							'<div id = "quality">Heaviness of Workload: <span id="indivReview">' + w +'/5</span></div>'+
@@ -718,8 +718,8 @@ export default {
 								this.loadReview(module_code, id);
 							});						
 						} else {
-							r.insertAdjacentHTML('beforeend','<td>'+ '<span class="username">' + n + '</span>' + '<br>'+ year +'</td>' +
-							'<td><div id = "quality">Quality of Content: <span id="indivReview">' + q + '/5</span></div>'+ 
+							r.insertAdjacentHTML('beforeend','<td class="rev-small">'+ '<span class="username">' + n + '</span>' + '<br>'+ year +'</td>' +
+							'<td class="rev-small"><div id = "quality">Quality of Content: <span id="indivReview">' + q + '/5</span></div>'+ 
 							'<div id = "quality">Relevance of Content: <span id="indivReview">' + re +'/5</span></div>'+
 							'<div id = "quality">Difficulty of Content: <span id="indivReview">' + d +'/5</span></div>'+
 							'<div id = "quality">Heaviness of Workload: <span id="indivReview">' + w +'/5</span></div>'+
