@@ -25,36 +25,36 @@
               <tr class = "rows">
                 <td class="one">Quality of Content: </td>
                 <td class="spin">
-                <b-form-spinbutton id="quality" v-model="quality" min=1 max=5 inline></b-form-spinbutton>
+                <b-form-spinbutton size="sm" id="quality" v-model="quality" min=1 max=5 inline></b-form-spinbutton>
                 </td>
               </tr>
               <tr class = "rows">
               <td class="one">Relevance of Content: </td>
                 <td class="spin">
-                <b-form-spinbutton id="relevance" v-model="relevance" min=1 max=5 inline></b-form-spinbutton>
+                <b-form-spinbutton size="sm" id="relevance" v-model="relevance" min=1 max=5 inline></b-form-spinbutton>
                 </td>
               </tr>
               <tr class = "rows">
               <td class="one">Difficulty of Content: </td>
                 <td class="spin">
-                <b-form-spinbutton id="difficulty" v-model="difficulty" min=1 max=5 inline></b-form-spinbutton>
+                <b-form-spinbutton size="sm" id="difficulty" v-model="difficulty" min=1 max=5 inline></b-form-spinbutton>
                 </td>
               </tr>
               <tr class = "rows">
               <td class="one">Heaviness of Workload: </td>
                 <td class="spin">
-                <b-form-spinbutton id="workload" v-model="workload" min=1 max=5 inline></b-form-spinbutton>
+                <b-form-spinbutton size="sm" id="workload" v-model="workload" min=1 max=5 inline></b-form-spinbutton>
                 </td>
               </tr>
               <tr class = "rows">
               <td class="one">Quality of Teaching Staff: </td>
                 <td class="spin">
-                <b-form-spinbutton id="staff" v-model="staff" min=1 max=5 inline></b-form-spinbutton>
+                <b-form-spinbutton size="sm" id="staff" v-model="staff" min=1 max=5 inline></b-form-spinbutton>
                 </td>
               </tr>
             </table>
             <slot name="body" id='writtenBody'>
-              <textarea id ='writtenReview' cols=1000 rows=5 placeholder = 'Type your review here'></textarea>
+              <textarea id ='writtenReview' cols=1000 rows=4 placeholder = 'Type your review here'></textarea>
             </slot>
             <slot name="footer">
               <button class="btn" id = 'submitReview' @click="submitR()">
