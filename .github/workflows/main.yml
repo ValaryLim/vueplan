@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
+      - name: Reveal Firebase
+        uses: git secret reveal -p ${{ secrets.REVEAL_PASS }}
       - name: Install Dependencies
         run: npm install
       - name: Build
