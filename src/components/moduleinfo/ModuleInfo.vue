@@ -221,6 +221,7 @@ export default {
 				let button = matches[matches.length-j-1];
 				button.addEventListener('click', function() {
 						x.modInfo(arr_all[j][1]);
+						x.dashboardInfo(arr_all[j][1]["code"]);
 					}
 				)
 			}
@@ -320,8 +321,10 @@ export default {
 					return result;
 					},
 					linkShape:"curve",
-					onNodeClick : (nodeData) => x.modInfo(this.allmodules[nodeData.data.text_1])
-
+					onNodeClick : (nodeData) => {
+						x.modInfo(this.allmodules[nodeData.data.text_1]);
+						x.dashboardInfo(this.allmodules[nodeData.data.text_1]["code"]);
+					}
 				});
 
 				myTree.refresh(data_1);
