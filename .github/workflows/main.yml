@@ -23,7 +23,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@master
       - name: Reveal Firebase
-        uses: git secret reveal -p REVEAL_PASS
+        run: git secret reveal -p REVEAL_PASS
         env: 
           REVEAL_PASS: ${{ secrets.FIREBASE_TOKEN }}
       - name: Install Dependencies
